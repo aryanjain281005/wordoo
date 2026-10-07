@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'props.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../models/models.dart';
@@ -39,22 +41,37 @@ class _RewardDialog extends StatelessWidget {
                 color: const Color(0xFFFFF9E8),
                 padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text('You Did It!', style: ts(40, color: C.purple, w: FontWeight.w900)),
-                  const SizedBox(height: 6),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    for (var i = 0; i < 3; i++)
-                      TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0, end: 1),
-                        duration: Duration(milliseconds: 500 + i * 350),
-                        curve: Curves.elasticOut,
-                        builder: (_, v, __) => Transform.scale(
-                          scale: i < outcome.stars ? v : .8,
-                          child: Text('⭐', style: TextStyle(fontSize: 58, color: i < outcome.stars ? null : Colors.grey.withValues(alpha: .35), shadows: i < outcome.stars ? null : null)),
+                  outlinedText('You Did It!', 46, fill: const Color(0xFFFFD34D), stroke: const Color(0xFF5B3DD8)),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    height: 150,
+                    child: Stack(alignment: Alignment.center, children: [
+                      const _Sunburst(),
+                      Positioned(bottom: 0, child: SizedBox(width: 130, height: 90, child: CustomPaint(painter: _ChestPainter()))),
+                      for (var i = 0; i < 3; i++)
+                        Positioned(
+                          top: i == 1 ? 0 : 14,
+                          left: 40.0 + i * 70,
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0, end: 1),
+                            duration: Duration(milliseconds: 500 + i * 350),
+                            curve: Curves.elasticOut,
+                            builder: (_, v, __) => Transform.scale(
+                              scale: i < outcome.stars ? v : .75,
+                              child: Text('⭐', style: TextStyle(fontSize: i == 1 ? 64 : 50, color: i < outcome.stars ? null : Colors.grey.withValues(alpha: .35))),
+                            ),
+                          ),
                         ),
-                      ),
-                  ]),
+                    ]),
+                  ),
                   Opacity(opacity: .0, child: Container()),
-                  Text('+${outcome.stars} stars', style: ts(24, color: C.orangeDark)),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    _RewardCard('⭐', '+${outcome.stars * 10} XP', C.gold),
+                    const SizedBox(width: 8),
+                    _RewardCard('🌟', '+${outcome.stars} stars', C.orange),
+                    const SizedBox(width: 8),
+                    _RewardCard(outcome.newCollectibles.isNotEmpty ? outcome.newCollectibles.first.emoji : '🎁', outcome.newCollectibles.isNotEmpty ? 'New treasure' : 'Keep going', C.pink),
+                  ]),
                   const SizedBox(height: 10),
                   Companion(type: companion, size: 96, message: up ? 'You’re getting stronger!' : (down ? 'Great effort! We’ll practise this together.' : 'Great job, Explorer!')),
                   if (up || down) ...[
@@ -107,4 +124,60 @@ class _RewardDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+class _RewardCard extends StatelessWidget {
+  final String emoji, label;
+  final Color color;
+  const _RewardCard(this.emoji, this.label, this.color);
+  @override
+  Widget build(BuildContext context) => Container(
+        width: 92,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(color: color.withValues(alpha: .16), borderRadius: BorderRadius.circular(18), border: Border.all(color: color, width: 2.5)),
+        child: Column(children: [Text(emoji, style: const TextStyle(fontSize: 28)), FittedBox(child: Text(label, style: ts(13)))]),
+      );
+}
+
+class _Sunburst extends StatefulWidget {
+  const _Sunburst();
+  @override
+  State<_Sunburst> createState() => _SunburstState();
+}
+
+class _SunburstState extends State<_Sunburst> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(seconds: 24))..repeat();
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(animation: _c, builder: (_, __) => CustomPaint(size: const Size(300, 150), painter: _RayPainter(_c.value)));
+}
+
+class _RayPainter extends CustomPainter {
+  final double t;
+  _RayPainter(this.t);
+  @override
+  void paint(Canvas c, Size s) {
+    final center = Offset(s.width / 2, s.height * .55);
+    final p = Paint()..color = const Color(0xFFFFD34D).withValues(alpha: .28);
+    for (var i = 0; i < 12; i++) {
+      final a = t * 2 * pi + i * pi / 6;
+      c.drawPath(Path()..moveTo(center.dx, center.dy)..lineTo(center.dx + cos(a - .1) * 200, center.dy + sin(a - .1) * 200)..lineTo(center.dx + cos(a + .1) * 200, center.dy + sin(a + .1) * 200)..close(), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_RayPainter o) => o.t != t;
+}
+
+class _ChestPainter extends CustomPainter {
+  const _ChestPainter();
+  @override
+  void paint(Canvas c, Size s) => Props.chest(c, s.width / 2, s.height, s.width * 1.1);
+  @override
+  bool shouldRepaint(_) => false;
 }

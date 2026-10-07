@@ -267,7 +267,7 @@ class ParentDashboard extends StatelessWidget {
         const SizedBox(height: 6),
         Wrap(spacing: 8, runSpacing: 8, children: [
           for (final l in LangRegistry.all)
-            Opacity(opacity: l.available ? 1 : .5, child: chip(l.available ? l.native : '${l.native} (soon)', st.langCode == l.code, l.available ? () => st.setLang(l.code) : () {})),
+            Opacity(opacity: l.available ? 1 : .5, child: chip(l.available ? l.native : '${l.name} (soon)', st.langCode == l.code, l.available ? () => st.setLang(l.code) : () {})),
         ]),
       ]),
     );

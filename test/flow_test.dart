@@ -146,7 +146,7 @@ void main() {
   testWidgets('app boots to the landing screen', (tester) async {
     await tester.pumpWidget(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
     await tester.pump(const Duration(seconds: 1));
-    expect(find.text('Start Your Adventure'), findsOneWidget);
+    expect(find.text('Let’s Start'), findsOneWidget);
     expect(find.textContaining('Parent'), findsOneWidget);
   });
 }

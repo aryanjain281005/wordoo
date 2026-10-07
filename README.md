@@ -1,6 +1,6 @@
 # Readle (wordoo) — A Reading Adventure Just for You
 
-Offline-first Flutter prototype of an adaptive literacy-skill adventure for children (≈6–10).
+Mobile-first (portrait) Flutter prototype of an adaptive literacy-skill adventure for children (≈6–10).
 It measures **six literacy skills**, personalises difficulty and games **per skill**, and re-checks
 progress every **week** with fresh items. It is a skill-support tool, **not** a diagnostic tool.
 

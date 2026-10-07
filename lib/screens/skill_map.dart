@@ -7,6 +7,7 @@ import '../models/models.dart';
 import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
+import '../widgets/props.dart';
 
 /// Result of the first adventure: the six-skill map (a grown-up/system view) + how the world is personalised.
 class SkillMapScreen extends StatelessWidget {
@@ -26,8 +27,9 @@ class SkillMapScreen extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 640),
               child: Column(children: [
+                const _ScrollRoll(),
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
                   decoration: BoxDecoration(
                     color: C.parchment,
                     borderRadius: BorderRadius.circular(30),
@@ -44,7 +46,16 @@ class SkillMapScreen extends StatelessWidget {
                     Text('These are the skills we’ll strengthen on your adventure.', textAlign: TextAlign.center, style: ts(17, color: C.inkSoft, w: FontWeight.w600)),
                   ]),
                 ),
-                const SizedBox(height: 18),
+                const _ScrollRoll(),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 96,
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                    for (final k in const [('forest', Color(0xFF56C27E), Color(0xFF2E9B5B)), ('treasure', Color(0xFFFFD35C), Color(0xFFE0A41A)), ('castle', Color(0xFFFF8FB8), Color(0xFFD9578A))])
+                      SizedBox(width: 96, height: 96, child: CustomPaint(painter: IslandArt(k.$1, k.$2, k.$3))),
+                  ]),
+                ),
+                const SizedBox(height: 6),
                 Pop(
                   index: 6,
                   child: Panel(
@@ -117,4 +128,18 @@ class _Row extends StatelessWidget {
       ]),
     );
   }
+}
+
+class _ScrollRoll extends StatelessWidget {
+  const _ScrollRoll();
+  @override
+  Widget build(BuildContext context) => Container(
+        height: 22,
+        margin: const EdgeInsets.symmetric(horizontal: 0),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFE9C77E), Color(0xFFC79A4B), Color(0xFFE9C77E)]),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [softShadow(const Color(0x44000000), 8, 4)],
+        ),
+      );
 }

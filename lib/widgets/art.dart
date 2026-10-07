@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../core/theme.dart';
+import 'props.dart';
 
 // ======================================================================
 // Companion creature (fox / panda / dragon) — one consistent vector style
@@ -19,6 +20,7 @@ class CreaturePainter extends CustomPainter {
     canvas.translate((size.width - s) / 2, (size.height - s) / 2);
     final o = switch (type) { 1 => _Pal(Colors.white, const Color(0xFF2B2B33), const Color(0xFFEFEFF4)), 2 => _Pal(const Color(0xFF4CC37E), const Color(0xFF2A8F5A), const Color(0xFFD8F6C9)), _ => _Pal(C.fox, const Color(0xFF9B4A12), Colors.white) };
     final fill = Paint()..style = PaintingStyle.fill;
+    Shader shade(Rect r, Color base) => RadialGradient(center: const Alignment(-.35, -.5), radius: 1.1, colors: [Color.lerp(base, Colors.white, .28)!, base, Color.lerp(base, Colors.black, .16)!]).createShader(r);
 
     // shadow
     fill.color = const Color(0x22000000);
@@ -33,8 +35,9 @@ class CreaturePainter extends CustomPainter {
       ..cubicTo(s * .22, -s * .06, s * .3, -s * .34, s * .12, -s * .46)
       ..cubicTo(s * .06, -s * .30, -s * .04, -s * .16, -s * .06, -s * .02)
       ..close();
-    fill.color = type == 1 ? const Color(0xFF2B2B33) : o.main;
+    fill.shader = shade(Rect.fromLTWH(-s * .06, -s * .46, s * .36, s * .5), type == 1 ? const Color(0xFF2B2B33) : o.main);
     canvas.drawPath(tail, fill);
+    fill.shader = null;
     if (type == 0) {
       fill.color = Colors.white;
       final tip = Path()
@@ -58,9 +61,10 @@ class CreaturePainter extends CustomPainter {
     }
 
     // body
-    fill.color = type == 1 ? Colors.white : o.main;
     final body = RRect.fromRectAndRadius(Rect.fromLTWH(s * .26, s * .56, s * .48, s * .38), Radius.circular(s * .2));
+    fill.shader = shade(body.outerRect, type == 1 ? Colors.white : o.main);
     canvas.drawRRect(body, fill);
+    fill.shader = null;
     fill.color = o.belly;
     canvas.drawOval(Rect.fromLTWH(s * .35, s * .62, s * .30, s * .30), fill);
     // feet
@@ -112,11 +116,16 @@ class CreaturePainter extends CustomPainter {
       ..cubicTo(s * .87, s * .64, s * .70, s * .70, s * .5, s * .70)
       ..cubicTo(s * .30, s * .70, s * .13, s * .64, s * .13, s * .46)
       ..close();
+    fill.shader = shade(Rect.fromLTWH(s * .13, s * .18, s * .74, s * .52), type == 1 ? Colors.white : o.main);
     canvas.drawPath(head, fill);
+    fill.shader = null;
     if (type == 0) {
       fill.color = Colors.white;
       canvas.drawOval(Rect.fromLTWH(s * .13, s * .46, s * .34, s * .20), fill);
       canvas.drawOval(Rect.fromLTWH(s * .53, s * .46, s * .34, s * .20), fill);
+      // fluffy cheek tufts
+      canvas.drawPath(Path()..moveTo(s * .13, s * .5)..lineTo(s * .04, s * .56)..lineTo(s * .14, s * .59)..lineTo(s * .06, s * .66)..lineTo(s * .2, s * .64)..close(), fill);
+      canvas.drawPath(Path()..moveTo(s * .87, s * .5)..lineTo(s * .96, s * .56)..lineTo(s * .86, s * .59)..lineTo(s * .94, s * .66)..lineTo(s * .8, s * .64)..close(), fill);
     }
     if (type == 1) {
       fill.color = const Color(0xFF2B2B33);
@@ -146,11 +155,13 @@ class CreaturePainter extends CustomPainter {
       canvas.drawArc(Rect.fromCenter(center: Offset(s * .65, eyeY), width: s * .08, height: s * .05), 0, pi, false, p);
     } else {
       fill.color = const Color(0xFF20263D);
-      canvas.drawOval(Rect.fromCenter(center: Offset(s * .35, eyeY), width: s * .075, height: s * .10), fill);
-      canvas.drawOval(Rect.fromCenter(center: Offset(s * .65, eyeY), width: s * .075, height: s * .10), fill);
+      canvas.drawOval(Rect.fromCenter(center: Offset(s * .35, eyeY), width: s * .1, height: s * .13), fill);
+      canvas.drawOval(Rect.fromCenter(center: Offset(s * .65, eyeY), width: s * .1, height: s * .13), fill);
       fill.color = Colors.white;
-      canvas.drawCircle(Offset(s * .36, eyeY - s * .02), s * .016, fill);
-      canvas.drawCircle(Offset(s * .66, eyeY - s * .02), s * .016, fill);
+      canvas.drawCircle(Offset(s * .36, eyeY - s * .03), s * .022, fill);
+      canvas.drawCircle(Offset(s * .66, eyeY - s * .03), s * .022, fill);
+      canvas.drawCircle(Offset(s * .335, eyeY + s * .025), s * .01, fill);
+      canvas.drawCircle(Offset(s * .635, eyeY + s * .025), s * .01, fill);
     }
     // nose + mouth
     fill.color = const Color(0xFF20263D);
@@ -247,7 +258,10 @@ class AvatarPainter extends CustomPainter {
     p.color = skin;
     canvas.drawCircle(Offset(w * .25, h * .32), w * .045, p);
     canvas.drawCircle(Offset(w * .75, h * .32), w * .045, p);
-    canvas.drawOval(Rect.fromCenter(center: headC, width: hr * 2, height: hr * 2.05), p);
+    final headR = Rect.fromCenter(center: headC, width: hr * 2, height: hr * 2.05);
+    p.shader = RadialGradient(center: const Alignment(-.3, -.4), colors: [const Color(0xFFFFDDB8), skin, const Color(0xFFEBB487)]).createShader(headR);
+    canvas.drawOval(headR, p);
+    p.shader = null;
     // hair front
     p.color = hairColors[hair];
     switch (hair) {
@@ -300,11 +314,16 @@ class AvatarPainter extends CustomPainter {
     }
     // face
     p.color = const Color(0xFF20263D);
-    canvas.drawOval(Rect.fromCenter(center: Offset(w * .41, h * .31), width: w * .055, height: h * .045), p);
-    canvas.drawOval(Rect.fromCenter(center: Offset(w * .59, h * .31), width: w * .055, height: h * .045), p);
+    canvas.drawOval(Rect.fromCenter(center: Offset(w * .405, h * .315), width: w * .075, height: h * .06), p);
+    canvas.drawOval(Rect.fromCenter(center: Offset(w * .595, h * .315), width: w * .075, height: h * .06), p);
     p.color = Colors.white;
-    canvas.drawCircle(Offset(w * .418, h * .30), w * .011, p);
-    canvas.drawCircle(Offset(w * .598, h * .30), w * .011, p);
+    canvas.drawCircle(Offset(w * .417, h * .30), w * .015, p);
+    canvas.drawCircle(Offset(w * .607, h * .30), w * .015, p);
+    canvas.drawCircle(Offset(w * .395, h * .328), w * .007, p);
+    canvas.drawCircle(Offset(w * .585, h * .328), w * .007, p);
+    final brow = Paint()..color = hairColors[hair]..style = PaintingStyle.stroke..strokeWidth = w * .016..strokeCap = StrokeCap.round;
+    canvas.drawArc(Rect.fromCenter(center: Offset(w * .405, h * .275), width: w * .09, height: h * .04), pi + .3, pi - .6, false, brow);
+    canvas.drawArc(Rect.fromCenter(center: Offset(w * .595, h * .275), width: w * .09, height: h * .04), pi + .3, pi - .6, false, brow);
     final sp = Paint()
       ..color = const Color(0xFF8A3B2A)
       ..style = PaintingStyle.stroke
@@ -444,23 +463,28 @@ class _ScenePainter extends CustomPainter {
       return p;
     }
 
-    canvas.drawPath(hills(.72, .04, 1), Paint()..color = hill1);
+    Shader hs(Color a, Color b, double base) => LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [a, b]).createShader(Rect.fromLTWH(0, h * (base - .06), w, h * .5));
+    canvas.drawPath(hills(.72, .04, 1), Paint()..shader = hs(hill1, Color.lerp(hill1, Colors.black, .18)!, .72));
 
     // distant castle silhouette
     if (scene == Scene.day || scene == Scene.castle || scene == Scene.night) {
-      final cx = w * .72, by = h * .72 - h * .02;
-      final cc = Paint()..color = (scene == Scene.night ? const Color(0xFF3A2D86) : const Color(0xFFB7A3F2));
-      final u = min(w, h) * .05;
-      canvas.drawRect(Rect.fromLTWH(cx - u * 1.2, by - u * 2.2, u * 2.4, u * 2.4), cc);
-      for (final dx in [-1.9, 1.3]) {
-        canvas.drawRect(Rect.fromLTWH(cx + u * dx, by - u * 3.2, u * .6, u * 3.4), cc);
-        canvas.drawPath(Path()..moveTo(cx + u * dx - u * .15, by - u * 3.2)..lineTo(cx + u * (dx + .3), by - u * 4.3)..lineTo(cx + u * (dx + .75), by - u * 3.2)..close(), Paint()..color = C.pink);
-      }
-      canvas.drawPath(Path()..moveTo(cx - u * .5, by - u * 2.2)..lineTo(cx, by - u * 3.6)..lineTo(cx + u * .5, by - u * 2.2)..close(), Paint()..color = C.pink);
+      Props.castle(canvas, w * .72, h * .72, min(w, h) * .26,
+          wall: scene == Scene.night ? const Color(0xFF5A4BB0) : const Color(0xFFD9CCF8), roof: C.pink, roof2: const Color(0xFF7A8CFF));
     }
 
-    canvas.drawPath(hills(.82, .035, 3), Paint()..color = hill2);
-    canvas.drawPath(hills(.93, .02, 0), Paint()..color = hill2.withValues(alpha: .9));
+    canvas.drawPath(hills(.82, .035, 3), Paint()..shader = hs(Color.lerp(hill2, Colors.white, .12)!, hill2, .82));
+    // tree line
+    if (scene != Scene.ocean) {
+      final tl = min(w, h) * .2;
+      for (var i = 0; i < 9; i++) {
+        final x = w * ((i * 0.13 + .02) % 1.0);
+        final base = h * (.86 - sin(x / w * pi * 2 + 3) * .035) + h * .005;
+        (i % 2 == 0)
+            ? Props.pine(canvas, x, base, tl, light: scene == Scene.night ? const Color(0xFF5A6BE0) : const Color(0xFF3FBF7A), dark: scene == Scene.night ? const Color(0xFF3A46B0) : const Color(0xFF1F8F5A))
+            : Props.roundTree(canvas, x, base, tl * .9, light: scene == Scene.treasure ? const Color(0xFFFFC85A) : const Color(0xFF6FD66F), dark: scene == Scene.treasure ? const Color(0xFFE08B2B) : const Color(0xFF2E9B4F));
+      }
+    }
+    canvas.drawPath(hills(.94, .02, 0), Paint()..shader = hs(hill2, Color.lerp(hill2, Colors.black, .2)!, .94));
 
     // sparkles
     if (!calm) {
@@ -560,6 +584,11 @@ class WavesPainter extends CustomPainter {
         canvas.drawPath(path, p);
       }
     }
+    for (var i = 0; i < 18; i++) {
+      final tw = (sin((t * 6 + i) * 1.7) + 1) / 2;
+      Props.sparkle(canvas, size.width * ((i * 41 % 100) / 100), size.height * ((i * 67 % 100) / 100), 2 + tw * 2.5, color: Colors.white.withValues(alpha: .25 + .5 * tw));
+    }
+    Props.cloud(canvas, size.width * (.1 + .8 * ((t * 1.0) % 1)), size.height * .05, size.width * .12, alpha: .35);
   }
 
   @override

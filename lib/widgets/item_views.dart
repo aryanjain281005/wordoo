@@ -472,9 +472,9 @@ class _ItemViewState extends State<ItemView> {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
               color: isCorrect ? const Color(0xFFD9FBE3) : Colors.white,
-              borderRadius: BorderRadius.circular(26),
-              border: Border.all(color: isCorrect ? C.green : _skinColor(), width: isCorrect ? 5 : 3),
-              boxShadow: [softShadow(isCorrect ? C.green.withValues(alpha: .5) : const Color(0x33000000), isCorrect ? 22 : 10, 5)],
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: isCorrect ? C.green : _skinColor(), width: 3.5),
+              boxShadow: [BoxShadow(color: (isCorrect ? C.green : _skinColor()).withValues(alpha: .85), offset: const Offset(0, 6), blurRadius: 0), softShadow(const Color(0x33000000), 12, 8)],
             ),
             child: Row(children: [
               if (column && widget.skin == GameSkin.quest) Padding(padding: const EdgeInsets.only(right: 10), child: Text(['A', 'B', 'C', 'D'][i], style: ts(22, color: C.purple))),
@@ -510,44 +510,48 @@ class _ItemViewState extends State<ItemView> {
 
   Widget _build(double maxW) {
     final n = it.answer.length;
-    final slotSize = min(70.0, (min(maxW, 640) - 24) / max(n, 4) - 8);
-    final tileSize = min(66.0, (min(maxW, 640) - 24) / 5 - 10);
+    final slotSize = min(64.0, (min(maxW, 640) - 60) / max(n, 4) - 8);
+    final tileSize = min(62.0, (min(maxW, 640) - 24) / 5 - 10);
     return Column(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Flexible(child: Text(it.prompt, style: ts(26, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x66000000), blurRadius: 6)]))),
-        const SizedBox(width: 12),
-        _speaker(),
-      ]),
-      const SizedBox(height: 10),
-      if (it.emoji != null)
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.white.withValues(alpha: .92), shape: BoxShape.circle, boxShadow: [softShadow()]),
-          child: Text(it.emoji!, style: const TextStyle(fontSize: 58)),
+      Container(
+        width: min(maxW, 640) - 8,
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFFBEBC5), Color(0xFFF1D79C)]),
+          borderRadius: BorderRadius.circular(26),
+          border: Border.all(color: C.parchmentDark, width: 4),
+          boxShadow: [softShadow(const Color(0x44000000), 16, 8)],
         ),
-      if (widget.scaffold && it.hint.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text('💡 ${it.hint}', style: ts(16, color: Colors.white)),
-        ),
-      const SizedBox(height: 18),
-      Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (var s = 0; s < n; s++)
-            GestureDetector(
-              onTap: () => _removeSlot(s),
-              child: _Hex(
-                size: slotSize,
-                filled: _slots[s] != null,
-                locked: _locked.contains(s) || (_resolved && _slots[s] != null),
-                wrong: _wrongBuild,
-                label: _slots[s] == null ? '' : it.tiles[_slots[s]!],
-              ),
-            ),
-        ],
+        child: Column(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Flexible(child: Text(it.prompt, textAlign: TextAlign.center, style: ts(22, color: const Color(0xFF6B4423)))),
+            const SizedBox(width: 10),
+            _speaker(),
+          ]),
+          const SizedBox(height: 10),
+          if (it.emoji != null) Text(it.emoji!, style: const TextStyle(fontSize: 72)),
+          if (widget.scaffold && it.hint.isNotEmpty)
+            Padding(padding: const EdgeInsets.only(top: 6), child: Text('💡 ${it.hint}', textAlign: TextAlign.center, style: ts(15, color: const Color(0xFF6B4423), w: FontWeight.w500))),
+          const SizedBox(height: 14),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (var s = 0; s < n; s++)
+                GestureDetector(
+                  onTap: () => _removeSlot(s),
+                  child: _Hex(
+                    size: slotSize,
+                    filled: _slots[s] != null,
+                    locked: _locked.contains(s) || (_resolved && _slots[s] != null),
+                    wrong: _wrongBuild,
+                    label: _slots[s] == null ? '' : it.tiles[_slots[s]!],
+                  ),
+                ),
+            ],
+          ),
+        ]),
       ),
       const SizedBox(height: 22),
       Wrap(
@@ -579,24 +583,6 @@ class _ItemViewState extends State<ItemView> {
   }
 }
 
-class _HexClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size s) {
-    final w = s.width, h = s.height;
-    return Path()
-      ..moveTo(w * .5, 0)
-      ..lineTo(w, h * .25)
-      ..lineTo(w, h * .75)
-      ..lineTo(w * .5, h)
-      ..lineTo(0, h * .75)
-      ..lineTo(0, h * .25)
-      ..close();
-  }
-
-  @override
-  bool shouldReclip(_) => false;
-}
-
 class _Hex extends StatelessWidget {
   final double size;
   final bool filled, locked, wrong, tile;
@@ -604,35 +590,21 @@ class _Hex extends StatelessWidget {
   const _Hex({required this.size, required this.filled, this.locked = false, this.wrong = false, this.tile = false, this.label = ''});
   @override
   Widget build(BuildContext context) {
-    final w = size, h = size * 1.12;
-    Color a, b;
-    if (!filled) {
-      a = Colors.white.withValues(alpha: .25);
-      b = Colors.white.withValues(alpha: .15);
-    } else if (locked) {
-      a = const Color(0xFF7BE0A0);
-      b = C.green;
-    } else if (tile) {
-      a = const Color(0xFFFFE17A);
-      b = const Color(0xFFFFB92E);
-    } else {
-      a = const Color(0xFFFFE17A);
-      b = const Color(0xFFFFB92E);
-    }
+    final lipColor = locked ? C.greenDark : const Color(0xFFB8B2D8);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      width: w,
-      height: h,
-      child: ClipPath(
-        clipper: _HexClipper(),
-        child: Container(
-          decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [a, b])),
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.all(6),
-            child: FittedBox(child: Text(label, style: ts(34, color: C.ink))),
-          ),
-        ),
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: !filled ? const Color(0x33805A28) : (locked ? const Color(0xFFD9FBE3) : Colors.white),
+        borderRadius: BorderRadius.circular(size * .24),
+        border: Border.all(color: !filled ? const Color(0x66805A28) : (locked ? C.green : (wrong ? C.orange : Colors.white)), width: filled ? 3 : 2.5),
+        boxShadow: filled ? [BoxShadow(color: lipColor, offset: const Offset(0, 5), blurRadius: 0), softShadow(const Color(0x33000000), 8, 6)] : null,
+      ),
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: FittedBox(child: Text(label, style: ts(34, color: C.ink))),
       ),
     );
   }

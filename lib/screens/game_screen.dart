@@ -157,39 +157,59 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  Widget _topBar({bool play = false}) => Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-        child: Row(children: [
-          RoundIconButton(icon: Icons.close_rounded, label: 'Back to the map', onTap: () => Navigator.of(context).pop()),
-          const SizedBox(width: 12),
-          Expanded(
-            child: play
-                ? Stack(clipBehavior: Clip.none, children: [
-                    Padding(padding: const EdgeInsets.only(top: 14), child: GameProgressBar(value: index / Cfg.itemsPerRound, color: meta.color)),
-                    Positioned.fill(
-                      child: LayoutBuilder(
-                        builder: (_, c) => Stack(clipBehavior: Clip.none, children: [
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeOutCubic,
-                            left: (c.maxWidth - 30) * (index / Cfg.itemsPerRound),
-                            top: -6,
-                            child: Text(meta.emoji, style: const TextStyle(fontSize: 30)),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ])
-                : Text(meta.name, style: ts(26, color: Colors.white)),
+  static const _missions = {
+    GameId.soundOrchestra: 'Wake the Forest Band!',
+    GameId.letterArcher: 'Hit the Letter Targets!',
+    GameId.wordRocket: 'Launch the Word Rocket!',
+    GameId.wordDetective: 'Catch the Right Word!',
+    GameId.spellingHive: 'Fix the Pirate Map!',
+    GameId.storyQuest: 'Read the Magic Scroll!',
+  };
+
+  Widget _topBar({bool play = false}) {
+    final st2 = context.read<AppState>();
+    final mi = st2.missions.indexWhere((m) => m.game == widget.game);
+    final region = Skills.of(meta.skill).region;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        RoundIconButton(icon: Icons.close_rounded, label: 'Back to the map', onTap: () => Navigator.of(context).pop(), size: 48),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(14, 8, 12, 10),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF3B3F8F), Color(0xFF262A66)]),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFE8C46A), width: 2.5),
+              boxShadow: [softShadow(const Color(0x55000000), 10, 5)],
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Expanded(child: Text(region, style: ts(14, color: const Color(0xFFFFE17A)))),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: .18), borderRadius: BorderRadius.circular(10)),
+                  child: PowerPips(level: level),
+                ),
+              ]),
+              Text(mi >= 0 ? 'Mission ${mi + 1}: ${_missions[widget.game] ?? meta.tagline}' : (_missions[widget.game] ?? meta.tagline), style: ts(17, color: Colors.white), maxLines: 2),
+              if (play) ...[
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(child: GameProgressBar(value: index / Cfg.itemsPerRound, color: C.gold, height: 14)),
+                  const SizedBox(width: 8),
+                  const Text('⭐', style: TextStyle(fontSize: 20)),
+                  const SizedBox(width: 3),
+                  Text('$index/${Cfg.itemsPerRound}', style: ts(15, color: Colors.white)),
+                ]),
+              ],
+            ]),
           ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: .85), borderRadius: BorderRadius.circular(20)),
-            child: PowerPips(level: level),
-          ),
-        ]),
-      );
+        ),
+      ]),
+    );
+  }
 
   Widget _intro() {
     return Column(key: const ValueKey('intro'), children: [

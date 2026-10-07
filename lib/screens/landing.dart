@@ -5,6 +5,7 @@ import '../data/strings.dart';
 import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
+import '../widgets/hero.dart';
 import 'parent_gate.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -13,81 +14,130 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
     final returning = st.hasBaseline;
-    return AdventureBackground(
-      scene: Scene.day,
+    return HeroScene(
       child: SafeArea(
         child: LayoutBuilder(builder: (context, c) {
-          final compact = c.maxHeight < 640;
-          return Column(children: [
-            const Spacer(flex: 2),
-            Pop(child: _Logo(size: compact ? 64 : 88)),
-            const SizedBox(height: 6),
-            Pop(index: 1, child: Text(Brand.tagline, textAlign: TextAlign.center, style: ts(compact ? 20 : 24, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 8)]))),
-            const Spacer(),
-            Pop(
-              index: 2,
-              child: SizedBox(
-                height: compact ? 150 : 210,
+          final h = c.maxHeight, w = c.maxWidth;
+          return Stack(children: [
+            // logo + tagline
+            Positioned(
+              top: h * .04,
+              left: 0,
+              right: 0,
+              child: Column(children: [
+                Pop(child: _Logo(size: (w * .22).clamp(60, 96))),
+                const SizedBox(height: 4),
+                Pop(index: 1, child: _Ribbon(text: Brand.tagline.replaceAll('Just for You', 'Just for You!'))),
+              ]),
+            ),
+            // characters on the path
+            Positioned(
+              bottom: h * .24,
+              left: 0,
+              right: 0,
+              child: Pop(
+                index: 2,
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: compact ? 140 : 200),
-                  const SizedBox(width: 10),
-                  Companion(type: st.avatar.companion, size: compact ? 100 : 140),
+                  AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: (w * .5).clamp(120, h * .27).toDouble()),
+                  SizedBox(width: w * .02),
+                  Padding(padding: const EdgeInsets.only(bottom: 4), child: Companion(type: st.avatar.companion, size: (w * .32).clamp(80, h * .17).toDouble())),
                 ]),
               ),
             ),
-            const Spacer(),
-            Pop(
-              index: 3,
-              child: BigButton(
-                label: returning ? 'Continue Adventure' : 'Start Your Adventure',
-                icon: Icons.auto_awesome_rounded,
-                style: BtnStyle.go,
-                width: 380,
-                height: 72,
-                fontSize: 24,
-                onTap: () => st.go(returning ? AppScreen.home : AppScreen.parent),
-              ),
+            // CTA block
+            Positioned(
+              bottom: 12,
+              left: 20,
+              right: 20,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Pop(
+                  index: 3,
+                  child: BigButton(
+                    label: returning ? 'Continue Adventure' : 'Let’s Start',
+                    style: BtnStyle.go,
+                    width: double.infinity,
+                    height: 66,
+                    fontSize: 28,
+                    onTap: () => st.go(returning ? AppScreen.home : AppScreen.parent),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                outlinedText('Turn Reading into an Adventure!', 17, stroke: const Color(0xFF2B6A45)),
+                const SizedBox(height: 6),
+                FittedBox(child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  _chip(Icons.play_arrow_rounded, 'Play'),
+                  _dot(),
+                  _chip(Icons.menu_book_rounded, 'Learn'),
+                  _dot(),
+                  _chip(Icons.spa_rounded, 'Grow'),
+                ])),
+                TextButton(
+                  onPressed: () async {
+                    if (!returning) {
+                      st.go(AppScreen.parent);
+                    } else if (await askParentGate(context)) {
+                      st.go(AppScreen.dashboard);
+                    }
+                  },
+                  child: Text('Parent / Grown-Up', style: ts(14, color: Colors.white, w: FontWeight.w500).copyWith(decoration: TextDecoration.underline, decorationColor: Colors.white70, shadows: const [Shadow(color: Color(0x88000000), blurRadius: 4)])),
+                ),
+              ]),
             ),
-            const SizedBox(height: 10),
-            Text('Turn reading into an adventure!', style: ts(16, color: Colors.white, w: FontWeight.w600)),
-            const SizedBox(height: 6),
-            TextButton(
-              onPressed: () async {
-                if (!returning) {
-                  st.go(AppScreen.parent);
-                } else if (await askParentGate(context)) {
-                  st.go(AppScreen.dashboard);
-                }
-              },
-              child: Text('Parent / Grown-Up', style: ts(15, color: Colors.white70, w: FontWeight.w600).copyWith(decoration: TextDecoration.underline, decorationColor: Colors.white54)),
-            ),
-            const SizedBox(height: 8),
           ]);
         }),
       ),
     );
   }
+
+  Widget _chip(IconData i, String t) => Row(children: [
+        Icon(i, color: Colors.white, size: 18),
+        const SizedBox(width: 3),
+        Text(t, style: ts(15, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 4)])),
+      ]);
+  Widget _dot() => const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('•', style: TextStyle(color: Colors.white70)));
+}
+
+class _Ribbon extends StatelessWidget {
+  final String text;
+  const _Ribbon({required this.text});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [Color(0xFF6C4DF0), Color(0xFF8A6BFF)]),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white, width: 2.5),
+          boxShadow: [softShadow(const Color(0x55000000), 10, 4)],
+        ),
+        child: Text(text, style: ts(15, color: Colors.white)),
+      );
 }
 
 class _Logo extends StatelessWidget {
   final double size;
   const _Logo({required this.size});
-  static const _cols = [Color(0xFFFFC83D), Color(0xFFFF9A2E), Color(0xFFFF6FA5), Color(0xFF58B7FF), Color(0xFF34B36B), Color(0xFFFFC83D)];
+  static const _cols = [Color(0xFFFFD34D), Color(0xFFFFB02E), Color(0xFFFF9A2E), Color(0xFFFF7A2E), Color(0xFFFFB02E), Color(0xFFFFD34D)];
   @override
   Widget build(BuildContext context) {
     final letters = Brand.name.split('');
     return Row(mainAxisSize: MainAxisSize.min, children: [
       for (var i = 0; i < letters.length; i++)
-        Padding(
-          padding: EdgeInsets.only(top: i.isEven ? 0 : size * .08),
-          child: Stack(children: [
-            Text(letters[i], style: TextStyle(fontSize: size, fontWeight: FontWeight.w900, foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = size * .16
-              ..strokeJoin = StrokeJoin.round
-              ..color = const Color(0xFF3B2A8F))),
-            Text(letters[i], style: TextStyle(fontSize: size, fontWeight: FontWeight.w900, color: _cols[i % _cols.length])),
-          ]),
+        Transform.translate(
+          offset: Offset(0, i.isEven ? 0 : size * .06),
+          child: Transform.rotate(
+            angle: (i - 2.5) * .035,
+            child: Stack(children: [
+              Text(letters[i], style: ts(size, w: FontWeight.w700).copyWith(shadows: [Shadow(color: const Color(0xFF2B1A7A), offset: Offset(0, size * .09))], foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = size * .2
+                ..strokeJoin = StrokeJoin.round
+                ..color = const Color(0xFF3B2A8F))),
+              ShaderMask(
+                shaderCallback: (r) => LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.white, _cols[i], const Color(0xFFE5700F)], stops: const [0, .35, 1]).createShader(r),
+                child: Text(letters[i], style: ts(size, color: Colors.white, w: FontWeight.w700)),
+              ),
+            ]),
+          ),
         ),
     ]);
   }

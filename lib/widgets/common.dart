@@ -34,14 +34,21 @@ class _BigButtonState extends State<BigButton> {
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onTap != null;
-    final (c1, c2, fg) = switch (widget.style) {
-      BtnStyle.primary => (const Color(0xFF8A6BFF), C.purpleDark, Colors.white),
-      BtnStyle.go => (const Color(0xFFFFB347), C.orangeDark, Colors.white),
-      BtnStyle.soft => (Colors.white, const Color(0xFFE6E2FA), C.purpleDark),
-      BtnStyle.ghost => (Colors.transparent, Colors.transparent, Colors.white),
+    final (top, bottom, edge, fg) = switch (widget.style) {
+      BtnStyle.primary => (const Color(0xFF9B7DFF), const Color(0xFF6C4DF0), const Color(0xFF3D26A8), Colors.white),
+      BtnStyle.go => (const Color(0xFFFFC04D), const Color(0xFFFF8A1F), const Color(0xFFC25A00), Colors.white),
+      BtnStyle.soft => (Colors.white, const Color(0xFFEDE9FF), const Color(0xFFB9B0E8), C.purpleDark),
+      BtnStyle.ghost => (const Color(0x22FFFFFF), const Color(0x11FFFFFF), const Color(0x44FFFFFF), Colors.white),
     };
-    final ghost = widget.style == BtnStyle.ghost;
-    return Semantics(
+    final lip = _down ? 2.0 : 6.0;
+    final r = widget.height / 2;
+    final label = Text(widget.label,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: ts(widget.fontSize, color: fg, w: FontWeight.w700).copyWith(
+            shadows: widget.style == BtnStyle.soft || widget.style == BtnStyle.ghost ? null : [Shadow(color: edge.withValues(alpha: .7), offset: const Offset(0, 2), blurRadius: 0)]));
+    final btn = Semantics(
       button: true,
       enabled: enabled,
       label: widget.label,
@@ -55,35 +62,52 @@ class _BigButtonState extends State<BigButton> {
                 widget.onTap!();
               }
             : null,
-        child: AnimatedScale(
-          scale: _down ? .96 : 1,
-          duration: const Duration(milliseconds: 90),
-          child: Opacity(
-            opacity: enabled ? 1 : .5,
+        child: Opacity(
+          opacity: enabled ? 1 : .5,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 70),
+            width: widget.width,
+            height: widget.height + 6,
+            padding: EdgeInsets.only(top: 6 - lip),
             child: Container(
-              width: widget.width,
-              height: widget.height,
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              alignment: widget.width != null ? Alignment.center : null,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(widget.height / 2),
-                gradient: ghost ? null : LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [c1, c2]),
-                border: ghost ? Border.all(color: Colors.white54, width: 2) : Border.all(color: Colors.white.withValues(alpha: .55), width: 2),
-                boxShadow: ghost ? null : [softShadow(c2.withValues(alpha: .45), 14, 7)],
+                borderRadius: BorderRadius.circular(r),
+                color: edge,
+                boxShadow: widget.style == BtnStyle.ghost ? null : [softShadow(edge.withValues(alpha: .35), 14, 8)],
               ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                if (widget.icon != null) ...[Icon(widget.icon, color: fg, size: widget.fontSize + 4), const SizedBox(width: 10)],
-                Flexible(
-                  child: Text(widget.label,
-                      textAlign: TextAlign.center,
-                      style: ts(widget.fontSize, color: fg, w: FontWeight.w800), maxLines: 2, overflow: TextOverflow.ellipsis),
+              padding: EdgeInsets.only(bottom: lip),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(r),
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [top, bottom]),
+                  border: Border.all(color: Colors.white.withValues(alpha: widget.style == BtnStyle.soft ? .9 : .5), width: 2),
                 ),
-              ]),
+                child: Stack(children: [
+                  // glossy highlight
+                  Positioned(
+                    left: r * .6,
+                    right: r * .6,
+                    top: 3,
+                    height: widget.height * .34,
+                    child: DecoratedBox(decoration: BoxDecoration(color: Colors.white.withValues(alpha: .32), borderRadius: BorderRadius.circular(r))),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        if (widget.icon != null) ...[Icon(widget.icon, color: fg, size: widget.fontSize + 4), const SizedBox(width: 8)],
+                        Flexible(child: label),
+                      ]),
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         ),
       ),
     );
+    return widget.width == null ? IntrinsicWidth(child: btn) : btn;
   }
 }
 
@@ -101,7 +125,7 @@ class Panel extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(radius),
-          border: Border.all(color: border ?? Colors.white.withValues(alpha: .7), width: 2.5),
+          border: Border.all(color: border ?? Colors.white, width: 3),
           boxShadow: [softShadow(const Color(0x33101840), 22, 10)],
         ),
         child: child,

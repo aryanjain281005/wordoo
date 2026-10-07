@@ -61,6 +61,9 @@ flutter:
   uses-material-design: true
 
   fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka.ttf
     - family: NotoSansDevanagari
       fonts:
         - asset: assets/fonts/NotoSansDevanagari.ttf

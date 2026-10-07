@@ -64,6 +64,8 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
               child: Column(children: [
+                Pop(child: Companion(type: 0, size: 84, message: step == 0 ? 'Hi grown-up! Tell me about your explorer.' : (step == 1 ? 'Your privacy matters to us.' : 'Here is how our adventure works!'), speakLocale: null)),
+                const SizedBox(height: 8),
                 Panel(
                   color: const Color(0xFFFFFDF5),
                   padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
@@ -71,8 +73,8 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
                     Row(children: [
                       GestureDetector(onTap: () => step == 0 ? st.go(AppScreen.landing) : setState(() => step--), child: const Icon(Icons.arrow_back_rounded, size: 30, color: C.purple)),
                       const SizedBox(width: 10),
-                      Expanded(child: Text('Let’s set up your child’s adventure!', style: ts(22))),
-                      const Text('🌟', style: TextStyle(fontSize: 26)),
+                      Expanded(child: Text('Let’s set up your child’s adventure!', style: ts(20, h: 1.15))),
+                      const Icon(Icons.star_rounded, color: C.gold, size: 30),
                     ]),
                     const SizedBox(height: 14),
                     _Progress(step: step),
@@ -138,7 +140,7 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
         Wrap(spacing: 8, runSpacing: 8, children: [for (final g in ['Pre-school', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5']) _chip(g, grade == g, () => setState(() => grade = g))]),
         _label('Preferred language'),
         Wrap(spacing: 8, runSpacing: 8, children: [
-          for (final l in LangRegistry.all) _chip(l.available ? l.native : '${l.native} · soon', lang == l.code, () => setState(() => lang = l.code), enabled: l.available),
+          for (final l in LangRegistry.all) _chip(l.available ? l.native : '${l.name} · soon', lang == l.code, () => setState(() => lang = l.code), enabled: l.available),
         ]),
       ]);
 

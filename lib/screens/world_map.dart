@@ -9,6 +9,7 @@ import '../models/models.dart';
 import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
+import '../widgets/props.dart';
 import 'collection.dart';
 import 'game_screen.dart';
 import 'parent_gate.dart';
@@ -109,21 +110,38 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
             _hud(st),
             Expanded(
               child: LayoutBuilder(builder: (context, c) {
-                final wide = c.maxWidth / max(c.maxHeight, 1) > 1.15;
-                final canvasH = wide ? c.maxHeight : max(c.maxHeight, c.maxWidth * 3.0);
                 final canvasW = c.maxWidth;
-                final base = wide ? min(min(canvasW * .19, canvasH * .27), 190.0) : min(canvasW * .36, 150.0);
-                return SingleChildScrollView(
-                  physics: wide ? const NeverScrollableScrollPhysics() : null,
-                  child: SizedBox(
-                    width: canvasW,
-                    height: canvasH,
-                    child: Stack(children: [
-                      for (final r in _regions)
-                        _island(r, st, rank, nextMission, canvasW, canvasH, wide, base),
-                    ]),
+                final canvasH = canvasW * 3.4 + 270;
+                final mapH = canvasW * 3.4;
+                final base = min(canvasW * .34, 145.0);
+                return Stack(children: [
+                  Positioned.fill(
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                        width: canvasW,
+                        height: canvasH,
+                        child: Stack(children: [
+                          Positioned.fill(child: CustomPaint(painter: _TrailPainter([for (final r in _regions) Offset(r.tall.dx * canvasW, r.tall.dy * mapH + base * .35)]))),
+                          for (final r in _regions) _island(r, st, rank, nextMission, canvasW, mapH, false, base),
+                        ]),
+                      ),
+                    ),
                   ),
-                );
+                  // explorer + companion waiting on the shore
+                  Positioned(
+                    left: 6,
+                    bottom: 0,
+                    child: IgnorePointer(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                        Padding(padding: const EdgeInsets.only(left: 18, bottom: 2), child: SpeechBubble(text: Str.t(st.langCode, 'whereToday'), fontSize: 14, maxWidth: 200)),
+                        Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                          AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: 112, hatEmoji: st.avatar.hat >= 0 ? Collectibles.all[st.avatar.hat].emoji : null),
+                          Companion(type: st.avatar.companion, size: 72),
+                        ]),
+                      ]),
+                    ),
+                  ),
+                ]);
               }),
             ),
             _bottom(st),
@@ -185,14 +203,14 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                 _label(r, order, done, locked, isNext),
                 const SizedBox(height: 2),
                 Expanded(
-                  child: Stack(alignment: Alignment.center, children: [
+                  child: Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
                     if (isNext) _PulseRing(size: size),
-                    Positioned.fill(child: CustomPaint(painter: IslandPainter(r.grass, r.grassDark, locked: locked))),
-                    Positioned(top: size * .08, child: Opacity(opacity: locked ? .45 : 1, child: Text(r.landmark, style: TextStyle(fontSize: size * .30)))),
-                    if (locked) Positioned(top: size * .22, child: Text('🔒', style: TextStyle(fontSize: size * .26))),
-                    if (band == Band.strong) Positioned(right: size * .08, top: size * .06, child: Text('✨', style: TextStyle(fontSize: size * .15))),
+                    Positioned.fill(child: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked))),
+                    if (locked) Positioned(top: size * .2, child: Container(padding: const EdgeInsets.all(10), decoration: const BoxDecoration(color: Color(0xCC1E2753), shape: BoxShape.circle), child: Icon(Icons.lock_rounded, color: Colors.white, size: size * .16))),
+                    if (band == Band.strong) Positioned(right: size * .04, top: size * .04, child: Text('✨', style: TextStyle(fontSize: size * .15))),
+                    if (isNext) Positioned(top: -4, child: _Bounce(child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: C.gold, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white, width: 2)), child: Text('Start here!', style: ts(12, color: C.ink))))),
                     if (r.skill != null)
-                      Positioned(bottom: size * .30, child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .85), borderRadius: BorderRadius.circular(14)), child: PowerPips(level: level, emoji: '⭐'))),
+                      Positioned(bottom: size * .1, child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .92), borderRadius: BorderRadius.circular(14), boxShadow: [softShadow(const Color(0x33000000), 6, 2)]), child: PowerPips(level: level, emoji: '⭐'))),
                   ]),
                 ),
               ]),
@@ -218,9 +236,9 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: locked ? [const Color(0xFF8A92B2), const Color(0xFF6C7494)] : [const Color(0xFF2B6A4E), const Color(0xFF1C4A38)]),
+            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: locked ? [const Color(0xFF8A92B2), const Color(0xFF6C7494)] : [const Color(0xFF2F7A57), const Color(0xFF1B4A37)]),
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: isNext ? C.gold : Colors.white70, width: isNext ? 3 : 2),
+            border: Border.all(color: isNext ? C.gold : const Color(0xFFE8C46A), width: 2.5),
             boxShadow: [softShadow(const Color(0x44000000), 8, 4)],
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -261,7 +279,6 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
   }
 
   Widget _bottom(AppState st) {
-    final lang = st.langCode;
     Widget content;
     if (st.weekReady) {
       content = Row(children: [
@@ -284,11 +301,9 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
       ]);
     } else {
       content = Row(children: [
-        Companion(type: st.avatar.companion, size: 70),
-        const SizedBox(width: 8),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-            Text('Day ${st.day} • ${Str.t(lang, 'whereToday')}', style: ts(15, color: Colors.white)),
+            Text('Day ${st.day} • Today’s adventure', style: ts(15, color: Colors.white)),
             const SizedBox(height: 6),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -410,4 +425,48 @@ class _GameRow extends StatelessWidget {
       ),
     );
   }
+}
+
+class _Bounce extends StatefulWidget {
+  final Widget child;
+  const _Bounce({required this.child});
+  @override
+  State<_Bounce> createState() => _BounceState();
+}
+
+class _BounceState extends State<_Bounce> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(animation: _c, builder: (_, ch) => Transform.translate(offset: Offset(0, -6 * Curves.easeInOut.transform(_c.value)), child: ch), child: widget.child);
+}
+
+/// Dotted adventure trail linking the islands in play order.
+class _TrailPainter extends CustomPainter {
+  final List<Offset> pts;
+  _TrailPainter(this.pts);
+  @override
+  void paint(Canvas c, Size s) {
+    final path = Path()..moveTo(pts.first.dx, pts.first.dy);
+    for (var i = 1; i < pts.length; i++) {
+      final a = pts[i - 1], b = pts[i];
+      final midY = (a.dy + b.dy) / 2;
+      path.cubicTo(a.dx, midY, b.dx, midY, b.dx, b.dy);
+    }
+    final dot = Paint()..color = Colors.white.withValues(alpha: .75);
+    for (final m in path.computeMetrics()) {
+      for (var d = 0.0; d < m.length; d += 22) {
+        final p = m.getTangentForOffset(d)!.position;
+        c.drawCircle(p, 3.2, dot);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_TrailPainter o) => false;
 }

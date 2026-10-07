@@ -29,7 +29,7 @@ class AppTheme {
     );
     final ls = extraSpacing ? 0.8 : 0.0;
     return base.copyWith(
-      textTheme: base.textTheme.apply(bodyColor: C.ink, displayColor: C.ink, fontFamilyFallback: const [
+      textTheme: base.textTheme.apply(bodyColor: C.ink, displayColor: C.ink, fontFamily: 'Fredoka', fontFamilyFallback: const [
         'NotoSansDevanagari',
         'Noto Sans Devanagari',
         'Kohinoor Devanagari',
@@ -47,8 +47,26 @@ class AppTheme {
   }
 }
 
-TextStyle ts(double size, {Color color = C.ink, FontWeight w = FontWeight.w700, double? h, double? ls}) =>
-    TextStyle(fontSize: size, color: color, fontWeight: w, height: h, letterSpacing: ls, fontFamilyFallback: const ['NotoSansDevanagari']);
+TextStyle ts(double size, {Color color = C.ink, FontWeight w = FontWeight.w700, double? h, double? ls}) => TextStyle(
+      fontFamily: 'Fredoka',
+      fontFamilyFallback: const ['NotoSansDevanagari'],
+      fontVariations: [FontVariation('wght', (w.value >= 700 ? 600 : w.value.clamp(300, 600)).toDouble())],
+      fontSize: size,
+      color: color,
+      fontWeight: FontWeight.w400,
+      height: h,
+      letterSpacing: ls,
+    );
+
+/// Chunky outlined title text like the reference ("You Did It!", logo).
+Widget outlinedText(String t, double size, {Color fill = Colors.white, Color stroke = const Color(0xFF3B2A8F), TextAlign align = TextAlign.center}) => Stack(children: [
+      Text(t, textAlign: align, style: ts(size, w: FontWeight.w700).copyWith(foreground: Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = size * .22
+        ..strokeJoin = StrokeJoin.round
+        ..color = stroke)),
+      Text(t, textAlign: align, style: ts(size, color: fill, w: FontWeight.w700)),
+    ]);
 
 BoxShadow softShadow([Color c = const Color(0x33000000), double blur = 18, double dy = 8]) =>
     BoxShadow(color: c, blurRadius: blur, offset: Offset(0, dy));
