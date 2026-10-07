@@ -88,7 +88,7 @@ class SkillMapScreen extends StatelessWidget {
   Widget _chip(String e, String t, Color c) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(color: c.withValues(alpha: .14), borderRadius: BorderRadius.circular(20), border: Border.all(color: c, width: 2)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [Text(e, style: const TextStyle(fontSize: 22)), const SizedBox(width: 8), Text(t, style: ts(16))]),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [Text(e, style: const TextStyle(fontSize: 22)), const SizedBox(width: 8), Flexible(child: Text(t, style: ts(15), softWrap: true))]),
       );
 }
 
