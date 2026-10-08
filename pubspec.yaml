@@ -70,6 +70,7 @@ flutter:
     - assets/art/
     - assets/music/
     - assets/cutscenes/
+    - assets/story/
 
   fonts:
     - family: Fredoka

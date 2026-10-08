@@ -1,0 +1,85 @@
+{
+ "milo": {
+  "voice": "am_puck",
+  "speed": 1.05,
+  "pitch": 1.12
+ },
+ "dadi": {
+  "voice": "hf_alpha",
+  "speed": 0.9,
+  "pitch": 1.0,
+  "reverb": true
+ },
+ "gumsum": {
+  "voice": "af_sky",
+  "speed": 0.95,
+  "pitch": 1.18,
+  "echo": true
+ },
+ "bhalu": {
+  "voice": "am_onyx",
+  "speed": 0.95,
+  "pitch": 0.88
+ },
+ "arya": {
+  "voice": "hf_beta",
+  "speed": 1.0,
+  "pitch": 1.04
+ },
+ "kachhua": {
+  "voice": "bm_george",
+  "speed": 0.9,
+  "pitch": 0.9
+ },
+ "ullu": {
+  "voice": "bm_daniel",
+  "speed": 0.95,
+  "pitch": 0.95
+ },
+ "madhu": {
+  "voice": "bf_emma",
+  "speed": 0.97,
+  "pitch": 1.06
+ },
+ "pari": {
+  "voice": "af_kore",
+  "speed": 1.0,
+  "pitch": 1.08
+ },
+ "kitabu": {
+  "voice": "bm_lewis",
+  "speed": 0.95,
+  "pitch": 1.0
+ },
+ "bolt": {
+  "voice": "am_adam",
+  "speed": 1.0,
+  "pitch": 1.0,
+  "robot": true
+ },
+ "pip": {
+  "voice": "am_echo",
+  "speed": 1.12,
+  "pitch": 1.1
+ },
+ "coral": {
+  "voice": "af_jessica",
+  "speed": 1.1,
+  "pitch": 1.05
+ },
+ "jugnu": {
+  "voice": "af_nicole",
+  "speed": 1.12,
+  "pitch": 1.3
+ },
+ "kalam": {
+  "voice": "bm_fable",
+  "speed": 1.05,
+  "pitch": 1.18
+ },
+ "chuchu": {
+  "voice": "af_nicole",
+  "speed": 1.15,
+  "pitch": 1.35
+ }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'story/story_lines.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'core/audio.dart';
@@ -12,6 +13,7 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   AudioManager.instance.init();
+  StoryLines.instance.load();
   runApp(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
 }
 

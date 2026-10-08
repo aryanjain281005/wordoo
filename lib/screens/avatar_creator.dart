@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../story/play_scene.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../data/strings.dart';
@@ -88,7 +89,11 @@ class _AvatarCreatorState extends State<AvatarCreator> {
               const SizedBox(height: 16),
               Center(child: BigButton(label: 'Start My Adventure!', icon: Icons.rocket_launch_rounded, style: BtnStyle.go, width: 320, onTap: () {
                 st.saveAvatar(a, name.text);
-                st.go(AppScreen.intro);
+                if (st.seenScenes.contains('prologue')) {
+                  st.go(AppScreen.intro);
+                } else {
+                  playScene(context, 'prologue').then((_) => st.go(AppScreen.intro));
+                }
               })),
             ]),
           );

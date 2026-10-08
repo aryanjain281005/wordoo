@@ -1,0 +1,382 @@
+{
+ "pro_1": {
+  "who": "dadi",
+  "text": "High above the clouds lies Aksharpur, where words keep the whole world alive."
+ },
+ "pro_2": {
+  "who": "dadi",
+  "text": "Every time someone reads, the great Story Tree grows a shining new leaf."
+ },
+ "pro_3": {
+  "who": "dadi",
+  "text": "But one little cloud had never, ever heard a story."
+ },
+ "pro_4": {
+  "who": "gumsum",
+  "text": "Hee hee! Sounds, letters, words... now they're all mine!"
+ },
+ "pro_5": {
+  "who": "milo",
+  "text": "Oh no, oh no! The colours are gone, and the Story Tree is fading!"
+ },
+ "pro_6": {
+  "who": "milo",
+  "text": "You came! A real Explorer! Will you help me bring the words back?"
+ },
+ "pro_7": {
+  "who": "dadi",
+  "text": "And so, the Quest for the Lost Words began."
+ },
+ "sb_1": {
+  "who": "milo",
+  "text": "Look! The Star Bridge has appeared over the islands!"
+ },
+ "sb_2": {
+  "who": "gumsum",
+  "text": "Hee... you played through all seven islands? Then I have some riddles for you!"
+ },
+ "sb_3": {
+  "who": "milo",
+  "text": "Ready, Explorer? Let's show Gumsum everything you've learned!"
+ },
+ "so_1": {
+  "who": "dadi",
+  "text": "A new season begins in Aksharpur."
+ },
+ "so_2": {
+  "who": "gumsum",
+  "text": "You're really getting good at this. Maybe... reading isn't only for others?"
+ },
+ "so_3": {
+  "who": "milo",
+  "text": "Look, the islands are growing! New adventures are waiting for us!"
+ },
+ "g_ready": {
+  "who": "milo",
+  "text": "Ready, Explorer?"
+ },
+ "g_demo": {
+  "who": "milo",
+  "text": "Watch me first!"
+ },
+ "g_turn": {
+  "who": "milo",
+  "text": "Now it's your turn!"
+ },
+ "g_power": {
+  "who": "milo",
+  "text": "Whoa, you're getting stronger!"
+ },
+ "g_warm": {
+  "who": "milo",
+  "text": "Let's try a warm-up one together."
+ },
+ "g_done": {
+  "who": "milo",
+  "text": "You did it! Amazing!"
+ },
+ "g_chapter": {
+  "who": "milo",
+  "text": "Chapter complete! The island is growing!"
+ },
+ "g_great": {
+  "who": "milo",
+  "text": "Great job!"
+ },
+ "g_almost": {
+  "who": "milo",
+  "text": "Almost! Let's try again."
+ },
+ "beat_forest_0": {
+  "who": "bhalu",
+  "text": "Tinku's tabla has gone silent! Can you wake it up with the right sounds?"
+ },
+ "beat_forest_1": {
+  "who": "bhalu",
+  "text": "Koyal has lost her song. Listen closely and help her find it!"
+ },
+ "beat_forest_2": {
+  "who": "bhalu",
+  "text": "Gajju's drum is fast asleep. Every right sound gives it a beat!"
+ },
+ "beat_forest_3": {
+  "who": "bhalu",
+  "text": "Welcome to the Echo Cave. Every sound bounces back... listen carefully!"
+ },
+ "beat_forest_4": {
+  "who": "bhalu",
+  "text": "The fireflies dance to the rhythm. Let's give them one!"
+ },
+ "beat_forest_5": {
+  "who": "bhalu",
+  "text": "To cross the Rhyme River, step only on the stones that rhyme!"
+ },
+ "beat_forest_6": {
+  "who": "bhalu",
+  "text": "The Beat Bridge only holds when the sounds are right. Let's build it!"
+ },
+ "beat_forest_7": {
+  "who": "bhalu",
+  "text": "The bamboo is whispering sounds. Can you hear the words inside?"
+ },
+ "beat_forest_8": {
+  "who": "bhalu",
+  "text": "It's the midnight rehearsal! The band needs your sharpest ears."
+ },
+ "beat_forest_9": {
+  "who": "bhalu",
+  "text": "Tonight is the Grand Jungle Concert! Lead the whole band, Maestro Explorer!"
+ },
+ "beat_valley_0": {
+  "who": "arya",
+  "text": "The first lantern of the festival is dark. Hit it with the right sound!"
+ },
+ "beat_valley_1": {
+  "who": "arya",
+  "text": "Garud's wind is blowing the lanterns around. Aim carefully!"
+ },
+ "beat_valley_2": {
+  "who": "arya",
+  "text": "These twin letters look alike. Listen, then choose!"
+ },
+ "beat_valley_3": {
+  "who": "arya",
+  "text": "The river lanterns are floating away. Light them before they go!"
+ },
+ "beat_valley_4": {
+  "who": "arya",
+  "text": "The festival gate opens only for the right letters."
+ },
+ "beat_valley_5": {
+  "who": "arya",
+  "text": "Bolt crossed all the wires! Sounds and letters are mixed up."
+ },
+ "beat_valley_6": {
+  "who": "arya",
+  "text": "The mountain echoes every sound. Which letters make it?"
+ },
+ "beat_valley_7": {
+  "who": "arya",
+  "text": "Time for the sky lantern parade! Let's light the whole sky!"
+ },
+ "beat_valley_8": {
+  "who": "arya",
+  "text": "Somewhere up there is the golden lantern. Find it with your best aim!"
+ },
+ "beat_valley_9": {
+  "who": "arya",
+  "text": "The Festival of Lights begins! Light every lantern in the valley!"
+ },
+ "beat_ocean_0": {
+  "who": "kachhua",
+  "text": "Bubbles and barnacles! The Bubble Rocket needs word fuel!"
+ },
+ "beat_ocean_1": {
+  "who": "kachhua",
+  "text": "Let's dive into the sunlight reef. Blend the sounds to steer!"
+ },
+ "beat_ocean_2": {
+  "who": "kachhua",
+  "text": "Coral's bridge is broken. Read the pieces to fix it!"
+ },
+ "beat_ocean_3": {
+  "who": "kachhua",
+  "text": "Strange signals from the twilight zone! Can you read them?"
+ },
+ "beat_ocean_4": {
+  "who": "kachhua",
+  "text": "A giant clam is guarding a pearl. Read the word to open it!"
+ },
+ "beat_ocean_5": {
+  "who": "kachhua",
+  "text": "The jellyfish light up when you read their names!"
+ },
+ "beat_ocean_6": {
+  "who": "kachhua",
+  "text": "Ping! The sonar shows words in the deep. Read them fast!"
+ },
+ "beat_ocean_7": {
+  "who": "kachhua",
+  "text": "We found a sunken ship! Its words are covered in sand."
+ },
+ "beat_ocean_8": {
+  "who": "kachhua",
+  "text": "Down in the alien trench, creatures have the strangest names!"
+ },
+ "beat_ocean_9": {
+  "who": "kachhua",
+  "text": "The Pearl of Sounds is right below us! One last dive, Explorer!"
+ },
+ "beat_village_0": {
+  "who": "ullu",
+  "text": "A mystery! Someone mixed up every word on the menu!"
+ },
+ "beat_village_1": {
+  "who": "ullu",
+  "text": "Who switched the school sign? Find the right words to catch them!"
+ },
+ "beat_village_2": {
+  "who": "ullu",
+  "text": "The bakery has a strange new sign. Let's investigate!"
+ },
+ "beat_village_3": {
+  "who": "ullu",
+  "text": "Jugnu's night bazaar is dark. The right words will light it!"
+ },
+ "beat_village_4": {
+  "who": "ullu",
+  "text": "The mangoes are missing! Follow the word clues!"
+ },
+ "beat_village_5": {
+  "who": "ullu",
+  "text": "The post office letters are all jumbled. Sort them out, detective!"
+ },
+ "beat_village_6": {
+  "who": "ullu",
+  "text": "The library has a riddle hidden in its words."
+ },
+ "beat_village_7": {
+  "who": "ullu",
+  "text": "Someone scribbled on the market map. Which words are real?"
+ },
+ "beat_village_8": {
+  "who": "ullu",
+  "text": "The signboards are talking nonsense! Let's fix them!"
+ },
+ "beat_village_9": {
+  "who": "ullu",
+  "text": "This is the biggest mystery in Word Village. Are you ready, detective?"
+ },
+ "beat_treasure_0": {
+  "who": "madhu",
+  "text": "Our honeycomb is empty! Spell the words to fill it with honey."
+ },
+ "beat_treasure_1": {
+  "who": "madhu",
+  "text": "The baby bees are waiting to hatch. Every word helps one!"
+ },
+ "beat_treasure_2": {
+  "who": "madhu",
+  "text": "Captain Kalam found his first rune! Spell it to open the chest."
+ },
+ "beat_treasure_3": {
+  "who": "madhu",
+  "text": "The pirate map is missing its words. Let's write them back!"
+ },
+ "beat_treasure_4": {
+  "who": "madhu",
+  "text": "The queen needs honey words. Build them letter by letter!"
+ },
+ "beat_treasure_5": {
+  "who": "madhu",
+  "text": "This chest is locked with a spelling lock!"
+ },
+ "beat_treasure_6": {
+  "who": "madhu",
+  "text": "The waves keep washing away the words on Spelling Beach!"
+ },
+ "beat_treasure_7": {
+  "who": "madhu",
+  "text": "Captain Kalam wrote a poem, but the parrot ate some letters!"
+ },
+ "beat_treasure_8": {
+  "who": "madhu",
+  "text": "The treasure cave is full of word puzzles. Let's explore!"
+ },
+ "beat_treasure_9": {
+  "who": "madhu",
+  "text": "The Golden Hive! Fill every cell, and the whole island will glow!"
+ },
+ "beat_castle_0": {
+  "who": "pari",
+  "text": "Kitabu forgot how his story begins! Can you read it with him?"
+ },
+ "beat_castle_1": {
+  "who": "pari",
+  "text": "The middle of this story has gone missing. Let's find it!"
+ },
+ "beat_castle_2": {
+  "who": "pari",
+  "text": "This ending ran away! Read carefully to bring it back."
+ },
+ "beat_castle_3": {
+  "who": "pari",
+  "text": "We found a dragon's diary! What happened inside?"
+ },
+ "beat_castle_4": {
+  "who": "pari",
+  "text": "I have a riddle hidden in a story. Can you solve it?"
+ },
+ "beat_castle_5": {
+  "who": "pari",
+  "text": "The tower library is full of sleeping stories. Let's wake them!"
+ },
+ "beat_castle_6": {
+  "who": "pari",
+  "text": "The portraits are telling stories. Listen to what they say!"
+ },
+ "beat_castle_7": {
+  "who": "pari",
+  "text": "The secret staircase opens only for careful readers."
+ },
+ "beat_castle_8": {
+  "who": "pari",
+  "text": "It's the midnight story hour. Every book is whispering!"
+ },
+ "beat_castle_9": {
+  "who": "pari",
+  "text": "The Great Story Restore! Bring back every ending in the castle!"
+ },
+ "beat_observatory_0": {
+  "who": "milo",
+  "text": "Let's map the stars of sounds!"
+ },
+ "beat_observatory_1": {
+  "who": "milo",
+  "text": "Now the stars of letters!"
+ },
+ "beat_observatory_2": {
+  "who": "milo",
+  "text": "Can you connect the word stars?"
+ },
+ "beat_observatory_3": {
+  "who": "milo",
+  "text": "The spelling stars are twinkling!"
+ },
+ "beat_observatory_4": {
+  "who": "milo",
+  "text": "The story stars are waiting!"
+ },
+ "beat_observatory_5": {
+  "who": "milo",
+  "text": "The Star Bridge gate is just ahead. One more star map!"
+ },
+ "how_soundOrchestra": {
+  "who": "milo",
+  "text": "Listen to the band, then pick the matching sound!"
+ },
+ "how_letterArcher": {
+  "who": "milo",
+  "text": "Hear the sound, then hit the matching letter!"
+ },
+ "how_wordRocket": {
+  "who": "milo",
+  "text": "Blend the sounds to power up the rocket!"
+ },
+ "how_wordDetective": {
+  "who": "milo",
+  "text": "Listen to the word, then find it among the look-alikes!"
+ },
+ "how_spellingHive": {
+  "who": "milo",
+  "text": "Hear the word, then build it with the honey tiles!"
+ },
+ "how_storyQuest": {
+  "who": "milo",
+  "text": "Read the little story, then answer the question!"
+ },
+ "how_starObservatory": {
+  "who": "milo",
+  "text": "Every star needs a different skill. Let's use them all!"
+ }
+}

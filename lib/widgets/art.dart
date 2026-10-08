@@ -11,7 +11,9 @@ class CreaturePainter extends CustomPainter {
   final double wag; // -1..1
   final bool blink;
   final bool happy;
-  CreaturePainter(this.type, {this.wag = 0, this.blink = false, this.happy = true});
+  final double mouth; // 0 closed … 1 wide open (lip-sync)
+  final String mood; // happy | sad | surprised | thinking
+  CreaturePainter(this.type, {this.wag = 0, this.blink = false, this.happy = true, this.mouth = 0, this.mood = 'happy'});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -171,13 +173,40 @@ class CreaturePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = s * .014
       ..strokeCap = StrokeCap.round;
-    final mouth = Path()
-      ..moveTo(s * .5, s * .545)
-      ..lineTo(s * .5, s * .575)
-      ..moveTo(s * .43, happy ? s * .585 : s * .595)
-      ..quadraticBezierTo(s * .5, happy ? s * .64 : s * .58, s * .57, happy ? s * .585 : s * .595);
-    canvas.drawPath(mouth, mp);
-    if (happy) {
+    final sad = mood == 'sad' || !happy;
+    if (mouth > .06 || mood == 'surprised') {
+      // open mouth for speaking / surprise
+      final open = mood == 'surprised' ? max(.6, mouth) : mouth;
+      final r = Rect.fromCenter(center: Offset(s * .5, s * .6), width: s * (.09 + .05 * open), height: s * (.03 + .08 * open));
+      fill.color = const Color(0xFF6B1F2A);
+      canvas.drawOval(r, fill);
+      fill.color = const Color(0xFFFF8FA3);
+      canvas.drawOval(Rect.fromCenter(center: Offset(s * .5, r.bottom - r.height * .25), width: r.width * .6, height: r.height * .35), fill);
+    } else {
+      final mpath = Path()
+        ..moveTo(s * .5, s * .545)
+        ..lineTo(s * .5, s * .575)
+        ..moveTo(s * .43, sad ? s * .61 : s * .585)
+        ..quadraticBezierTo(s * .5, sad ? s * .57 : s * .64, s * .57, sad ? s * .61 : s * .585);
+      canvas.drawPath(mpath, mp);
+    }
+    if (mood == 'sad' || mood == 'thinking' || mood == 'surprised') {
+      // eyebrows show the feeling
+      final b = Paint()
+        ..color = const Color(0xFF20263D)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = s * .016
+        ..strokeCap = StrokeCap.round;
+      final up = mood == 'surprised' ? -s * .03 : 0.0;
+      if (mood == 'sad') {
+        canvas.drawLine(Offset(s * .29, s * .36), Offset(s * .39, s * .33), b);
+        canvas.drawLine(Offset(s * .71, s * .36), Offset(s * .61, s * .33), b);
+      } else {
+        canvas.drawLine(Offset(s * .29, s * .35 + up), Offset(s * .4, s * .34 + up), b);
+        canvas.drawLine(Offset(s * .6, s * .34 + up + (mood == 'thinking' ? -s * .02 : 0)), Offset(s * .71, s * .35 + up), b);
+      }
+    }
+    if (happy && mood != 'sad') {
       fill.color = const Color(0x55FF6FA5);
       canvas.drawCircle(Offset(s * .25, s * .55), s * .04, fill);
       canvas.drawCircle(Offset(s * .75, s * .55), s * .04, fill);
@@ -186,7 +215,7 @@ class CreaturePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CreaturePainter o) => o.wag != wag || o.blink != blink || o.type != type || o.happy != happy;
+  bool shouldRepaint(CreaturePainter o) => o.wag != wag || o.blink != blink || o.type != type || o.happy != happy || o.mouth != mouth || o.mood != mood;
 }
 
 class _Pal {

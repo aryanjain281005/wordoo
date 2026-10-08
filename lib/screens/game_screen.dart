@@ -15,6 +15,9 @@ import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/reward_modal.dart';
+import '../story/beats.dart';
+import '../story/puppets.dart';
+import '../story/story_lines.dart';
 
 Scene sceneFor(Skill s) => switch (s) {
       Skill.phonological => Scene.forest,
@@ -49,7 +52,7 @@ class _GameScreenState extends State<GameScreen> {
   late final Map<Skill, SkillModel> devModels = {
     for (final s in quest.skills.toSet()) s: SkillModel(theta: (widget.devStep ?? 1) + 1.27, calibrationLeft: 0),
   };
-  SkillModel model(Skill s) => dev ? devModels[s]! : model(s);
+  SkillModel model(Skill s) => dev ? devModels[s]! : st.models[s]!;
   late final Map<Skill, int> startSteps = {for (final s in quest.skills.toSet()) s: model(s).step};
   final List<ItemResult> results = [];
   Item? item;
@@ -70,16 +73,54 @@ class _GameScreenState extends State<GameScreen> {
     demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).make(s0, (model(s0).step - 1).clamp(1, 10));
     msg = Str.t(pack.code, 'tryDemo');
     startedAt = DateTime.now();
+    beatId = beatLineFor(quest, st.campaign);
+    guardian = islandGuardian[quest.island]!;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _tellBeat());
+  }
+
+  late final String beatId;
+  late final String guardian;
+
+  Future<void> _tellBeat() async {
+    final beat = StoryLines.instance[beatId];
+    if (beat == null || !mounted) return;
+    await AudioManager.instance.voice(beatId, beat.text, character: beat.who);
+    final how = 'how_${quest.game.name}';
+    final h = StoryLines.instance[how];
+    if (h != null && mounted && phase == _Phase.intro) await AudioManager.instance.voice(how, h.text, character: 'milo');
+  }
+
+  Widget _beatCard() {
+    final beat = StoryLines.instance[beatId];
+    if (beat == null) return const SizedBox.shrink();
+    final who = storyCast[beat.who];
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.fromLTRB(8, 8, 14, 8),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: .92), borderRadius: BorderRadius.circular(24)),
+      child: Row(children: [
+        SizedBox(width: 84, height: 84, child: Puppet(id: guardian, size: 84, companionType: st.avatar.companion)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (who != null) Text(who.name, style: ts(15, color: who.color, w: FontWeight.w700)),
+            Text(beat.text, style: ts(17, color: C.ink)),
+          ]),
+        ),
+      ]),
+    );
   }
 
   @override
   void dispose() {
     Speaker.instance.stop();
+    AudioManager.instance.stopVoice();
     super.dispose();
   }
 
   void _start() {
     Speaker.instance.stop();
+    AudioManager.instance.stopVoice();
     setState(() {
       phase = _Phase.play;
       msg = Str.t(pack.code, 'yourTurn');
@@ -234,6 +275,7 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 4),
                   Text(meta.tagline, style: ts(20, color: Colors.white, w: FontWeight.w600)),
                   const SizedBox(height: 12),
+                  _beatCard(),
                   Container(
                     height: 400,
                     decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white54, width: 2)),

@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../story/play_scene.dart';
+import 'journal.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
@@ -286,6 +288,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
         const Spacer(),
         StarChip(st.stars),
         const SizedBox(width: 8),
+        RoundIconButton(icon: Icons.menu_book_rounded, label: 'Explorer’s Journal', size: 50, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JournalScreen()))),
+        const SizedBox(width: 8),
         RoundIconButton(icon: Icons.backpack_rounded, label: 'My treasures', size: 50, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen()))),
         const SizedBox(width: 8),
         RoundIconButton(icon: Icons.settings_rounded, label: 'Grown-up area', size: 50, onTap: () async {
@@ -310,7 +314,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
             Text('All seven islands played — Gumsum is waiting.', style: ts(13, color: Colors.white70, w: FontWeight.w600)),
           ]),
         ),
-        BigButton(label: 'Let’s Go!', style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => st.go(AppScreen.intro)),
+        BigButton(label: 'Let’s Go!', style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => playScene(context, 'star_bridge').then((_) => st.go(AppScreen.intro))),
       ]);
     } else {
       content = Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [

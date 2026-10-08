@@ -6,6 +6,7 @@ import '../data/skills.dart';
 import '../engine/campaign.dart';
 import '../models/models.dart';
 import '../widgets/common.dart';
+import '../story/cutscene.dart';
 import 'game_screen.dart';
 
 /// Developer-only test bench (opened by long-pressing the Grown-up Dashboard title).
@@ -64,9 +65,15 @@ class _DevPanelState extends State<DevPanel> {
           ),
         ),
         const SizedBox(height: 16),
+        Text('Story scenes (does not mark them as seen)', style: ts(16, color: Colors.white, w: FontWeight.w600)),
+        Wrap(spacing: 8, children: [
+          for (final id in const ['prologue', 'star_bridge', 'season_opener'])
+            ActionChip(label: Text(id), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CutsceneScreen(sceneId: id, canSkip: true)))),
+        ]),
+        const SizedBox(height: 16),
         ...widget.extra,
         const SizedBox(height: 16),
-        Text('Assets: sound effects ${sfxCount == 5 ? 'OK' : 'missing ($sfxCount/5)'} · voice files: ${AudioManager.instance.hasVoice('milo_ready') ? 'generated' : 'placeholder TTS'}', style: ts(13, color: Colors.white70, w: FontWeight.w500)),
+        Text('Assets: sound effects ${sfxCount == 5 ? 'OK' : 'missing ($sfxCount/5)'} · voice files: ${AudioManager.instance.hasVoice('g_ready') ? 'generated' : 'placeholder TTS'}', style: ts(13, color: Colors.white70, w: FontWeight.w500)),
         const SizedBox(height: 8),
         BigButton(label: 'Test sounds', style: BtnStyle.soft, height: 48, fontSize: 15, onTap: () async {
           for (final id in ['ui_tap', 'correct_1', 'power_up', 'star_1', 'reward_fanfare']) {

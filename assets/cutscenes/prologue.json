@@ -1,0 +1,145 @@
+{
+ "title": "The Night the Words Went Quiet",
+ "shots": [
+  {
+   "bg": "aksharpur",
+   "camera": {
+    "zoom": [
+     1.15,
+     1.0
+    ],
+    "pan": [
+     0.04,
+     0
+    ]
+   },
+   "line": "pro_1",
+   "sfx": "sparkle",
+   "ms": 3500
+  },
+  {
+   "bg": "tree",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.12
+    ]
+   },
+   "cast": [
+    {
+     "id": "dadi",
+     "x": 0.5,
+     "size": 0.42,
+     "enter": "float"
+    }
+   ],
+   "line": "pro_2",
+   "ms": 3200
+  },
+  {
+   "bg": "night",
+   "camera": {
+    "zoom": [
+     1.05,
+     1.0
+    ]
+   },
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.7,
+     "size": 0.34,
+     "mood": "sad",
+     "enter": "right"
+    }
+   ],
+   "line": "pro_3",
+   "ms": 3000
+  },
+  {
+   "bg": "tree",
+   "fx": "greying",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.1
+    ]
+   },
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "size": 0.5,
+     "mood": "happy",
+     "enter": "pop"
+    }
+   ],
+   "line": "pro_4",
+   "sfx": "cloud_whoosh",
+   "ms": 3200
+  },
+  {
+   "bg": "tree_grey",
+   "fx": "grey",
+   "camera": {
+    "zoom": [
+     1.1,
+     1.0
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.42,
+     "mood": "surprised",
+     "enter": "left"
+    }
+   ],
+   "line": "pro_5",
+   "ms": 3000
+  },
+  {
+   "bg": "tree_grey",
+   "fx": "light",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.08
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.3,
+     "size": 0.36,
+     "mood": "happy",
+     "enter": "none"
+    }
+   ],
+   "line": "pro_6",
+   "sfx": "magic",
+   "ms": 3500
+  },
+  {
+   "bg": "aksharpur",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.05
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.36,
+     "enter": "pop"
+    }
+   ],
+   "line": "pro_7",
+   "sfx": "chapter_complete",
+   "ms": 3500
+  }
+ ]
+}

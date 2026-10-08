@@ -71,6 +71,13 @@ class AppState extends ChangeNotifier {
   List<SessionEntry> sessions = [];
   int cycleSessionStart = 0;
 
+  // story
+  Set<String> seenScenes = {};
+  double get gumsumLightness => ((campaign.season - 1) * .25).clamp(0.0, 1.0);
+  void markSeen(String id) {
+    if (seenScenes.add(id)) changed();
+  }
+
   // rewards
   int stars = 0;
   Set<String> badges = {};
@@ -161,6 +168,7 @@ class AppState extends ChangeNotifier {
         'cycleSessionStart': cycleSessionStart,
         'stars': stars,
         'badges': badges.toList(),
+        'seenScenes': seenScenes.toList(),
         'textSize': textSize,
         'extraSpacing': extraSpacing,
         'voiceOn': voiceOn,
@@ -204,6 +212,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = j['cycleSessionStart'] as int? ?? 0;
     stars = j['stars'] as int;
     badges = Set<String>.from(j['badges'] as List);
+    seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
     textSize = j['textSize'] as int;
     extraSpacing = j['extraSpacing'] as bool;
     voiceOn = j['voiceOn'] as bool;
@@ -253,6 +262,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = 0;
     stars = 0;
     badges = {};
+    seenScenes = {};
   }
 
   void saveParentSetup({required String name, required int age, required String grade, required String lang, required bool consent}) {

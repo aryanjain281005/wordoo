@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
+import '../story/play_scene.dart';
 import '../screening/ui/screening_screen.dart';
 import 'adventure.dart';
 import 'avatar_creator.dart';
@@ -29,7 +30,10 @@ class AppShell extends StatelessWidget {
       AppScreen.dashboard => const ParentDashboard(),
       AppScreen.weeklyReport => const WeeklyReportScreen(),
       AppScreen.nextAdventure => const NextAdventureScreen(),
-      AppScreen.loop => LoopScreen(onContinue: st.startNextCycle),
+      AppScreen.loop => Builder(builder: (ctx) => LoopScreen(onContinue: () {
+            st.startNextCycle();
+            playScene(ctx, 'season_opener');
+          })),
     };
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 450),

@@ -1,0 +1,66 @@
+{
+ "title": "A New Season",
+ "shots": [
+  {
+   "bg": "tree",
+   "camera": {
+    "zoom": [
+     1.15,
+     1.0
+    ]
+   },
+   "cast": [
+    {
+     "id": "dadi",
+     "x": 0.5,
+     "size": 0.42,
+     "enter": "float"
+    }
+   ],
+   "line": "so_1",
+   "sfx": "season_start",
+   "ms": 3200
+  },
+  {
+   "bg": "tree",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.06
+    ]
+   },
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "size": 0.46,
+     "mood": "happy",
+     "enter": "float"
+    }
+   ],
+   "line": "so_2",
+   "ms": 3200
+  },
+  {
+   "bg": "aksharpur",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.08
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.38,
+     "mood": "happy",
+     "enter": "pop"
+    }
+   ],
+   "line": "so_3",
+   "sfx": "island_restore",
+   "ms": 3200
+  }
+ ]
+}

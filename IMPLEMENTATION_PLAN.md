@@ -66,5 +66,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 ## Progress log
 - [x] Plan saved, decisions recorded
 - [x] Phase 0 — Groundwork (asset manifest + placeholders, Audio Manager, Kenney SFX, GameHost contract, Flame, dev panel)
-- [ ] Phase 1 — Story spine
+- [x] Phase 1 — Story spine (cutscene player + 3 scenes, puppet characters with lip-sync, 95 Kokoro voice lines, guardian story beat before every quest, Star Bridge, season opener, Explorer's Journal, dev-panel scene launchers)
 - [ ] Phase 2a — Spelling Hive

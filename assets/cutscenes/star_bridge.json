@@ -1,0 +1,72 @@
+{
+ "title": "The Star Bridge",
+ "shots": [
+  {
+   "bg": "night",
+   "camera": {
+    "zoom": [
+     1.1,
+     1.0
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.3,
+     "size": 0.36,
+     "mood": "surprised"
+    }
+   ],
+   "line": "sb_1",
+   "sfx": "sparkle",
+   "ms": 3000
+  },
+  {
+   "bg": "night",
+   "camera": {
+    "zoom": [
+     1.0,
+     1.06
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.25,
+     "size": 0.3,
+     "enter": "none"
+    },
+    {
+     "id": "gumsum",
+     "x": 0.7,
+     "size": 0.42,
+     "mood": "thinking",
+     "enter": "right"
+    }
+   ],
+   "line": "sb_2",
+   "sfx": "cloud_whoosh",
+   "ms": 3000
+  },
+  {
+   "bg": "night",
+   "camera": {
+    "zoom": [
+     1.06,
+     1.0
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.35,
+     "size": 0.38,
+     "mood": "happy",
+     "enter": "pop"
+    }
+   ],
+   "line": "sb_3",
+   "ms": 2800
+  }
+ ]
+}
