@@ -112,6 +112,9 @@ class AudioManager {
 
   bool hasVoice(String id) => ReadleAssets.instance.bundled('assets/vo/en/$id.ogg');
 
+  /// Length of a generated voice line (from its lip-sync envelope); null when only TTS is available.
+  Duration? voiceLength(String id) => hasVoice(id) && _envelopes[id] != null ? Duration(milliseconds: _envelopes[id]!.length * 50) : null;
+
   /// Speak a character line. Completes when the line has finished (approximately, for TTS).
   Future<void> voice(String id, String text, {String character = 'milo', String ttsLocale = 'en-IN'}) async {
     await stopVoice();

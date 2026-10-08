@@ -1,0 +1,386 @@
+{
+ "book_s_hat_0": {
+  "who": "dadi",
+  "text": "Milo lost his red hat in the park."
+ },
+ "book_s_hat_1": {
+  "who": "dadi",
+  "text": "Then it began to rain, so Milo felt cold."
+ },
+ "book_s_hat_2": {
+  "who": "dadi",
+  "text": "A kind duck found the hat and gave it back."
+ },
+ "bookq_s_hat_0": {
+  "who": "kitabu",
+  "text": "What did Milo lose?"
+ },
+ "bookq_s_hat_1": {
+  "who": "kitabu",
+  "text": "Why did Milo feel cold?"
+ },
+ "bookq_s_hat_2": {
+  "who": "kitabu",
+  "text": "Who found the hat?"
+ },
+ "book_s_seeds_0": {
+  "who": "dadi",
+  "text": "Tia planted seeds in a pot."
+ },
+ "book_s_seeds_1": {
+  "who": "dadi",
+  "text": "She gave them water every day."
+ },
+ "book_s_seeds_2": {
+  "who": "dadi",
+  "text": "After many days, a green plant came up."
+ },
+ "bookq_s_seeds_0": {
+  "who": "kitabu",
+  "text": "What did Tia plant?"
+ },
+ "bookq_s_seeds_1": {
+  "who": "kitabu",
+  "text": "Why did the plant grow?"
+ },
+ "bookq_s_seeds_2": {
+  "who": "kitabu",
+  "text": "What came up after many days?"
+ },
+ "book_s_berries_0": {
+  "who": "dadi",
+  "text": "Milo was hungry."
+ },
+ "book_s_berries_1": {
+  "who": "dadi",
+  "text": "The berries were too high to reach."
+ },
+ "book_s_berries_2": {
+  "who": "dadi",
+  "text": "He stacked three logs and climbed up to eat."
+ },
+ "bookq_s_berries_0": {
+  "who": "kitabu",
+  "text": "Why did Milo stack the logs?"
+ },
+ "bookq_s_berries_1": {
+  "who": "kitabu",
+  "text": "What did Milo do first?"
+ },
+ "bookq_s_berries_2": {
+  "who": "kitabu",
+  "text": "What kind of fox is Milo?"
+ },
+ "book_s_kite_0": {
+  "who": "dadi",
+  "text": "Leo had a red kite."
+ },
+ "book_s_kite_1": {
+  "who": "dadi",
+  "text": "The wind was strong, so the kite flew high."
+ },
+ "book_s_kite_2": {
+  "who": "dadi",
+  "text": "Then the string broke, and the kite floated away."
+ },
+ "bookq_s_kite_0": {
+  "who": "kitabu",
+  "text": "Why did the kite fly high?"
+ },
+ "bookq_s_kite_1": {
+  "who": "kitabu",
+  "text": "What happened last?"
+ },
+ "bookq_s_kite_2": {
+  "who": "kitabu",
+  "text": "How did Leo feel at the end?"
+ },
+ "book_s_puppy_0": {
+  "who": "dadi",
+  "text": "A little puppy got lost in the rain."
+ },
+ "book_s_puppy_1": {
+  "who": "dadi",
+  "text": "A girl named Anu found him shivering under a bench."
+ },
+ "book_s_puppy_2": {
+  "who": "dadi",
+  "text": "She wrapped him in her scarf and took him home."
+ },
+ "bookq_s_puppy_0": {
+  "who": "kitabu",
+  "text": "Where did Anu find the puppy?"
+ },
+ "bookq_s_puppy_1": {
+  "who": "kitabu",
+  "text": "Why was the puppy shivering?"
+ },
+ "bookq_s_puppy_2": {
+  "who": "kitabu",
+  "text": "What kind of girl is Anu?"
+ },
+ "book_s_rocket_0": {
+  "who": "dadi",
+  "text": "Kabir built a rocket from an old box."
+ },
+ "book_s_rocket_1": {
+  "who": "dadi",
+  "text": "He painted it silver and drew stars on the side."
+ },
+ "book_s_rocket_2": {
+  "who": "dadi",
+  "text": "When his little sister saw it, she clapped and asked for a ride."
+ },
+ "book_s_rocket_3": {
+  "who": "dadi",
+  "text": "Kabir smiled and made room for two."
+ },
+ "bookq_s_rocket_0": {
+  "who": "kitabu",
+  "text": "What did Kabir use to build the rocket?"
+ },
+ "bookq_s_rocket_1": {
+  "who": "kitabu",
+  "text": "What did he do after painting it?"
+ },
+ "bookq_s_rocket_2": {
+  "who": "kitabu",
+  "text": "Why did Kabir make room for two?"
+ },
+ "bookq_s_rocket_3": {
+  "who": "kitabu",
+  "text": "What will they probably do next?"
+ },
+ "book_s_market_0": {
+  "who": "dadi",
+  "text": "Every Sunday, Meera goes to the market with her grandfather."
+ },
+ "book_s_market_1": {
+  "who": "dadi",
+  "text": "Today he forgot his bag, so Meera carried the mangoes in her skirt."
+ },
+ "book_s_market_2": {
+  "who": "dadi",
+  "text": "Grandfather laughed and called her his clever helper."
+ },
+ "bookq_s_market_0": {
+  "who": "kitabu",
+  "text": "When does Meera go to the market?"
+ },
+ "bookq_s_market_1": {
+  "who": "kitabu",
+  "text": "Why did Meera carry mangoes in her skirt?"
+ },
+ "bookq_s_market_2": {
+  "who": "kitabu",
+  "text": "How did Grandfather feel about Meera?"
+ },
+ "book_s_turtle_0": {
+  "who": "dadi",
+  "text": "Tortu the turtle wanted to see the sunrise from the top of the hill."
+ },
+ "book_s_turtle_1": {
+  "who": "dadi",
+  "text": "He started walking at midnight because he knew he was slow."
+ },
+ "book_s_turtle_2": {
+  "who": "dadi",
+  "text": "When the sun came up, Tortu was sitting at the top, smiling."
+ },
+ "bookq_s_turtle_0": {
+  "who": "kitabu",
+  "text": "Why did Tortu start walking at midnight?"
+ },
+ "bookq_s_turtle_1": {
+  "who": "kitabu",
+  "text": "Where was Tortu when the sun came up?"
+ },
+ "bookq_s_turtle_2": {
+  "who": "kitabu",
+  "text": "What does this story teach?"
+ },
+ "book_s_library_0": {
+  "who": "dadi",
+  "text": "Zoya loved the library because it was calm."
+ },
+ "book_s_library_1": {
+  "who": "dadi",
+  "text": "One day a bird flew in through the window and began to sing."
+ },
+ "book_s_library_2": {
+  "who": "dadi",
+  "text": "Everyone looked up from their books."
+ },
+ "book_s_library_3": {
+  "who": "dadi",
+  "text": "The librarian opened the window wide, and the bird flew back to its tree."
+ },
+ "bookq_s_library_0": {
+  "who": "kitabu",
+  "text": "Why did Zoya love the library?"
+ },
+ "bookq_s_library_1": {
+  "who": "kitabu",
+  "text": "What happened after the bird began to sing?"
+ },
+ "bookq_s_library_2": {
+  "who": "kitabu",
+  "text": "Why did the librarian open the window wide?"
+ },
+ "book_s_rain_0": {
+  "who": "dadi",
+  "text": "The farmers in the village waited for rain for many weeks."
+ },
+ "book_s_rain_1": {
+  "who": "dadi",
+  "text": "The fields were dry and the cows were thirsty."
+ },
+ "book_s_rain_2": {
+  "who": "dadi",
+  "text": "One evening dark clouds rolled in, and big drops began to fall."
+ },
+ "book_s_rain_3": {
+  "who": "dadi",
+  "text": "The children ran outside and danced in the puddles."
+ },
+ "bookq_s_rain_0": {
+  "who": "kitabu",
+  "text": "Why were the farmers waiting?"
+ },
+ "bookq_s_rain_1": {
+  "who": "kitabu",
+  "text": "What happened just before the drops began to fall?"
+ },
+ "bookq_s_rain_2": {
+  "who": "kitabu",
+  "text": "How did the children feel when it rained?"
+ },
+ "bookq_s_rain_3": {
+  "who": "kitabu",
+  "text": "What will the fields look like in a few weeks?"
+ },
+ "book_s_robot_0": {
+  "who": "dadi",
+  "text": "Bolt the robot could carry heavy boxes and fix broken clocks, but he had never had a friend."
+ },
+ "book_s_robot_1": {
+  "who": "dadi",
+  "text": "One day a little girl dropped her ice cream and started to cry."
+ },
+ "book_s_robot_2": {
+  "who": "dadi",
+  "text": "Bolt could not fix ice cream, so he simply sat beside her and offered his hand."
+ },
+ "book_s_robot_3": {
+  "who": "dadi",
+  "text": "She stopped crying and smiled."
+ },
+ "bookq_s_robot_0": {
+  "who": "kitabu",
+  "text": "What could Bolt do well?"
+ },
+ "bookq_s_robot_1": {
+  "who": "kitabu",
+  "text": "Why did the girl start to cry?"
+ },
+ "bookq_s_robot_2": {
+  "who": "kitabu",
+  "text": "What did Bolt learn?"
+ },
+ "book_s_island_0": {
+  "who": "dadi",
+  "text": "While walking on the beach, Arjun found a glass bottle with a rolled-up note inside."
+ },
+ "book_s_island_1": {
+  "who": "dadi",
+  "text": "The note said, “Whoever finds this, please write back."
+ },
+ "book_s_island_2": {
+  "who": "dadi",
+  "text": "I live on the island across the sea.”"
+ },
+ "book_s_island_3": {
+  "who": "dadi",
+  "text": "Arjun ran home, found his best pencil, and began writing a long letter about his town."
+ },
+ "bookq_s_island_0": {
+  "who": "kitabu",
+  "text": "Where did Arjun find the bottle?"
+ },
+ "bookq_s_island_1": {
+  "who": "kitabu",
+  "text": "Why did Arjun run home?"
+ },
+ "bookq_s_island_2": {
+  "who": "kitabu",
+  "text": "What is the person who wrote the note probably feeling?"
+ },
+ "bookq_s_island_3": {
+  "who": "kitabu",
+  "text": "What will Arjun most likely do with his letter?"
+ },
+ "book_s_festival_0": {
+  "who": "dadi",
+  "text": "The night before the lantern festival, a storm tore Arya’s lantern into pieces."
+ },
+ "book_s_festival_1": {
+  "who": "dadi",
+  "text": "Instead of crying, she collected the torn paper and made five tiny lanterns."
+ },
+ "book_s_festival_2": {
+  "who": "dadi",
+  "text": "At the festival, she gave them to children who had none."
+ },
+ "book_s_festival_3": {
+  "who": "dadi",
+  "text": "The sky that night had more lights than ever before."
+ },
+ "bookq_s_festival_0": {
+  "who": "kitabu",
+  "text": "What happened to Arya’s lantern?"
+ },
+ "bookq_s_festival_1": {
+  "who": "kitabu",
+  "text": "What did Arya do with the torn paper?"
+ },
+ "bookq_s_festival_2": {
+  "who": "kitabu",
+  "text": "Why were there more lights than ever before?"
+ },
+ "bookq_s_festival_3": {
+  "who": "kitabu",
+  "text": "Which word describes Arya best?"
+ },
+ "book_s_cloud_0": {
+  "who": "dadi",
+  "text": "Far above the islands lived a small grey cloud named Gumsum."
+ },
+ "book_s_cloud_1": {
+  "who": "dadi",
+  "text": "Every evening he watched families reading together, but no one ever looked up at him."
+ },
+ "book_s_cloud_2": {
+  "who": "dadi",
+  "text": "One night a girl noticed him, smiled, and read her favourite book out loud to the sky."
+ },
+ "book_s_cloud_3": {
+  "who": "dadi",
+  "text": "Gumsum listened so carefully that he forgot to rain."
+ },
+ "bookq_s_cloud_0": {
+  "who": "kitabu",
+  "text": "What did Gumsum watch every evening?"
+ },
+ "bookq_s_cloud_1": {
+  "who": "kitabu",
+  "text": "Why did Gumsum forget to rain?"
+ },
+ "bookq_s_cloud_2": {
+  "who": "kitabu",
+  "text": "How had Gumsum felt before that night?"
+ },
+ "bookq_s_cloud_3": {
+  "who": "kitabu",
+  "text": "What might Gumsum do the next evening?"
+ }
+}

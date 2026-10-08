@@ -68,4 +68,6 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Phase 0 — Groundwork (asset manifest + placeholders, Audio Manager, Kenney SFX, GameHost contract, Flame, dev panel)
 - [x] Phase 1 — Story spine (cutscene player + 3 scenes, puppet characters with lip-sync, 95 Kokoro voice lines, guardian story beat before every quest, Star Bridge, season opener, Explorer's Journal, dev-panel scene launchers)
 - [x] Phase 2a — Spelling Hive (drag or tap bee tiles into a honeycomb that wraps for long words, honey fill + baby-bee hatch, persistent hive growth, sound-aware hints that keep correct cells, scaffold, self-playing demo, tests)
-- [ ] Phase 2b — Story Quest
+- [x] Art & music batch 1 integrated (tool/prepare_art.py: background removal + front-view extraction; music → looping OGG)
+- [x] Phase 2b — Story Quest (comic-book panels per sentence, Dadi narration for all 14 authored stories with word highlighting, tap-a-word, Kitabu asks, look-back help that reopens the answer panel, emotion faces, Story Library to re-read, castle restoration)
+- [ ] Phase 2c — Sound Orchestra

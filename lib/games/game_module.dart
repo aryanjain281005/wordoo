@@ -5,6 +5,7 @@ import '../widgets/item_views.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import 'spelling_hive/spelling_hive.dart';
+import 'story_quest/story_quest.dart';
 
 /// Everything a game needs to show ONE item. The shared GameHost (game_screen.dart) owns the quest,
 /// the learner model, rewards and story; a game module only turns an item into play.
@@ -23,14 +24,15 @@ typedef GameItemBuilder = Widget Function(BuildContext context, GameCtx ctx, Key
 /// Registry: which widget plays which game. Games without a dedicated module use the classic item view.
 class GameModules {
   static final Map<GameId, GameItemBuilder> _registry = {
-    GameId.spellingHive: (c, ctx, key) => SpellingHiveItem(key: key, ctx: ctx, hiveBees: _hiveBees(c)),
+    GameId.spellingHive: (c, ctx, key) => SpellingHiveItem(key: key, ctx: ctx, hiveBees: _state(c)?.hiveBees ?? 0),
+    GameId.storyQuest: (c, ctx, key) => StoryQuestItem(key: key, ctx: ctx, libraryBooks: _state(c)?.libraryBooks.length ?? 0),
   };
 
-  static int _hiveBees(BuildContext c) {
+  static AppState? _state(BuildContext c) {
     try {
-      return Provider.of<AppState>(c, listen: false).hiveBees;
+      return Provider.of<AppState>(c, listen: false);
     } catch (_) {
-      return 0; // used outside the app (tests, previews)
+      return null; // used outside the app (tests, previews)
     }
   }
 

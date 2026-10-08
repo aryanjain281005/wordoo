@@ -9,6 +9,7 @@ import '../story/puppets.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import 'collection.dart';
+import 'library.dart';
 
 /// Explorer's Journal: the story so far, island by island, and story scenes to watch again.
 class JournalScreen extends StatelessWidget {
@@ -68,6 +69,8 @@ class JournalScreen extends StatelessWidget {
                           Text('Story scenes you watch will appear here.', style: ts(16, color: Colors.white70, w: FontWeight.w500)),
                       ]),
                       const SizedBox(height: 16),
+                      BigButton(label: 'Story Library (${st.libraryBooks.length})', icon: Icons.local_library_rounded, style: BtnStyle.primary, height: 52, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LibraryScreen()))),
+                      const SizedBox(height: 10),
                       BigButton(label: 'My treasures', icon: Icons.backpack_rounded, style: BtnStyle.go, height: 52, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen()))),
                     ]),
                   ),

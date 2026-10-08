@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate character voice lines for Readle (English v1).
 
-Reads  assets/story/lines_en.json  (id -> who, text)  and  tool/voice_cast.json (who -> voice settings),
+Reads  assets/story/lines_en.json + books_en.json  (id -> who, text)  and  tool/voice_cast.json (who -> voice settings),
 speaks every line with the free open-source Kokoro model (Apache 2.0) and writes
   assets/vo/en/<id>.ogg        small Ogg Opus files bundled in the app (works offline)
   assets/vo/en/envelopes.json  loudness every 50 ms, used for lip-sync
@@ -19,6 +19,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.expanduser("~/readle-tools")
 OUT = os.path.join(ROOT, "assets/vo/en")
 lines = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
+books = os.path.join(ROOT, "assets/story/books_en.json")  # story narration (tool/export_books.dart)
+if os.path.exists(books):
+    lines.update(json.load(open(books)))
 cast = json.load(open(os.path.join(ROOT, "tool/voice_cast.json")))
 hash_path = os.path.join(OUT, ".hashes.json")
 hashes = json.load(open(hash_path)) if os.path.exists(hash_path) else {}

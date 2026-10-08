@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
+import '../story/book_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
@@ -80,6 +81,7 @@ class AppState extends ChangeNotifier {
 
   // rewards
   int stars = 0;
+  Set<String> libraryBooks = {}; // Story Quest: authored stories understood → re-readable Library + restored castle towers
   int hiveBees = 0; // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
@@ -169,6 +171,7 @@ class AppState extends ChangeNotifier {
         'cycleSessionStart': cycleSessionStart,
         'stars': stars,
         'hiveBees': hiveBees,
+        'libraryBooks': libraryBooks.toList(),
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
         'textSize': textSize,
@@ -214,6 +217,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = j['cycleSessionStart'] as int? ?? 0;
     stars = j['stars'] as int;
     hiveBees = j['hiveBees'] as int? ?? 0;
+    libraryBooks = Set<String>.from(j['libraryBooks'] as List? ?? const []);
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
     textSize = j['textSize'] as int;
@@ -265,6 +269,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = 0;
     stars = 0;
     hiveBees = 0;
+    libraryBooks = {};
     badges = {};
     seenScenes = {};
   }
@@ -475,6 +480,10 @@ class AppState extends ChangeNotifier {
     final tag = r.tags.isEmpty ? null : r.tags.first;
     m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
     if (item.skill == Skill.spelling && r.correct) hiveBees++;
+    if (item.skill == Skill.comprehension && r.correct) {
+      final id = storyIdOfItem(item.id);
+      if (isAuthoredStory(id)) libraryBooks.add(id);
+    }
     for (final t in r.tags) {
       skills[item.skill]!.errors[t] = (skills[item.skill]!.errors[t] ?? 0) + 1;
     }
