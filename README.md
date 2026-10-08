@@ -288,7 +288,7 @@ Mistakes say *"Almost! Let's try again."* — never "Wrong" or "Game over".
 5. **Learning loop** screen, then week 2 starts with a fresh plan.
 
 **Demo controls** (grown-up dashboard): load Profile A (Aarav) / Profile B (Meera). There is no time-skipping and no retest override;
-jump to end of week (fills realistic practice), run screening now, simulate week-1 results (clearly labelled *simulated*), open screening / weekly reports, learning loop, reset.
+then open screening and check-in reports, the learning loop, or reset.
 
 ---
 
