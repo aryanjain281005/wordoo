@@ -439,7 +439,7 @@ class _SpellingHiveItemState extends State<SpellingHiveItem> with TickerProvider
               child: Transform.scale(
                 scale: t,
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  ArtImage('prop.hive.baby_bee', fallback: const Text('🐝', style: TextStyle(fontSize: 64))),
+                  SizedBox(width: 110, height: 120, child: ArtImage('prop.hive.baby_bee', fallback: const Center(child: Text('🐝', style: TextStyle(fontSize: 64))))),
                   if (!demo)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

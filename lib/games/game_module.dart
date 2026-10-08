@@ -4,6 +4,7 @@ import '../models/models.dart';
 import '../widgets/item_views.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
+import 'sound_orchestra/sound_orchestra.dart';
 import 'spelling_hive/spelling_hive.dart';
 import 'story_quest/story_quest.dart';
 
@@ -25,6 +26,7 @@ typedef GameItemBuilder = Widget Function(BuildContext context, GameCtx ctx, Key
 class GameModules {
   static final Map<GameId, GameItemBuilder> _registry = {
     GameId.spellingHive: (c, ctx, key) => SpellingHiveItem(key: key, ctx: ctx, hiveBees: _state(c)?.hiveBees ?? 0),
+    GameId.soundOrchestra: (c, ctx, key) => SoundOrchestraItem(key: key, ctx: ctx),
     GameId.storyQuest: (c, ctx, key) => StoryQuestItem(key: key, ctx: ctx, libraryBooks: _state(c)?.libraryBooks.length ?? 0),
   };
 

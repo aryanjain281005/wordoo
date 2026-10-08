@@ -166,7 +166,9 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
                 final t = Curves.easeInOut.transform(_cam.value);
                 final z = shot.zoomFrom + (shot.zoomTo - shot.zoomFrom) * t;
                 final p = shot.panFrom + (shot.panTo - shot.panFrom) * t;
-                return Transform.translate(offset: Offset(0, p * box.maxHeight), child: Transform.scale(scale: z, child: child));
+                // zoom in at least enough that panning never shows the edge of the picture
+                final zz = max(z, 1 + 2 * p.abs() + .02);
+                return Transform.translate(offset: Offset(0, p * box.maxHeight), child: Transform.scale(scale: zz, child: child));
               },
               child: AnimatedSwitcher(duration: const Duration(milliseconds: 700), child: KeyedSubtree(key: ValueKey('bg$i${shot.bg}'), child: _background(shot))),
             ),

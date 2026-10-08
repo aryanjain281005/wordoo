@@ -29,12 +29,16 @@ class AudioManager {
   String? _musicId;
   Map<String, List<int>> _envelopes = {}; // per voice line: loudness 0..9 every 50 ms
   Timer? _lip;
+  Completer<void>? _voiceDone;
   bool _ready = false;
 
   Future<void> init() async {
     if (_ready || !enabled) return;
     try {
+      // Our paths are full asset paths ("assets/sfx/x.ogg"). audioplayers adds "assets/" by default, which made
+      // every sound load "assets/assets/…" on real devices — so clear the prefix for every cache we use.
       FlameAudio.updatePrefix('');
+      AudioCache.instance.prefix = '';
       await ReadleAssets.instance.load();
       try {
         final raw = jsonDecode(await rootBundle.loadString('assets/vo/en/envelopes.json')) as Map<String, dynamic>;
@@ -78,7 +82,7 @@ class AudioManager {
     final path = ReadleAssets.instance.music(id);
     if (path == null) return; // placeholder: silence until the Pixabay track is added to the manifest
     try {
-      _music = await FlameAudio.loopLongAudio(path, volume: musicVolume);
+      _music = await FlameAudio.loopLongAudio(path, volume: musicVolume * _level);
     } catch (e) {
       debugPrint('music $id: $e');
     }
@@ -104,9 +108,23 @@ class AudioManager {
     _music = null;
   }
 
+  double _level = 1; // 0..1 set by games (Sound Orchestra wakes the band up layer by layer)
+  bool _ducked = false;
+
   void _duck(bool down) {
+    _ducked = down;
+    _applyVolume();
+  }
+
+  /// Sound Orchestra: the track grows from quiet to full as the band wakes up.
+  void setMusicLevel(double level) {
+    _level = level.clamp(0.0, 1.0);
+    _applyVolume();
+  }
+
+  void _applyVolume() {
     try {
-      _music?.setVolume(down ? musicVolume * .35 : musicVolume);
+      _music?.setVolume(musicVolume * _level * (_ducked ? .35 : 1));
     } catch (_) {}
   }
 
@@ -121,34 +139,40 @@ class AudioManager {
     speaking.value = character;
     _duck(true);
     final done = Completer<void>();
+    _voiceDone = done;
+    var played = false;
     if (enabled && hasVoice(id)) {
       try {
         final p = AudioPlayer();
         _voice = p;
+        p.onPlayerComplete.first.then((_) {
+          if (!done.isCompleted) done.complete();
+        });
         await p.play(AssetSource('assets/vo/en/$id.ogg'));
+        played = true;
         final env = _envelopes[id];
         final sw = Stopwatch()..start();
         _lip = Timer.periodic(const Duration(milliseconds: 50), (_) {
           final i = sw.elapsedMilliseconds ~/ 50;
           mouth.value = env == null ? (sin(i * 1.3).abs()) : (i < env.length ? env[i] / 9 : 0);
         });
-        p.onPlayerComplete.first.then((_) {
-          if (!done.isCompleted) done.complete();
-        });
-        await done.future.timeout(const Duration(seconds: 30), onTimeout: () {});
+        final len = voiceLength(id);
+        await done.future.timeout(len == null ? const Duration(seconds: 30) : len + const Duration(seconds: 2), onTimeout: () {});
       } catch (e) {
         debugPrint('voice $id: $e');
       }
-    } else {
-      // placeholder voice: device TTS + simulated mouth movement for an estimated duration
+    }
+    if (!played && !done.isCompleted) {
+      // placeholder voice (or the file failed): device TTS + simulated mouth movement for an estimated duration
       Speaker.instance.speak(text, ttsLocale);
       final ms = 400 + text.length * 62;
       final sw = Stopwatch()..start();
       _lip = Timer.periodic(const Duration(milliseconds: 60), (_) {
         mouth.value = sw.elapsedMilliseconds < ms ? (sin(sw.elapsedMilliseconds / 70).abs() * .9) : 0;
       });
-      await Future.delayed(Duration(milliseconds: ms));
+      await Future.any([Future.delayed(Duration(milliseconds: ms)), done.future]);
     }
+    if (_voiceDone != done) return; // a newer line took over; it owns the mouth and ducking now
     _lip?.cancel();
     mouth.value = 0;
     speaking.value = null;
@@ -156,6 +180,8 @@ class AudioManager {
   }
 
   Future<void> stopVoice() async {
+    final d = _voiceDone;
+    if (d != null && !d.isCompleted) d.complete(); // release whoever is waiting for the line to end
     _lip?.cancel();
     mouth.value = 0;
     try {

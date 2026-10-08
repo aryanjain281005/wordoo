@@ -42,12 +42,13 @@ class EnFeatures {
   static int syllables(String w) {
     var s = w.toLowerCase();
     if (s.length <= 3) return 1;
-    if (s.endsWith('e') && !s.endsWith('le') && !s.endsWith('ee') && !vowels.contains(s[s.length - 2])) s = s.substring(0, s.length - 1);
-    final groups = RegExp(r'[aeiouy]+').allMatches(s).length;
-    var n = groups;
-    if (w.endsWith('le') && w.length > 3 && !vowels.contains(w[w.length - 3])) n += 1;
-    if (w.endsWith('tion')) n -= 0; // already counted
-    return n.clamp(1, 7);
+    // plural -es after a silent e is not a syllable (grapes, gloves) — but it is after s/x/z/ch/sh (boxes)
+    if (s.endsWith('es') && !RegExp(r'(s|x|z|ch|sh)es$').hasMatch(s)) s = s.substring(0, s.length - 1);
+    if (s.endsWith('e') && !s.endsWith('ee') && s.length > 3) {
+      final consonantLe = s.endsWith('le') && !vowels.contains(s[s.length - 3]); // ap-ple, cas-tle: the "le" is a beat
+      if (!consonantLe && !vowels.contains(s[s.length - 2])) s = s.substring(0, s.length - 1); // whale, snake: silent e
+    }
+    return RegExp(r'[aeiouy]+').allMatches(s).length.clamp(1, 7);
   }
 
   /// Consonant clusters made of separate letters (fr, st, nd, mp…), at the start or end.

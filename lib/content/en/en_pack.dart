@@ -83,6 +83,7 @@ class EnglishGameContent extends GameContentPack {
         'endSound': 'Which one ends like {w}?',
         'rhyme': 'Which one rhymes with {w}?',
         'blend': 'Put the sounds together!',
+        'clap': 'Tap the drum for every beat in {w}!',
         'delete': 'Say {w} without the {r} sound.',
         'deleteMid': 'Say {w}, but leave out the {r} sound.',
         'swap': 'Say {w}. Now change {r} to {x}.',

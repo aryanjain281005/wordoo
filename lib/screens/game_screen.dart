@@ -116,6 +116,7 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     Speaker.instance.stop();
     AudioManager.instance.stopVoice();
+    AudioManager.instance.setMusicLevel(1);
     AudioManager.instance.music('music.aksharpur');
     super.dispose();
   }

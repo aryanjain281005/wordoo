@@ -58,11 +58,12 @@ class _BookTile extends StatelessWidget {
     final cover = ReadleAssets.instance.art('story.${story.id}');
     return GestureDetector(
       onTap: open ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookReader(story: story))) : null,
-      child: Opacity(
-        opacity: open ? 1 : .55,
+      child: Semantics(
+        button: open,
+        label: open ? story.title : 'Locked story',
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFFFF8EA),
+            color: open ? const Color(0xFFFFF8EA) : const Color(0xFFF1EDF8),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0xFFD9B98A), width: 3),
             boxShadow: const [BoxShadow(color: Color(0x44000000), blurRadius: 10, offset: Offset(0, 4))],
@@ -83,7 +84,7 @@ class _BookTile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(open ? story.title : 'Still lost…', textAlign: TextAlign.center, maxLines: 2, style: ts(16, color: C.ink)),
+            Text(open ? story.title : 'Still lost…', textAlign: TextAlign.center, maxLines: 2, style: ts(16, color: open ? C.ink : C.inkSoft)),
           ]),
         ),
       ),

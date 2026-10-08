@@ -307,3 +307,28 @@ These are the book covers on the Library shelf and the first comic panel. No tex
 3. The 14 `story.*` covers
 4. The `bg.book.*` backgrounds, then the props
 
+
+---
+
+## I. Phase 2c — Sound Orchestra ("The Jungle Band Lost Its Rhythm")
+
+The band stands on tree stumps; each member "sings" one answer. Until these exist the app shows 🐒 🐦 🐘.
+Sleeping members are shown in grey by the app automatically, so only the happy colour version is needed.
+
+### I1. Band members (1024 × 1024, plain white background, ONE pose, full body, facing the viewer)
+
+| File name | Prompt (after Style block) |
+|---|---|
+| `char.tinku.happy.png` | Tinku, a small cheeky brown monkey with a cream face and big ears, wearing a tiny orange vest with gold buttons, sitting and playing a pair of Indian tabla drums with both hands, grinning, tail curled up. |
+| `char.koyal.happy.png` | Koyal, a small round sky-blue songbird (Indian cuckoo) with a cream belly and a tiny red bow-tie, wings spread, beak open singing, a little bamboo bansuri flute tucked under one wing, musical notes around her. |
+| `char.gajju.happy.png` | Gajju, a chubby friendly baby elephant in pastel grey-lavender with pink ears and cheeks, a small purple vest, holding up a red dhol drum with sticks in his trunk, big happy smile. |
+
+### I2. Optional extras (512 × 512, plain white background, ONE object)
+
+| File name | Prompt (after Style block) |
+|---|---|
+| `prop.orchestra.stump.png` | A single cut tree stump seen from the front, warm brown bark, light rings on top, tiny mushrooms and a leaf at its base, used as a little stage. |
+| `prop.orchestra.drum.png` | A bright red Indian dhol drum with cream drum skins, golden ropes and two wooden sticks resting on top, seen from the front. |
+
+### Priority for Phase 2c
+`char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (then the props).

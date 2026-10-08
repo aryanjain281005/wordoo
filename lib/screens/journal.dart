@@ -6,6 +6,7 @@ import '../state/app_state.dart';
 import '../story/beats.dart';
 import '../story/play_scene.dart';
 import '../story/puppets.dart';
+import '../core/assets.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import 'collection.dart';
@@ -50,7 +51,7 @@ class JournalScreen extends StatelessWidget {
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text('Season ${c.season}', style: ts(24)),
                           const SizedBox(height: 4),
-                          Text('Gumsum the cloud is ${(st.gumsumLightness * 100).round()}% brighter than at the start.', style: ts(16, color: C.inkSoft, w: FontWeight.w500)),
+                          Text(st.gumsumLightness == 0 ? 'Gumsum is still a little grey cloud. Every season of reading makes him brighter.' : 'Gumsum the cloud is ${(st.gumsumLightness * 100).round()}% brighter than at the start.', style: ts(16, color: C.inkSoft, w: FontWeight.w500)),
                         ]),
                       ),
                       const SizedBox(height: 12),
@@ -91,7 +92,11 @@ class JournalScreen extends StatelessWidget {
     return Panel(
       padding: const EdgeInsets.all(12),
       child: Row(children: [
-        Text(g?.emoji ?? '🏝️', style: const TextStyle(fontSize: 34)),
+        SizedBox(
+          width: 52,
+          height: 52,
+          child: ArtImage('char.${islandGuardian[i]}.happy', fallback: Center(child: Text(g?.emoji ?? '🏝️', style: const TextStyle(fontSize: 34)))),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

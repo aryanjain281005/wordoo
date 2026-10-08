@@ -146,7 +146,8 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
 
   /// Bring the question and answers into view on small phones.
   void _showQuestion() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    // wait for the picture to shrink (AnimatedContainer) so the full answer list fits the scroll range
+    Future.delayed(const Duration(milliseconds: 450), () {
       if (!_disposed && _scroll.hasClients) {
         _scroll.animateTo(_scroll.position.maxScrollExtent, duration: const Duration(milliseconds: 450), curve: Curves.easeOut);
       }
@@ -273,6 +274,7 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
       child: Column(children: [
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 380),
+          reverseDuration: const Duration(milliseconds: 120), // the old page leaves quickly, so texts never overlap
           transitionBuilder: (c, a) => FadeTransition(opacity: a, child: SlideTransition(position: Tween(begin: const Offset(.12, 0), end: Offset.zero).animate(a), child: c)),
           child: BookPanel(
             key: ValueKey(_page),
@@ -282,7 +284,7 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
             index: _page,
             litWord: _lit,
             glow: _glow == _page,
-            pictureHeight: _asked ? 130 : 190,
+            pictureHeight: _asked ? 115 : 190,
             ttsLocale: tts,
           ),
         ),

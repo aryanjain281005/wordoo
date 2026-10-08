@@ -94,6 +94,15 @@ class ItemGen {
     final pics = c.words.where((w) => w.emoji != null && !w.irregular && w.syllables <= 2).toList();
     WordEntry pickT(bool Function(WordEntry) ok, String pre) => _leastSeen(_near(min(step, 5), (w) => w.emoji != null && ok(w), prefix: pre), pre);
 
+    if (fmt <= 2 && focus.isEmpty && rng.nextDouble() < .35) {
+      // Clap the Beat: one drum tap per syllable (1–2 beats at step 1, up to 3 at step 2)
+      final maxSyl = step <= 1 ? 2 : 3;
+      final t = _leastSeen(_near(min(step, 5), (w) => w.emoji != null && !w.nonword && w.syllables <= maxSyl && w.text.length <= 9, prefix: 'pc:'), 'pc:');
+      final p = c.p('clap', w: t.text);
+      return _choice('pc:${t.text}', Skill.phonological, step, p, p,
+          [Opt('${t.syllables}', say: t.text), for (var n = 1; n <= 3; n++) if (n != t.syllables) Opt('$n', say: t.text, tag: 'Syllable count error')],
+          stimulus: t.text, emoji: t.emoji, replay: t.text, hint: 'Say it slowly and tap for each beat.', diff: step.toDouble());
+    }
     if (fmt <= 2) {
       final t = pickT((w) => pics.any((o) => o.text != w.text && o.firstUnit == w.firstUnit), 'ps:');
       final match = _pick(pics.where((o) => o.text != t.text && o.firstUnit == t.firstUnit).toList());

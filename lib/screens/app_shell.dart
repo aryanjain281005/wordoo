@@ -41,10 +41,18 @@ class AppShell extends StatelessWidget {
       AppScreen.dashboard || AppScreen.weeklyReport => 'music.calm',
       _ => 'music.aksharpur',
     });
-    return AnimatedSwitcher(
+    // Android back button: grown-up screens return to the map instead of closing the app
+    final backToMap = const {AppScreen.dashboard, AppScreen.weeklyReport, AppScreen.nextAdventure, AppScreen.skillMap}.contains(st.screen);
+    return PopScope(
+      canPop: !backToMap,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && backToMap) st.go(AppScreen.home);
+      },
+      child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 450),
       switchInCurve: Curves.easeOut,
       child: KeyedSubtree(key: ValueKey(st.screen), child: screen),
+      ),
     );
   }
 }
