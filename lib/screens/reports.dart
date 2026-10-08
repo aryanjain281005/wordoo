@@ -232,11 +232,18 @@ class ParentDashboard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(children: [
         Text(m.emoji, style: const TextStyle(fontSize: 22)),
-        const SizedBox(width: 8),
-        Expanded(child: Text(m.name, style: ts(15))),
-        PowerPips(level: st.skills[s]!.level),
         const SizedBox(width: 10),
-        SizedBox(width: 118, child: Align(alignment: Alignment.centerRight, child: bandPill(BandInfo.label(b), BandInfo.color(b), size: 12))),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(m.name, style: ts(15)),
+            const SizedBox(height: 4),
+            Row(children: [
+              PowerPips(level: st.skills[s]!.level),
+              const Spacer(),
+              bandPill(BandInfo.label(b), BandInfo.color(b), size: 12),
+            ]),
+          ]),
+        ),
       ]),
     );
   }
