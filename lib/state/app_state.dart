@@ -80,6 +80,7 @@ class AppState extends ChangeNotifier {
 
   // rewards
   int stars = 0;
+  int hiveBees = 0; // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
   // settings
@@ -167,6 +168,7 @@ class AppState extends ChangeNotifier {
         'sessions': sessions.map((s) => s.toJson()).toList(),
         'cycleSessionStart': cycleSessionStart,
         'stars': stars,
+        'hiveBees': hiveBees,
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
         'textSize': textSize,
@@ -211,6 +213,7 @@ class AppState extends ChangeNotifier {
     sessions = [for (final e in (j['sessions'] as List? ?? const [])) SessionEntry.fromJson(Map<String, dynamic>.from(e as Map))];
     cycleSessionStart = j['cycleSessionStart'] as int? ?? 0;
     stars = j['stars'] as int;
+    hiveBees = j['hiveBees'] as int? ?? 0;
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
     textSize = j['textSize'] as int;
@@ -261,6 +264,7 @@ class AppState extends ChangeNotifier {
     sessions = [];
     cycleSessionStart = 0;
     stars = 0;
+    hiveBees = 0;
     badges = {};
     seenScenes = {};
   }
@@ -470,6 +474,7 @@ class AppState extends ChangeNotifier {
     final m = models[item.skill]!;
     final tag = r.tags.isEmpty ? null : r.tags.first;
     m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
+    if (item.skill == Skill.spelling && r.correct) hiveBees++;
     for (final t in r.tags) {
       skills[item.skill]!.errors[t] = (skills[item.skill]!.errors[t] ?? 0) + 1;
     }

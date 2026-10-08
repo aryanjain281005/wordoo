@@ -67,4 +67,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Plan saved, decisions recorded
 - [x] Phase 0 — Groundwork (asset manifest + placeholders, Audio Manager, Kenney SFX, GameHost contract, Flame, dev panel)
 - [x] Phase 1 — Story spine (cutscene player + 3 scenes, puppet characters with lip-sync, 95 Kokoro voice lines, guardian story beat before every quest, Star Bridge, season opener, Explorer's Journal, dev-panel scene launchers)
-- [ ] Phase 2a — Spelling Hive
+- [x] Phase 2a — Spelling Hive (drag or tap bee tiles into a honeycomb that wraps for long words, honey fill + baby-bee hatch, persistent hive growth, sound-aware hints that keep correct cells, scaffold, self-playing demo, tests)
+- [ ] Phase 2b — Story Quest
