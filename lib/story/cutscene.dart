@@ -217,7 +217,10 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
       'sea' => AnimatedBuilder(animation: _ambient, builder: (_, __) => CustomPaint(painter: WavesPainter(_ambient.value))),
       _ => const AdventureBackground(scene: Scene.day),
     };
-    return ArtImage('bg.cut.${s.bg}', fit: BoxFit.cover, fallback: fallback);
+    // until the dedicated cutscene picture exists, borrow the closest finished background
+    const borrow = {'night': 'bg.night', 'forest': 'bg.forest', 'castle': 'bg.island.castle', 'day': 'bg.day', 'sea': 'bg.island.ocean'};
+    final alt = borrow[s.bg];
+    return ArtImage('bg.cut.${s.bg}', fit: BoxFit.cover, fallback: alt == null ? fallback : ArtImage(alt, fit: BoxFit.cover, fallback: fallback));
   }
 
   Widget _fx(Shot s) {

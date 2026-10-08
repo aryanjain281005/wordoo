@@ -36,8 +36,8 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | Group | Result | What happens now |
 |---|---|---|
 | `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
-| All 9 `bg.cut.*` | ❌ Came out as a grid of 12 small variations, so each picture is only ~300 px | **Please make these again** (single scene, see the rule in the Style block). Until then, cutscenes use the nearest good background |
-| Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they work now. Making them again as single images gives sharper art (optional, after the cutscene backgrounds) |
+| All 8 `bg.cut.*` | ❌ Came out as a grid of 12 small variations, so each picture is only ~300 px | **Please make these again** (single scene, see the rule in the Style block). Until then, cutscenes use the nearest good background |
+| Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
 
@@ -302,7 +302,7 @@ These are the book covers on the Library shelf and the first comic panel. No tex
 | `prop.emotion.proud.png` | A round cartoon face sticker, proud happy face with closed eyes and a big grin, gold, little sparkle. |
 
 ### Priority for Phase 2b
-1. The **9 `bg.cut.*` redos** (cutscenes use them right away)
+1. The **8 `bg.cut.*` redos** (cutscenes use them right away)
 2. `char.pari.talk`, `char.kitabu.talk`, `char.kitabu.thinking`, `char.pari.cheer`
 3. The 14 `story.*` covers
 4. The `bg.book.*` backgrounds, then the props

@@ -388,7 +388,22 @@ class _SpellingHiveItemState extends State<SpellingHiveItem> with TickerProvider
     );
   }
 
-  Widget _tileFace(String letter) => SizedBox(
+  Widget _tileFace(String letter) {
+    if (ReadleAssets.instance.art('prop.hive.tile') != null) {
+      // painted bee holding a blank wooden tile; the letter is written on the tile
+      return SizedBox(
+        width: 66,
+        height: 84,
+        child: Stack(children: [
+          Positioned.fill(child: ArtImage('prop.hive.tile', fallback: const SizedBox.shrink())),
+          Positioned(left: 0, right: 0, bottom: 6, height: 40, child: Center(child: Text(letter, style: ts(27, color: const Color(0xFF4A2A00))))),
+        ]),
+      );
+    }
+    return _plainTile(letter);
+  }
+
+  Widget _plainTile(String letter) => SizedBox(
         width: 60,
         height: 80,
         child: Stack(alignment: Alignment.bottomCenter, children: [
