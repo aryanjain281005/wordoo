@@ -61,6 +61,7 @@ class _ItemViewState extends State<ItemView> {
   Timer? _ticker;
   int _elapsed = 0;
   int _unitFlash = -1;
+  int? _playing; // audio options: which option was last heard
 
   // build state
   late List<int?> _slots;
@@ -140,6 +141,12 @@ class _ItemViewState extends State<ItemView> {
     if (_resolved || (widget.demo && !demo)) return;
     if (_faded.contains(i)) return;
     final o = it.options[i];
+    if (it.audioOptions && !demo && _playing != i) {
+      // heard options: first tap listens, second tap chooses
+      setState(() => _playing = i);
+      _say(o.say ?? o.label);
+      return;
+    }
     if (widget.skin == GameSkin.archer) {
       _arrowKey++;
       _arrowTo = i;
@@ -315,7 +322,7 @@ class _ItemViewState extends State<ItemView> {
           ),
         ),
       if (it.stimulus != null && it.skill == Skill.decoding) _unitTiles(),
-      if (it.stimulus != null && it.skill == Skill.phonological && it.level >= 3 && it.level == 3)
+      if (it.stimulus != null && it.stimulus!.startsWith('•'))
         Padding(
           padding: const EdgeInsets.only(top: 6),
           child: Text(it.stimulus!, style: ts(40, color: Colors.white)),
@@ -387,7 +394,7 @@ class _ItemViewState extends State<ItemView> {
 
   Widget _choices(double maxW) {
     final n = it.options.length;
-    final useColumn = widget.skin == GameSkin.quest || it.options.any((o) => o.emoji == null && o.label.runes.length > 6 && widget.skin != GameSkin.archer);
+    final useColumn = !it.audioOptions && (widget.skin == GameSkin.quest || it.options.any((o) => o.emoji == null && o.label.runes.length > 6 && widget.skin != GameSkin.archer));
     final tiles = <Widget>[];
     for (var i = 0; i < n; i++) {
       if (_faded.contains(i) && !_resolved && it.options.length > 2 && widget.scaffold && i == _faded.first && _attempts == 0) {
@@ -410,6 +417,13 @@ class _ItemViewState extends State<ItemView> {
           children: [for (final t in tiles) Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 6), child: t))],
         ),
       );
+    }
+    if (it.audioOptions) {
+      return Column(children: [
+        body,
+        const SizedBox(height: 10),
+        Text('Tap once to hear, tap again to choose', style: ts(15, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 4)])),
+      ]);
     }
     if (widget.skin == GameSkin.archer) {
       return SizedBox(
@@ -458,6 +472,11 @@ class _ItemViewState extends State<ItemView> {
           ),
         ]),
       );
+    } else if (it.audioOptions) {
+      content = Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(_playing == i ? Icons.check_circle_rounded : Icons.volume_up_rounded, size: 40, color: _playing == i ? C.green : C.purple),
+        Text('${it.options.indexOf(o) + 1}', style: ts(20, color: C.inkSoft)),
+      ]);
     } else if (o.emoji != null && it.skill != Skill.wordRecognition) {
       content = Center(child: FittedBox(child: Text(o.emoji!, style: const TextStyle(fontSize: 70))));
     } else {

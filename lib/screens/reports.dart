@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/config.dart';
 import '../core/theme.dart';
 import '../data/lang.dart';
 import '../data/skills.dart';
 import '../engine/personalizer.dart';
+import '../engine/campaign.dart';
 import '../engine/report.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
@@ -19,16 +19,15 @@ Widget _scroll(Widget child) => SingleChildScrollView(
       child: Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: child)),
     );
 
-/// Parent-facing weekly report: baseline vs week 1.
+/// Parent-facing check-in report: baseline vs the latest check-in (one per cycle, never per week).
 class WeeklyReportScreen extends StatelessWidget {
   const WeeklyReportScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
-    final week = st.history.length - 1;
+    final week = st.cycle;
     final best = Report.biggestImprovement(st);
-    final focus = Personalizer.weekFocus(st.skills).first;
-    final simulated = st.history.last.simulated;
+    final focus = Personalizer.focus(st.models).first;
     return AdventureBackground(
       scene: Scene.day,
       calm: true,
@@ -38,20 +37,16 @@ class WeeklyReportScreen extends StatelessWidget {
             color: const Color(0xFFFFFDF5),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Expanded(child: Text('${st.explorerName}’s Week $week Progress Report', style: ts(26))),
+                Expanded(child: Text('${st.explorerName}’s Check-in $week Progress Report', style: ts(26))),
                 bandPill('Grown-up view', C.purple, size: 12),
               ]),
               const SizedBox(height: 4),
               Text('Fresh questions, same skills — so we can see real progress, not memory.', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
-              if (simulated)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text('Demo: Week-$week results were simulated from the practice played.', style: ts(12, color: C.orangeDark)),
-                ),
+              Text('Unlocked after playing through all seven islands of season ${st.campaign.season}.', style: ts(12, color: C.purple)),
               const Divider(height: 28),
               OverallBars(st),
               const Divider(height: 28),
-              sectionTitle('Skill Performance', sub: 'Baseline → this week, for each of the six skills'),
+              sectionTitle('Skill Performance', sub: 'Baseline → this check-in, for each of the six skills'),
               SkillCompare(st),
             ]),
           ),
@@ -62,11 +57,11 @@ class WeeklyReportScreen extends StatelessWidget {
             Expanded(child: Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('🎯 Current focus', style: ts(15, color: C.inkSoft)), const SizedBox(height: 6), Text(Skills.of(focus).name, style: ts(19))]))),
           ]),
           const SizedBox(height: 14),
-          Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Practice consistency'), PracticeCard(st)])),
+          Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Practice this cycle'), PracticeCard(st)])),
           const SizedBox(height: 14),
           Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('What we observed'), ObservedCard(Report.observations(st))])),
           const SizedBox(height: 14),
-          Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Common slips this week', sub: 'Used to target practice'), ErrorsCard(Report.errors(st, lastWeek: true))])),
+          Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Common slips this cycle', sub: 'Used to target practice'), ErrorsCard(Report.errors(st, lastWeek: true))])),
           const SizedBox(height: 14),
           const SupportNote(),
           const SizedBox(height: 18),
@@ -84,8 +79,8 @@ class NextAdventureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
-    final focus = Personalizer.weekFocus(st.skills);
-    final dayOne = Personalizer.dailyPlan(st.skills, 1);
+    final focus = Personalizer.focus(st.models);
+    final nextSeason = seasonName(st.campaign.season + 1);
     return AdventureBackground(
       scene: Scene.treasure,
       calm: true,
@@ -99,7 +94,10 @@ class NextAdventureScreen extends StatelessWidget {
               const SizedBox(height: 6),
               Companion(type: st.avatar.companion, size: 96, message: 'Look, ${st.explorerName}! A new map, made just for you.', speakLocale: st.pack.tts),
               const SizedBox(height: 14),
-              Align(alignment: Alignment.centerLeft, child: Text('Focus for next week:', style: ts(21, color: const Color(0xFF7A4E22)))),
+              Text('Season ${st.campaign.season + 1}: $nextSeason', textAlign: TextAlign.center, style: ts(20, color: C.purple)),
+              Text('Every island grows to the next tier, with new quests at the new levels.', textAlign: TextAlign.center, style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
+              const SizedBox(height: 10),
+              Align(alignment: Alignment.centerLeft, child: Text('Focus for the next season:', style: ts(21, color: const Color(0xFF7A4E22)))),
               const SizedBox(height: 8),
               for (final s in focus)
                 Padding(
@@ -119,13 +117,7 @@ class NextAdventureScreen extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 10),
-              Align(alignment: Alignment.centerLeft, child: Text('Suggested missions:', style: ts(21, color: const Color(0xFF7A4E22)))),
-              const SizedBox(height: 8),
-              Wrap(spacing: 10, runSpacing: 10, children: [
-                for (final m in dayOne) bandPill('${Skills.game(m.game).emoji} ${Skills.game(m.game).name}', Skills.of(m.skill).color, size: 17),
-              ]),
-              const SizedBox(height: 14),
-              Align(alignment: Alignment.centerLeft, child: Text('Starting power for each skill:', style: ts(18, color: const Color(0xFF7A4E22)))),
+              Align(alignment: Alignment.centerLeft, child: Text('Starting step for each skill (of 10):', style: ts(18, color: const Color(0xFF7A4E22)))),
               const SizedBox(height: 6),
               for (final s in Skill.values)
                 Padding(
@@ -134,7 +126,8 @@ class NextAdventureScreen extends StatelessWidget {
                     Text(Skills.of(s).emoji, style: const TextStyle(fontSize: 18)),
                     const SizedBox(width: 8),
                     Expanded(child: Text(Skills.of(s).shortName, style: ts(14))),
-                    PowerPips(level: st.skills[s]!.level),
+                    Text('Step ${st.model(s).step}  ', style: ts(14, color: C.purple)),
+                    PowerPips(level: st.model(s).band),
                   ]),
                 ),
             ]),
@@ -155,7 +148,7 @@ class ParentDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
     final has = st.history.length >= 2;
-    final focus = Personalizer.weekFocus(st.skills);
+    final focus = Personalizer.focus(st.models);
     return AdventureBackground(
       scene: Scene.night,
       calm: true,
@@ -179,7 +172,7 @@ class ParentDashboard extends StatelessWidget {
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(st.explorerName, style: ts(26)),
                       Text('Age ${st.age} • ${st.grade} • ${st.pack.native}', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
-                      Text(has ? 'Week ${st.history.length - 1} complete — Week ${st.history.length} plan ready' : 'Week 1 of practice • Day ${st.day > 7 ? 7 : st.day} of 7', style: ts(14, color: C.purple)),
+                      Text('Season ${st.campaign.season}: ${seasonName(st.campaign.season)} · ${st.cycle} check-in(s) done', style: ts(14, color: C.purple)),
                     ])),
                   ]),
                 ]),
@@ -193,19 +186,24 @@ class ParentDashboard extends StatelessWidget {
               ])),
               const SizedBox(height: 14),
               Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                sectionTitle(has ? 'Baseline vs this week' : 'Skill performance', sub: has ? 'Skill Performance (not a medical score)' : 'Baseline from the first adventure — week-1 check-in comes after 7 days'),
+                sectionTitle(has ? 'Baseline vs latest check-in' : 'Skill performance', sub: has ? 'Skill Performance (not a medical score)' : 'Baseline from the screening — the next check-in opens after all seven islands are played'),
                 SkillCompare(st),
               ])),
               const SizedBox(height: 14),
-              Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Practice consistency'), PracticeCard(st)])),
+              Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Practice this cycle'), PracticeCard(st)])),
               const SizedBox(height: 14),
               Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('Common slips', sub: 'The engine targets these, not just “easier”'), ErrorsCard(Report.errors(st))])),
               const SizedBox(height: 14),
               Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                sectionTitle('Current focus & plan', sub: 'Generated from the skill profile'),
+                sectionTitle('Learning picture per skill', sub: 'Started from the screening, adapting after every answer'),
                 Wrap(spacing: 8, runSpacing: 8, children: [for (final s in focus) bandPill('${Skills.of(s).emoji} ${Skills.of(s).name}', Skills.of(s).color, size: 14)]),
                 const SizedBox(height: 12),
-                WeekPlan(st),
+                SkillPlan(st),
+              ])),
+              const SizedBox(height: 14),
+              Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                sectionTitle('Next check-in', sub: 'Unlocked by progress, not by time'),
+                RetestChecklist(st),
               ])),
               const SizedBox(height: 14),
               Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('What we observed'), ObservedCard(Report.observations(st))])),
@@ -285,14 +283,10 @@ class ParentDashboard extends StatelessWidget {
     return Panel(
       color: const Color(0xFFFFF3C4),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        sectionTitle('Demo controls', sub: 'For presenting the one-week loop quickly'),
+        sectionTitle('Demo controls', sub: 'Load an example child with an uneven skill profile'),
         Wrap(spacing: 10, runSpacing: 10, children: [
           BigButton(label: 'Profile A (Aarav)', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => st.loadDemoProfile(0)),
           BigButton(label: 'Profile B (Meera)', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => st.loadDemoProfile(1)),
-          BigButton(label: 'Skip to tomorrow', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.day > Cfg.daysPerWeek ? null : st.advanceDay),
-          BigButton(label: 'Jump to end of week', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.weekReady ? null : st.jumpToEndOfWeek),
-          BigButton(label: 'Run screening now', style: BtnStyle.go, height: 50, fontSize: 15, onTap: () => st.go(AppScreen.intro)),
-          BigButton(label: 'Simulate week-1 results', style: BtnStyle.primary, height: 50, fontSize: 15, onTap: st.hasBaseline && st.history.length < 2 ? st.simulateWeekOne : null),
           BigButton(label: 'Screening report', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.lastScreening == null ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScreeningReportScreen(report: st.lastScreening!, childName: st.explorerName)))),
           BigButton(label: 'Latest report', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.history.length >= 2 ? () => st.go(AppScreen.weeklyReport) : null),
           BigButton(label: 'Learning loop', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoopScreen(buttonLabel: 'Close', onContinue: () => Navigator.of(context).pop())))),

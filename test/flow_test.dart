@@ -1,145 +1,152 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wordoo/content/content_pack.dart';
+import 'package:wordoo/core/config.dart';
 import 'package:wordoo/data/lang.dart';
-import 'package:wordoo/data/skills.dart';
-import 'package:wordoo/engine/item_factory.dart';
-import 'package:wordoo/engine/personalizer.dart';
-import 'package:wordoo/engine/report.dart';
+import 'package:wordoo/engine/campaign.dart';
+import 'package:wordoo/engine/item_gen.dart';
 import 'package:wordoo/main.dart';
 import 'package:wordoo/models/models.dart';
+import 'package:wordoo/screening/battery.dart';
+import 'package:wordoo/screening/models.dart' as scr;
+import 'package:wordoo/screening/scorer.dart';
 import 'package:wordoo/state/app_state.dart';
 import 'package:wordoo/widgets/item_views.dart';
 
-List<ItemResult> _results(Skill s, List<bool> ok) => [for (var i = 0; i < ok.length; i++) ItemResult(itemId: '$i', skill: s, level: 2, correct: ok[i], ms: 900)];
+/// Plays one quest with a simulated child who answers correctly with probability [p].
+SessionOutcome playQuest(AppState st, Quest q, Random rng, {double p = .8}) {
+  final gen = ItemGen(st.content, rng: rng, seen: st.itemSeen);
+  final start = {for (final s in q.skills.toSet()) s: st.model(s).step};
+  final results = <ItemResult>[];
+  for (var i = 0; i < q.items; i++) {
+    final s = q.skills[i % q.skills.length];
+    final it = gen.make(s, st.model(s).step);
+    final ok = rng.nextDouble() < p;
+    final r = ItemResult(itemId: it.id, skill: s, level: it.level, correct: ok, ms: 2500, tags: ok ? const [] : const ['Wrong vowel']);
+    results.add(r);
+    st.recordItem(it, r);
+  }
+  return st.completeQuest(q, results, 90, start);
+}
+
+Map<String, List<scr.ItemResponse>> screeningAll(double score) => {
+      for (final d in battery)
+        d.id: [scr.ItemResponse(itemId: d.id, subtest: d.id, score: score, ms: 1000, rate: d.normJunior.rateMean == null ? null : d.normJunior.rateMean! * (score >= .9 ? 1.3 : .5))],
+    };
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('profiles A and B produce different missions, levels and plans', () {
+  test('uneven profiles: each skill starts at its own step, no global level', () {
     final a = AppState()..loadDemoProfile(0);
     final b = AppState()..loadDemoProfile(1);
-    expect(a.skills[Skill.spelling]!.level, 1);
-    expect(a.skills[Skill.wordRecognition]!.level, 3);
-    expect(b.skills[Skill.spelling]!.level, 3);
-    expect(b.skills[Skill.decoding]!.level, 1);
-    expect(a.missions.map((m) => m.game).toList(), isNot(b.missions.map((m) => m.game).toList()));
-    expect(a.missions.first.skill, Skill.spelling);
-    expect(b.missions.first.skill, Skill.decoding);
+    expect(a.model(Skill.spelling).step, lessThan(a.model(Skill.wordRecognition).step));
+    expect(b.model(Skill.spelling).step, greaterThan(b.model(Skill.decoding).step));
+    expect(a.board.first.island, isNot(b.board.first.island));
+    expect(Skill.values.map((s) => a.model(s).step).toSet().length, greaterThan(2));
   });
 
-  test('difficulty rises on success and falls (with scaffold) on repeated errors', () {
-    final st = AppState()..loadDemoProfile(0);
-    // Word recognition: strong, starts at level 3 → perfect rounds push it up
-    st.recordGame(GameId.wordDetective, _results(Skill.wordRecognition, [true, true, true, true, true]), 120);
-    expect(st.skills[Skill.wordRecognition]!.level, 4);
-    // Spelling: needs support, level 1 stays at floor but scaffold turns on
-    final out = st.recordGame(GameId.spellingHive, _results(Skill.spelling, [false, false, true, false, false]), 150);
-    expect(st.skills[Skill.spelling]!.level, 1);
-    expect(st.skills[Skill.spelling]!.scaffold, true);
-    expect(out.stars, greaterThanOrEqualTo(1)); // never zero: effort is rewarded
-    // Decoding developing at 2: mixed → stays; then perfect → up
-    st.recordGame(GameId.wordRocket, _results(Skill.decoding, [true, true, true, true, true]), 100);
-    expect(st.skills[Skill.decoding]!.level, 3);
-  });
-
-  test('live level-down inside a round is kept', () {
-    final st = AppState()..loadDemoProfile(0);
-    final before = st.skills[Skill.decoding]!.level; // 2
-    st.recordGame(GameId.wordRocket, _results(Skill.decoding, [false, false, true, true, true]), 100, endLevel: before - 1);
-    expect(st.skills[Skill.decoding]!.level, before - 1);
-    expect(st.skills[Skill.decoding]!.scaffold, true);
-  });
-
-  test('missions complete, rewards unlock, day completes', () {
-    final st = AppState()..loadDemoProfile(0);
-    SessionOutcome? last;
-    for (final m in List.of(st.missions)) {
-      last = st.recordGame(m.game, _results(m.skill, [true, true, true, true, false]), 130);
-    }
-    expect(st.dayDone, true);
-    expect(last!.dayComplete, true);
-    expect(st.practiceDays, contains(1));
-    expect(st.stars, greaterThanOrEqualTo(5));
-    expect(st.unlocked, isNotEmpty);
-  });
-
-  test('week cycle: end of week → reassessment → report → next plan', () {
-    final st = AppState()..loadDemoProfile(0);
-    for (final m in List.of(st.missions)) {
-      st.recordGame(m.game, _results(m.skill, [true, true, false, true, true]), 130);
-    }
-    st.jumpToEndOfWeek();
-    expect(st.weekReady, true);
-    final planBefore = Personalizer.weekFocus(st.skills);
-    st.simulateWeekOne();
-    expect(st.history.length, 2);
-    expect(st.screen, AppScreen.weeklyReport);
-    expect(Report.overall(st), greaterThan(0));
-    expect(Report.observations(st), isNotEmpty);
-    expect(st.assessForm, Pool.a); // week 2 would reuse the A form only after B was used
-    st.startNextWeek();
-    expect(st.day, 1);
-    expect(st.practiceDays, isEmpty);
-    expect(st.missions.length, 3);
-    expect(planBefore.length, 3);
-  });
-
-  test('assessment results → baseline with independent levels', () {
-    final st = AppState();
-    final results = <ItemResult>[
-      for (final s in Skill.values) ...[
-        for (var lv = 1; lv <= 3; lv++) ItemResult(itemId: '$s$lv', skill: s, level: lv, correct: s == Skill.gpc || s == Skill.wordRecognition || (s == Skill.decoding && lv < 3), ms: 800, tags: const [])
-      ]
-    ];
-    st.completeBaseline(results);
-    expect(st.bandOf(Skill.gpc), Band.strong);
-    expect(st.bandOf(Skill.spelling), Band.needsSupport);
-    expect(st.skills[Skill.gpc]!.level, greaterThan(st.skills[Skill.spelling]!.level));
+  test('screening drives the start; strong never starts at level 1, weak never too high', () {
+    final st = AppState()..grade = 'Class 1';
+    final resp = screeningAll(1);
+    resp['spelling'] = [const scr.ItemResponse(itemId: 's1', subtest: 'spelling', score: 0, ms: 900, tag: 'Wrong vowel')];
+    final r = Scorer.build(responses: resp, band: scr.GradeBand.junior, lang: 'en', pool: 'A', bg: scr.Background(schoolMedium: 'English'), speechAvailable: true, minutes: 15);
+    st.completeScreening(r, resp);
+    expect(st.model(Skill.spelling).step, lessThanOrEqualTo(2));
+    expect(st.model(Skill.gpc).step, greaterThanOrEqualTo(5));
+    expect(st.model(Skill.spelling).errors.containsKey('Wrong vowel'), isTrue); // screening error seeds practice
     expect(st.screen, AppScreen.skillMap);
   });
 
-  testWidgets('choice item: wrong answer is gentle, correct is rewarded', (tester) async {
-    final pack = LangRegistry.byCode('en');
-    final item = ItemFactory(pack).make(Skill.wordRecognition, 1, {Pool.p});
-    ItemResult? got;
-    String? feedback;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: ItemView(item: item, skin: GameSkin.detective, pack: pack, autoSpeak: false, onDone: (r) => got = r, onFeedback: (m, g) => feedback = m),
-      ),
-    ));
-    await tester.pump(const Duration(milliseconds: 400));
-    final wrong = item.options.firstWhere((o) => o != item.options[item.correct]).label;
-    await tester.tap(find.text(wrong));
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(feedback, contains('Almost'));
-    expect(feedback!.toLowerCase(), isNot(contains('wrong')));
-    await tester.tap(find.text(item.options[item.correct].label));
-    await tester.pump(const Duration(milliseconds: 1500));
-    expect(got, isNotNull);
-    expect(got!.correct, false); // first attempt wasn't right
-    expect(got!.tags, isNotEmpty);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+  test('no daily cap: quests keep coming after any number of rounds', () {
+    final st = AppState()..loadDemoProfile(0);
+    final rng = Random(5);
+    for (var i = 0; i < 25; i++) {
+      final b = st.board;
+      expect(b.length, Cfg.boardSize);
+      playQuest(st, b[i % b.length], rng);
+    }
+    expect(st.sessions.isNotEmpty, isTrue);
+    expect(st.cycleRounds, 25);
   });
 
-  testWidgets('spelling item can be built and checked', (tester) async {
-    final pack = LangRegistry.byCode('hi');
-    final item = ItemFactory(pack).make(Skill.spelling, 2, {Pool.p});
-    ItemResult? got;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(body: ItemView(item: item, skin: GameSkin.hive, pack: pack, autoSpeak: false, onDone: (r) => got = r)),
-    ));
-    await tester.pump(const Duration(milliseconds: 300));
-    for (final u in item.answer) {
-      // tap the first still-visible tile with that text
-      await tester.tap(find.text(u).last);
-      await tester.pump(const Duration(milliseconds: 50));
+  test('gameplay keeps adapting each skill separately', () {
+    final st = AppState()..loadDemoProfile(0);
+    final rng = Random(6);
+    final strongStart = st.model(Skill.wordRecognition).step;
+    final weakStart = st.model(Skill.spelling).step;
+    for (var i = 0; i < 4; i++) {
+      playQuest(st, st.campaign.questFor(IslandId.village, st.models), rng, p: 1);
+      playQuest(st, st.campaign.questFor(IslandId.treasure, st.models), rng, p: .2);
     }
-    await tester.tap(find.text('जाँचो'));
-    await tester.pump(const Duration(milliseconds: 2000));
-    expect(got?.correct, true);
+    expect(st.model(Skill.wordRecognition).step, greaterThan(strongStart));
+    expect(st.model(Skill.spelling).step, lessThanOrEqualTo(weakStart));
+    expect(st.model(Skill.spelling).needsScaffold, isTrue);
+  });
+
+  test('full long-term loop: 7 islands → retest unlocks → check-in → new season', () {
+    final st = AppState()..loadDemoProfile(1);
+    final rng = Random(7);
+    var guard = 0;
+    var observatorySeen = false;
+    while (!st.retestReady && guard++ < 400) {
+      final q = st.board.first;
+      if (q.island == IslandId.observatory) observatorySeen = true;
+      playQuest(st, q, rng);
+    }
+    expect(st.retestReady, isTrue, reason: st.retest.missing.join('; '));
+    expect(observatorySeen, isTrue);
+    for (final i in IslandId.values) {
+      expect(st.campaign.chapterDone(i), isTrue);
+    }
+    for (final s in Skill.values) {
+      expect(st.model(s).cycleItems, greaterThanOrEqualTo(Cfg.retestMinItemsPerSkill));
+    }
+    // the check-in itself
+    final resp = screeningAll(.9);
+    final r = Scorer.build(responses: resp, band: scr.GradeBand.junior, lang: 'en', pool: 'B', bg: scr.Background(schoolMedium: 'English'), speechAvailable: true, minutes: 15);
+    st.completeScreening(r, resp);
+    expect(st.screen, AppScreen.weeklyReport);
+    expect(st.history.length, 2);
+    st.startNextCycle();
+    expect(st.campaign.season, 2);
+    expect(st.campaign.islands.values.every((i) => i.tier == 2 && i.nodes == 0), isTrue);
+    expect(st.retestReady, isFalse);
+    expect(st.board.length, Cfg.boardSize);
+  });
+
+  test('state survives an app restart', () async {
+    final st = AppState()..loadDemoProfile(0);
+    playQuest(st, st.board.first, Random(8));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    final again = AppState();
+    await again.load();
+    expect(again.explorerName, 'Aarav');
+    expect(again.campaign.islands.values.fold<int>(0, (a, i) => a + i.nodes), 1);
+    expect(again.model(Skill.spelling).items, st.model(Skill.spelling).items);
+    expect(again.langCode, 'en');
+  });
+
+  testWidgets('heard options: first tap listens, second tap chooses', (tester) async {
+    final pack = LangRegistry.byCode('en');
+    final gen = ItemGen(GameContent.of('en'), rng: Random(9));
+    late Item it;
+    do {
+      it = gen.make(Skill.phonological, 8);
+    } while (!it.audioOptions);
+    ItemResult? got;
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: ItemView(item: it, skin: GameSkin.orchestra, pack: pack, autoSpeak: false, onDone: (r) => got = r))));
+    await tester.pump(const Duration(milliseconds: 300));
+    final card = find.text('${it.correct + 1}');
+    await tester.tap(card);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(got, isNull);
+    await tester.tap(find.byIcon(Icons.check_circle_rounded));
+    await tester.pump(const Duration(milliseconds: 1500));
+    expect(got?.correct, isTrue);
     await tester.pumpAndSettle(const Duration(seconds: 2));
   });
 
@@ -147,6 +154,5 @@ void main() {
     await tester.pumpWidget(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('Let’s Start'), findsOneWidget);
-    expect(find.textContaining('Parent'), findsOneWidget);
   });
 }

@@ -77,6 +77,8 @@ class Skills {
         'Trace letters and short words.', false, Color(0xFFE0A100)),
     GameId.storyQuest: GameMeta(GameId.storyQuest, Skill.comprehension, 'Story Quest', '📖', 'Read. Think. Answer.',
         'Read a tiny story, then answer.', true, Color(0xFFE0568A)),
+    GameId.starObservatory: GameMeta(GameId.starObservatory, Skill.comprehension, 'Star Observatory', '🔭', 'Every skill, one sky.',
+        'A mixed challenge with all your skills.', true, Color(0xFF6A78E0)),
   };
 
   static SkillMeta of(Skill s) => meta[s]!;

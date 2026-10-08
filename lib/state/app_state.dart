@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../content/content_pack.dart';
 import '../core/config.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
 import '../data/skills.dart';
+import '../engine/campaign.dart';
 import '../engine/personalizer.dart';
+import '../engine/skill_model.dart';
 import '../models/models.dart';
 import '../screening/models.dart' as scr;
 
@@ -18,8 +21,21 @@ class SessionOutcome {
   final List<AdaptEvent> adapt;
   final List<Collectible> newCollectibles;
   final List<BadgeDef> newBadges;
-  final bool dayComplete;
-  SessionOutcome(this.stars, this.points, this.accuracy, this.adapt, this.newCollectibles, this.newBadges, this.dayComplete);
+  final bool chapterComplete;
+  final bool retestUnlocked;
+  final double restorationBefore, restorationAfter;
+  SessionOutcome(this.stars, this.points, this.accuracy, this.adapt, this.newCollectibles, this.newBadges,
+      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0});
+}
+
+/// One play session, kept only for reports (it never limits play).
+class SessionEntry {
+  final String date; // yyyy-mm-dd
+  double minutes;
+  int rounds;
+  SessionEntry(this.date, this.minutes, this.rounds);
+  Map<String, dynamic> toJson() => {'d': date, 'm': minutes, 'r': rounds};
+  factory SessionEntry.fromJson(Map<String, dynamic> j) => SessionEntry(j['d'] as String, (j['m'] as num).toDouble(), j['r'] as int);
 }
 
 class AppState extends ChangeNotifier {
@@ -41,37 +57,45 @@ class AppState extends ChangeNotifier {
   scr.Background background = scr.Background();
   List<scr.ScreeningReport> screenings = [];
   scr.ScreeningReport? get lastScreening => screenings.isEmpty ? null : screenings.last;
+  Map<String, int> screeningSeen = {}; // screening item id → times used (fresh items on every retest)
 
   // learning data
-  Map<Skill, SkillState> skills = {for (final s in Skill.values) s: SkillState()};
-  List<AssessmentRecord> history = [];
-  Map<String, int> lastWeekErrors = {}; // "skill|tag" -> count (previous week, for report)
-  List<Mission> missions = [];
-  int day = 1;
-  Set<int> practiceDays = {};
-  double minutes = 0;
-  int sessionsThisWeek = 0;
+  Map<Skill, SkillState> skills = {for (final s in Skill.values) s: SkillState()}; // screening scores + lifetime error counts
+  Map<Skill, SkillModel> models = {for (final s in Skill.values) s: SkillModel()}; // live per-skill difficulty
+  Campaign campaign = Campaign();
+  Map<String, int> itemSeen = {}; // practice item exposure (spacing, no repetition)
+  List<AssessmentRecord> history = []; // one record per screening (cycle 0 = baseline)
+  Map<String, int> lastCycleErrors = {}; // "skill|tag" → count for the finished cycle
+  Map<Skill, int> cycleStartStep = {};
+  List<SessionEntry> sessions = [];
+  int cycleSessionStart = 0;
 
   // rewards
   int stars = 0;
   Set<String> badges = {};
 
   // settings
-  int textSize = 0; // 0 normal, 1 large, 2 extra large
+  int textSize = 0;
   bool extraSpacing = false;
   bool voiceOn = true;
   bool highContrast = false;
 
   LangPack get pack => LangRegistry.byCode(langCode);
+  GameContentPack get content => GameContent.of(langCode);
 
   bool get hasBaseline => history.isNotEmpty;
-  bool get weekReady => day > Cfg.daysPerWeek;
-  int get currentWeek => history.length; // week being practised (1 after baseline)
-  bool get dayDone => missions.isNotEmpty && missions.every((m) => m.done);
-  Pool get assessForm => history.length.isEven ? Pool.a : Pool.b;
+  int get cycle => max(0, history.length - 1); // number of completed check-ins
+  RetestStatus get retest => campaign.retest(models);
+  bool get retestReady => hasBaseline && retest.ready;
+  List<Quest> get board => campaign.board(models);
   List<Collectible> get unlocked => Collectibles.all.where((c) => stars >= c.stars).toList();
 
   Band bandOf(Skill s) => Personalizer.classify(skills[s]!.score);
+  SkillModel model(Skill s) => models[s]!;
+
+  double get cycleMinutes => sessions.skip(cycleSessionStart).fold(0.0, (a, s) => a + s.minutes);
+  int get cycleRounds => sessions.skip(cycleSessionStart).fold(0, (a, s) => a + s.rounds);
+  int get cycleDays => sessions.skip(cycleSessionStart).map((s) => s.date).toSet().length;
 
   // ---------------- persistence ----------------
   Future<void> load() async {
@@ -82,6 +106,7 @@ class AppState extends ChangeNotifier {
     } catch (e) {
       debugPrint('load failed: $e');
     }
+    if (!GameContent.enabledLanguages.contains(langCode)) langCode = 'en'; // v1 is English-only
     Speaker.instance.enabled = voiceOn;
     loaded = true;
     notifyListeners();
@@ -97,8 +122,17 @@ class AppState extends ChangeNotifier {
   }
 
   void changed() {
+    _sync();
     notifyListeners();
     _save();
+  }
+
+  /// Keeps the simple UI fields (power pips, scaffold flag) in line with the learner model.
+  void _sync() {
+    for (final s in Skill.values) {
+      skills[s]!.level = models[s]!.band;
+      skills[s]!.scaffold = models[s]!.needsScaffold;
+    }
   }
 
   Map<String, dynamic> _toJson() => {
@@ -111,13 +145,15 @@ class AppState extends ChangeNotifier {
         'consent': consent,
         'avatar': avatar.toJson(),
         'skills': skills.map((k, v) => MapEntry(k.index.toString(), v.toJson())),
+        'models': models.map((k, v) => MapEntry(k.index.toString(), v.toJson())),
+        'campaign': campaign.toJson(),
+        'itemSeen': itemSeen,
+        'screeningSeen': screeningSeen,
         'history': history.map((h) => h.toJson()).toList(),
-        'lastWeekErrors': lastWeekErrors,
-        'missions': missions.map((m) => m.toJson()).toList(),
-        'day': day,
-        'practiceDays': practiceDays.toList(),
-        'minutes': minutes,
-        'sessionsThisWeek': sessionsThisWeek,
+        'lastCycleErrors': lastCycleErrors,
+        'cycleStartStep': cycleStartStep.map((k, v) => MapEntry(k.index.toString(), v)),
+        'sessions': sessions.map((s) => s.toJson()).toList(),
+        'cycleSessionStart': cycleSessionStart,
         'stars': stars,
         'badges': badges.toList(),
         'textSize': textSize,
@@ -130,7 +166,6 @@ class AppState extends ChangeNotifier {
 
   void _fromJson(Map<String, dynamic> j) {
     screen = AppScreen.values[j['screen'] as int];
-    // never resume in the middle of a flow that has no stored progress
     if (screen == AppScreen.assessment || screen == AppScreen.weeklyReport) screen = AppScreen.home;
     childName = j['childName'] as String;
     explorerName = j['explorerName'] as String;
@@ -139,18 +174,27 @@ class AppState extends ChangeNotifier {
     langCode = j['lang'] as String;
     consent = j['consent'] as bool;
     avatar = Avatar.fromJson(Map<String, dynamic>.from(j['avatar'] as Map));
-    skills = (j['skills'] as Map).map((k, v) =>
-        MapEntry(Skill.values[int.parse(k as String)], SkillState.fromJson(Map<String, dynamic>.from(v as Map))));
+    skills = (j['skills'] as Map).map((k, v) => MapEntry(Skill.values[int.parse(k as String)], SkillState.fromJson(Map<String, dynamic>.from(v as Map))));
     for (final s in Skill.values) {
       skills.putIfAbsent(s, () => SkillState());
     }
+    if (j['models'] != null) {
+      models = (j['models'] as Map).map((k, v) => MapEntry(Skill.values[int.parse(k as String)], SkillModel.fromJson(Map<String, dynamic>.from(v as Map))));
+    } else {
+      // older saves: derive the learner model from the stored screening scores
+      models = {for (final s in Skill.values) s: SkillModel.fromScreening(skills[s]!.score)};
+    }
+    for (final s in Skill.values) {
+      models.putIfAbsent(s, () => SkillModel());
+    }
+    if (j['campaign'] != null) campaign = Campaign.fromJson(Map<String, dynamic>.from(j['campaign'] as Map));
+    itemSeen = Map<String, int>.from(j['itemSeen'] as Map? ?? const {});
+    screeningSeen = Map<String, int>.from(j['screeningSeen'] as Map? ?? const {});
     history = (j['history'] as List).map((e) => AssessmentRecord.fromJson(Map<String, dynamic>.from(e as Map))).toList();
-    lastWeekErrors = Map<String, int>.from(j['lastWeekErrors'] as Map);
-    missions = (j['missions'] as List).map((e) => Mission.fromJson(Map<String, dynamic>.from(e as Map))).toList();
-    day = j['day'] as int;
-    practiceDays = Set<int>.from(j['practiceDays'] as List);
-    minutes = (j['minutes'] as num).toDouble();
-    sessionsThisWeek = j['sessionsThisWeek'] as int;
+    lastCycleErrors = Map<String, int>.from(j['lastCycleErrors'] as Map? ?? j['lastWeekErrors'] as Map? ?? const {});
+    cycleStartStep = (j['cycleStartStep'] as Map? ?? const {}).map((k, v) => MapEntry(Skill.values[int.parse(k as String)], v as int));
+    sessions = [for (final e in (j['sessions'] as List? ?? const [])) SessionEntry.fromJson(Map<String, dynamic>.from(e as Map))];
+    cycleSessionStart = j['cycleSessionStart'] as int? ?? 0;
     stars = j['stars'] as int;
     badges = Set<String>.from(j['badges'] as List);
     textSize = j['textSize'] as int;
@@ -160,9 +204,10 @@ class AppState extends ChangeNotifier {
     if (j['background'] != null) background = scr.Background.fromJson(Map<String, dynamic>.from(j['background'] as Map));
     screenings = [for (final e in (j['screenings'] as List? ?? const [])) scr.ScreeningReport.fromJson(Map<String, dynamic>.from(e as Map))];
     if (screen == AppScreen.home && history.isEmpty) screen = AppScreen.landing;
+    _sync();
   }
 
-  // ---------------- navigation ----------------
+  // ---------------- navigation & setup ----------------
   void go(AppScreen s) {
     screen = s;
     changed();
@@ -173,20 +218,11 @@ class AppState extends ChangeNotifier {
     childName = explorerName = '';
     age = 6;
     grade = 'Class 1';
+    langCode = 'en';
     consent = false;
     avatar = Avatar();
-    skills = {for (final s in Skill.values) s: SkillState()};
-    history = [];
-    lastWeekErrors = {};
-    missions = [];
-    day = 1;
-    practiceDays = {};
-    minutes = 0;
-    sessionsThisWeek = 0;
-    stars = 0;
-    badges = {};
-    screenings = [];
     background = scr.Background();
+    _resetLearning();
     textSize = keepText;
     extraSpacing = keepSpacing;
     voiceOn = keepVoice;
@@ -194,13 +230,28 @@ class AppState extends ChangeNotifier {
     changed();
   }
 
-  // ---------------- setup ----------------
+  void _resetLearning() {
+    skills = {for (final s in Skill.values) s: SkillState()};
+    models = {for (final s in Skill.values) s: SkillModel()};
+    campaign = Campaign();
+    itemSeen = {};
+    screeningSeen = {};
+    history = [];
+    screenings = [];
+    lastCycleErrors = {};
+    cycleStartStep = {};
+    sessions = [];
+    cycleSessionStart = 0;
+    stars = 0;
+    badges = {};
+  }
+
   void saveParentSetup({required String name, required int age, required String grade, required String lang, required bool consent}) {
     childName = name.trim();
     explorerName = explorerName.isEmpty ? childName : explorerName;
     this.age = age;
     this.grade = grade;
-    langCode = lang;
+    langCode = GameContent.enabledLanguages.contains(lang) ? lang : 'en';
     this.consent = consent;
     changed();
   }
@@ -212,6 +263,7 @@ class AppState extends ChangeNotifier {
   }
 
   void setLang(String code) {
+    if (!GameContent.enabledLanguages.contains(code)) return;
     langCode = code;
     changed();
   }
@@ -227,102 +279,39 @@ class AppState extends ChangeNotifier {
     changed();
   }
 
-  // ---------------- demo profiles ----------------
+  void saveBackground(scr.Background b) {
+    background = b;
+    changed();
+  }
+
+  // ---------------- demo profiles (instant uneven profiles for presenting) ----------------
   static const _demoScores = <int, Map<Skill, double>>{
-    0: {
-      Skill.phonological: 9,
-      Skill.gpc: 78,
-      Skill.decoding: 30,
-      Skill.wordRecognition: 82,
-      Skill.spelling: 7,
-      Skill.comprehension: 35,
-    },
-    1: {
-      Skill.phonological: 80,
-      Skill.gpc: 34,
-      Skill.decoding: 8,
-      Skill.wordRecognition: 30,
-      Skill.spelling: 75,
-      Skill.comprehension: 72,
-    },
+    0: {Skill.phonological: 9, Skill.gpc: 78, Skill.decoding: 30, Skill.wordRecognition: 82, Skill.spelling: 7, Skill.comprehension: 35},
+    1: {Skill.phonological: 80, Skill.gpc: 34, Skill.decoding: 8, Skill.wordRecognition: 30, Skill.spelling: 75, Skill.comprehension: 72},
   };
 
-  /// Loads Profile A (Aarav) or Profile B (Meera) so the personalization can be demonstrated instantly.
   void loadDemoProfile(int which) {
-    resetAllSync();
+    _resetLearning();
     childName = which == 0 ? 'Aarav' : 'Meera';
     explorerName = childName;
     age = which == 0 ? 6 : 7;
     grade = which == 0 ? 'Class 1' : 'Class 2';
+    langCode = 'en';
     consent = true;
     avatar = Avatar(hair: which == 0 ? 1 : 2, outfit: which == 0 ? 0 : 3, companion: 0);
-    _applyBaseline(_demoScores[which]!, seedErrors: true);
-    screen = AppScreen.skillMap;
-    changed();
-  }
-
-  void resetAllSync() {
-    screenings = [];
-    skills = {for (final s in Skill.values) s: SkillState()};
-    history = [];
-    lastWeekErrors = {};
-    missions = [];
-    day = 1;
-    practiceDays = {};
-    minutes = 0;
-    sessionsThisWeek = 0;
-    stars = 0;
-    badges = {};
-  }
-
-  // ---------------- assessment ----------------
-  void _applyBaseline(Map<Skill, double> scores, {bool seedErrors = false}) {
-    for (final s in Skill.values) {
-      final st = skills[s]!;
-      st.baseline = scores[s]!;
-      st.score = scores[s]!;
-      st.level = Personalizer.startLevel(Personalizer.classify(scores[s]!));
-      st.recent = [];
-      st.sessions = 0;
-      st.scaffold = false;
-      st.errors = {};
-    }
-    if (seedErrors) {
+    _startFromScores(_demoScores[which]!);
+    if (which == 0) {
       skills[Skill.phonological]!.errors = {'Wrong first sound': 3, 'Failed blend': 2};
-      skills[Skill.spelling]!.errors = {'Wrong matra / vowel': 3, 'Missing unit': 2};
-      skills[Skill.decoding]!.errors = {'Incorrect blend': 3};
+      skills[Skill.spelling]!.errors = {'Wrong vowel': 3, 'Missing unit': 2};
+      models[Skill.spelling]!.errors['Wrong vowel'] = 2.5;
+      models[Skill.phonological]!.errors['Wrong first sound'] = 2.2;
     }
-    history = [AssessmentRecord(0, Map.of(scores))];
     badges.add(Badges.first.id);
-    day = 1;
-    practiceDays = {};
-    minutes = 0;
-    sessionsThisWeek = 0;
-    missions = Personalizer.dailyPlan(skills, day);
-  }
-
-  Map<Skill, double> scoresFrom(List<ItemResult> results) => {
-        for (final s in Skill.values) s: Personalizer.scoreAssessment(results.where((r) => r.skill == s).toList()),
-      };
-
-  void completeBaseline(List<ItemResult> results) {
-    final scores = scoresFrom(results);
-    _applyBaseline(scores);
-    _addErrors(results);
-    stars += 5;
     screen = AppScreen.skillMap;
     changed();
   }
 
-  void _addErrors(List<ItemResult> results) {
-    for (final r in results) {
-      for (final t in r.tags) {
-        final m = skills[r.skill]!.errors;
-        m[t] = (m[t] ?? 0) + 1;
-      }
-    }
-  }
-
+  // ---------------- screening → personalised start ----------------
   static const _constructSkill = {
     scr.Construct.phonological: Skill.phonological,
     scr.Construct.gpc: Skill.gpc,
@@ -331,43 +320,6 @@ class AppState extends ChangeNotifier {
     scr.Construct.spelling: Skill.spelling,
     scr.Construct.comprehension: Skill.comprehension,
   };
-
-  void saveBackground(scr.Background b) {
-    background = b;
-    changed();
-  }
-
-  /// Screening finished: the report's construct percentiles become the six skill scores,
-  /// which set every game's starting level (strong → higher, weak → foundational).
-  void completeScreening(scr.ScreeningReport report, Map<String, List<scr.ItemResponse>> responses) {
-    final measured = [for (final c in report.constructs) if (c.band != scr.ScreenBand.notMeasured) c.percentile];
-    final fallback = measured.isEmpty ? 30.0 : measured.reduce((a, b) => a + b) / measured.length;
-    final scores = <Skill, double>{
-      for (final e in _constructSkill.entries)
-        e.value: (report.of(e.key)?.band ?? scr.ScreenBand.notMeasured) == scr.ScreenBand.notMeasured ? fallback.roundToDouble() : report.of(e.key)!.percentile,
-    };
-    final first = !hasBaseline;
-    screenings = [...screenings, report];
-    if (first) {
-      _applyBaseline(scores);
-    } else {
-      _applyReassessment(scores);
-    }
-    // carry the screening's error patterns into the engine
-    for (final list in responses.values) {
-      for (final r in list) {
-        if (r.tag == null || r.tag == 'discontinued' || !r.measured) continue;
-        final c = _subtestConstruct[r.subtest];
-        final skill = c == null ? null : _constructSkill[c];
-        if (skill == null) continue;
-        final m = skills[skill]!.errors;
-        m[r.tag!] = (m[r.tag!] ?? 0) + 1;
-      }
-    }
-    stars += 5;
-    screen = first ? AppScreen.skillMap : AppScreen.weeklyReport;
-    changed();
-  }
 
   static const _subtestConstruct = {
     'rhyme': scr.Construct.phonological,
@@ -381,141 +333,158 @@ class AppState extends ChangeNotifier {
     'oralReading': scr.Construct.comprehension,
   };
 
-  /// Fresh-item reassessment finished: update profile and move to the report.
-  void completeReassessment(List<ItemResult> results, {bool simulated = false, Map<Skill, double>? override}) {
-    final scores = override ?? scoresFrom(results);
-    _applyReassessment(scores, simulated: simulated);
-    screen = AppScreen.weeklyReport;
-    changed();
-  }
+  /// Maps screening tags onto the tags the games use as practice targets.
+  static const _tagMap = {
+    'Wrong first sound': 'Wrong first sound',
+    'Rhyme confusion': 'Rhyme confusion',
+    'Sound deletion / replacement error': 'Sound deletion / replacement error',
+    'Similar letter / matra confusion': 'Similar-letter confusion',
+    'Incorrect blend': 'Incorrect blend',
+    'Misread word': 'Visual confusion',
+    'Wrong vowel': 'Wrong vowel',
+    'Wrong letter': 'Wrong letter',
+    'Missing unit': 'Missing unit',
+  };
 
-  void _applyReassessment(Map<Skill, double> scores, {bool simulated = false}) {
-    // snapshot this week's errors for the report
-    lastWeekErrors = {};
-    for (final s in Skill.values) {
-      skills[s]!.errors.forEach((tag, n) => lastWeekErrors['${s.index}|$tag'] = n);
-    }
+  void _startFromScores(Map<Skill, double> scores, {Set<Skill> unmeasured = const {}}) {
     for (final s in Skill.values) {
       final st = skills[s]!;
-      final oldBand = Personalizer.classify(st.score);
+      st.baseline = scores[s]!;
       st.score = scores[s]!;
-      final nb = Personalizer.classify(st.score);
-      final start = Personalizer.startLevel(nb);
-      st.level = nb.index < oldBand.index ? start : max(start, st.level);
-      st.recent = [];
-      st.scaffold = false;
+      models[s] = SkillModel.fromScreening(scores[s]!, measured: !unmeasured.contains(s));
+      cycleStartStep[s] = models[s]!.step;
     }
-    history = [...history, AssessmentRecord(history.length, Map.of(scores), simulated: simulated)];
-    badges.add(Badges.week.id);
-    stars += 5;
+    history = [AssessmentRecord(0, Map.of(scores))];
+    campaign = Campaign();
+    campaign.startTiers(models);
+    cycleSessionStart = sessions.length;
   }
 
-  /// Demo shortcut: derive realistic week-1 results from the practice that really happened.
-  void simulateWeekOne() {
-    if (!weekReady) _fillDemoPractice();
-    final rng = Random(childName.hashCode + history.length);
-    final out = <Skill, double>{};
-    for (final s in Skill.values) {
-      final st = skills[s]!;
-      final practiced = st.sessions;
-      final acc = st.recent.isEmpty ? 0.7 : Personalizer.accuracy(st.recent);
-      var gain = 4.0 + practiced * 3.5 + acc * 6 + rng.nextInt(4);
-      if (st.score >= 80) gain = gain * 0.35;
-      if (practiced == 0) gain = min(gain, 4);
-      out[s] = (st.score + gain).clamp(0, 98).roundToDouble();
+  ({Map<Skill, double> scores, Set<Skill> unmeasured}) _scoresFrom(scr.ScreeningReport report) {
+    final measured = [for (final c in report.constructs) if (c.band != scr.ScreenBand.notMeasured) c.percentile];
+    final fallback = measured.isEmpty ? 30.0 : measured.reduce((a, b) => a + b) / measured.length;
+    final un = <Skill>{};
+    final scores = <Skill, double>{};
+    for (final e in _constructSkill.entries) {
+      final r = report.of(e.key);
+      if (r == null || r.band == scr.ScreenBand.notMeasured) {
+        un.add(e.value);
+        scores[e.value] = fallback.roundToDouble();
+      } else {
+        scores[e.value] = r.percentile;
+      }
     }
-    // a skill with heavy errors keeps lagging a bit — realistic, not all green
-    final worst = Personalizer.ranked(skills).first;
-    out[worst] = min(out[worst]!, skills[worst]!.score + 9);
-    _applyReassessment(out, simulated: true);
-    screen = AppScreen.weeklyReport;
+    return (scores: scores, unmeasured: un);
+  }
+
+  /// Screening finished. First time → every skill starts at its own step from the screening.
+  /// Later (check-in) → blend the fresh screening with what gameplay already knows.
+  void completeScreening(scr.ScreeningReport report, Map<String, List<scr.ItemResponse>> responses) {
+    for (final list in responses.values) {
+      for (final r in list) {
+        screeningSeen[r.itemId.split('.').first] = (screeningSeen[r.itemId.split('.').first] ?? 0) + 1;
+      }
+    }
+    final (:scores, :unmeasured) = _scoresFrom(report);
+    final first = !hasBaseline;
+    screenings = [...screenings, report];
+    if (first) {
+      _startFromScores(scores, unmeasured: unmeasured);
+      badges.add(Badges.first.id);
+    } else {
+      _applyCheckIn(scores, unmeasured);
+    }
+    for (final list in responses.values) {
+      for (final r in list) {
+        if (r.tag == null || r.tag == 'discontinued' || !r.measured) continue;
+        final c = _subtestConstruct[r.subtest];
+        final skill = c == null ? null : _constructSkill[c];
+        if (skill == null) continue;
+        skills[skill]!.errors[r.tag!] = (skills[skill]!.errors[r.tag!] ?? 0) + 1;
+        final mapped = _tagMap[r.tag];
+        if (mapped != null) models[skill]!.errors[mapped] = (models[skill]!.errors[mapped] ?? 0) + 1;
+      }
+    }
+    stars += 5;
+    screen = first ? AppScreen.skillMap : AppScreen.weeklyReport;
     changed();
   }
 
-  void startNextWeek() {
-    day = 1;
-    practiceDays = {};
-    minutes = 0;
-    sessionsThisWeek = 0;
-    missions = Personalizer.dailyPlan(skills, day);
+  void _applyCheckIn(Map<Skill, double> scores, Set<Skill> unmeasured) {
+    lastCycleErrors = {};
+    for (final s in Skill.values) {
+      models[s]!.errors.forEach((tag, n) => lastCycleErrors['${s.index}|$tag'] = n.round());
+    }
+    for (final s in Skill.values) {
+      final st = skills[s]!;
+      st.score = scores[s]!;
+      if (!unmeasured.contains(s)) {
+        final screenTheta = SkillModel.fromScreening(scores[s]!).theta;
+        final m = models[s]!;
+        m.theta = .6 * screenTheta + .4 * m.theta; // fresh, controlled measure weighs more
+        m.calibrationLeft = 1;
+      }
+    }
+    history = [...history, AssessmentRecord(history.length, Map.of(scores))];
+    badges.add(Badges.week.id);
+  }
+
+  /// After the check-in report and plan: a new season starts, islands grow a tier.
+  void startNextCycle() {
+    campaign.nextSeason(models);
+    for (final s in Skill.values) {
+      models[s]!.cycleItems = 0;
+      cycleStartStep[s] = models[s]!.step;
+    }
+    cycleSessionStart = sessions.length;
     screen = AppScreen.home;
     changed();
   }
 
-  // ---------------- daily practice ----------------
-  void advanceDay() {
-    if (day <= Cfg.daysPerWeek) day++;
-    if (day <= Cfg.daysPerWeek) missions = Personalizer.dailyPlan(skills, day);
-    changed();
-  }
-
-  /// Demo helper: replays the rest of the week as realistic practice so the weekly loop can be shown quickly.
-  void _fillDemoPractice() {
-    for (var d = day; d <= Cfg.daysPerWeek; d++) {
-      for (final m in Personalizer.dailyPlan(skills, d)) {
-        final st = skills[m.skill]!;
-        st.sessions++;
-        st.recent = [...st.recent, 1, 1, 1, 0, 1].reversed.take(Cfg.recentWindow).toList().reversed.toList();
-        sessionsThisWeek++;
-        stars += 2;
-      }
-      practiceDays.add(d);
-      minutes += Cfg.targetMinutesPerDay * 0.9;
+  // ---------------- gameplay ----------------
+  /// Every single answer updates that skill's model immediately (live adaptation).
+  void recordItem(Item item, ItemResult r) {
+    final m = models[item.skill]!;
+    final tag = r.tags.isEmpty ? null : r.tags.first;
+    m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
+    for (final t in r.tags) {
+      skills[item.skill]!.errors[t] = (skills[item.skill]!.errors[t] ?? 0) + 1;
     }
-    day = Cfg.daysPerWeek + 1;
+    _sync();
   }
 
-  void jumpToEndOfWeek() {
-    if (!weekReady) _fillDemoPractice();
-    changed();
-  }
-
-  SessionOutcome recordGame(GameId game, List<ItemResult> results, double seconds, {int? endLevel}) {
-    final skill = Skills.game(game).skill;
-    final st = skills[skill]!;
-    final before = st.level;
-    final adaptEvents = <AdaptEvent>[];
-
-    for (final r in results) {
-      st.recent.add(r.correct ? 1 : 0);
-      if (st.recent.length > Cfg.recentWindow) st.recent.removeAt(0);
+  SessionOutcome completeQuest(Quest q, List<ItemResult> results, double seconds, Map<Skill, int> startSteps) {
+    final before = campaign.restoration(q.island, models);
+    final wasReady = retestReady;
+    for (final s in q.skills.toSet()) {
+      models[s]!.endRound();
+      skills[s]!.sessions++;
     }
-    _addErrors(results);
-    st.sessions++;
+    final adapt = <AdaptEvent>[
+      for (final s in q.skills.toSet())
+        if (models[s]!.step != (startSteps[s] ?? models[s]!.step)) AdaptEvent(s, startSteps[s] ?? models[s]!.step, models[s]!.step),
+    ];
+    final hadChapter = campaign.chapterDone(q.island);
+    campaign.completeNode(q);
+    final chapterComplete = !hadChapter && campaign.chapterDone(q.island);
+
     final acc = results.isEmpty ? 1.0 : results.where((r) => r.correct).length / results.length;
-    if (endLevel != null && endLevel != before) {
-      // the level already moved inside the round (live adaptation) — keep it
-      st.level = endLevel;
-      st.scaffold = endLevel < before;
-    } else {
-      final decision = Personalizer.adapt(st.recent, st.level);
-      st.level = decision.level;
-      st.scaffold = decision.scaffold;
-    }
-    if (st.level != before) {
-      adaptEvents.add(AdaptEvent(skill, before, st.level));
-    }
-
-    final starsEarned = acc >= 0.8 ? 3 : (acc >= 0.5 ? 2 : 1);
+    var earned = acc >= .8 ? 3 : (acc >= .5 ? 2 : 1);
+    if (q.kind == QuestKind.boss || q.kind == QuestKind.challenge) earned += 1;
     final prevUnlocked = unlocked.map((c) => c.id).toSet();
     final prevBadges = Set<String>.of(badges);
-    stars += starsEarned;
-    badges.add(Badges.forSkill(skill).id);
-    if (adaptEvents.any((e) => e.up)) badges.add(Badges.levelUp.id);
-
-    final mi = missions.indexWhere((m) => m.skill == skill && !m.done);
-    var dayComplete = false;
-    if (mi >= 0) {
-      missions[mi].done = true;
-      if (dayDone) {
-        dayComplete = true;
-        practiceDays.add(day);
-        stars += 3;
-        badges.add(Badges.day.id);
-      }
+    stars += earned;
+    if (chapterComplete) stars += 5;
+    for (final s in q.skills) {
+      badges.add(Badges.forSkill(s).id);
     }
-    minutes += seconds / 60.0;
-    sessionsThisWeek++;
+    if (adapt.any((e) => e.up)) badges.add(Badges.levelUp.id);
+    if (chapterComplete) badges.add(Badges.day.id);
+
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    if (sessions.isEmpty || sessions.last.date != today) sessions.add(SessionEntry(today, 0, 0));
+    sessions.last.minutes += seconds / 60;
+    sessions.last.rounds++;
 
     final newC = unlocked.where((c) => !prevUnlocked.contains(c.id)).toList();
     final defs = <String, BadgeDef>{
@@ -525,9 +494,11 @@ class AppState extends ChangeNotifier {
       Badges.levelUp.id: Badges.levelUp,
       for (final s in Skill.values) Badges.forSkill(s).id: Badges.forSkill(s),
     };
-    final newB = [for (final id in badges.difference(prevBadges)) defs[id]!];
+    final newB = [for (final id in badges.difference(prevBadges)) if (defs[id] != null) defs[id]!];
+    final after = campaign.restoration(q.island, models);
     changed();
-    return SessionOutcome(starsEarned, starsEarned * Cfg.pointsPerStar, acc, adaptEvents, newC, newB, dayComplete);
+    return SessionOutcome(earned, earned * Cfg.pointsPerStar, acc, adapt, newC, newB,
+        chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after);
   }
 
   void equipHat(int idx) {

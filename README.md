@@ -4,9 +4,12 @@
 
 Readle is a gamified, multilingual (English + Hindi) literacy-support app for children aged roughly 5–10.
 A child plays a story adventure; behind the scenes the app runs a **DALI-aligned literacy screening**,
-builds a **skill profile**, and then **personalises a set of reading games** — each skill gets its own
-game and its own difficulty. Every week the child is re-screened with **fresh items**, progress is
-compared, and the next week's plan is generated automatically.
+builds a **skill profile**, and then **personalises a long-term game world**: each skill has its own island,
+its own game and its own difficulty (10 steps), re-estimated after every answer. There is **no daily limit**.
+When the child has played through **all seven islands**, a check-in with **fresh items** unlocks (never on a timer),
+and a new season begins with every island growing a tier. **Version 1 of the games is English-only** (Hindi in phase 2).
+
+📘 Full game design: [GAME_DESIGN.md](GAME_DESIGN.md)
 
 > ⚠️ **Readle is an educational screening and practice tool. It is NOT a medical or clinical diagnostic tool.**
 > It never says a child "has dyslexia", never shows a "dyslexia probability", and always recommends
@@ -125,7 +128,7 @@ Design rules:
 - **Language:** the whole screening runs in the language chosen at setup (English or Hindi).
   Hindi content is written for Hindi (aksharas, matras, conjuncts, Hindi stories), not translated.
 - **Stop rule:** each activity stops after **3 misses in a row** (remaining items scored 0), so a struggling child is never stuck failing.
-- **Fresh forms:** every item is tagged **pool A** (baseline) or **pool B** (weekly check-in); A and B never share items. Daily games never use screening items.
+- **Fresh items:** screening items are tagged by form, and every check-in picks the **least-used items first** (exposure tracking). Games never use screening items.
 - **Neutral feedback:** during screening the child hears "Nice!" / "Great reading!", never right/wrong.
 - **About 15 minutes**, split into stations with a story wrapper.
 
@@ -201,6 +204,16 @@ an educator detail table (accuracy, rate, band per activity) and a disclaimer.
 
 ## 6. Personalisation and adaptive difficulty
 
+> **v2 game system (current):** see [GAME_DESIGN.md §3A–3C](GAME_DESIGN.md). In short:
+> - The screening percentile sets a **starting step 1–7 of 10 per skill** (`Cfg.startStepTable`).
+> - A per-skill **learner model** (`engine/skill_model.dart`, Elo/IRT-style θ) updates after **every answer** and serves the step with ~78 % expected success.
+> - Error tags that repeat become practice targets and fade over time.
+> - The **Quest Board** (`engine/campaign.dart`) always offers 3 quests. Islands have 10-quest chapters, the 7th island is the mixed **Star Observatory**, and **seasons** grow every island a tier.
+> - The **check-in unlocks only after all seven islands** are played through, with ≥ 60 answers per skill and settled levels. There are no timers and no override.
+> - Items come from a **feature-tagged English word database** (770+ words, automatic difficulty) in `lib/content/en/`.
+>
+> The table below describes the original v1 thresholds, kept for history.
+
 All thresholds live in **`lib/core/config.dart`** (`Cfg`) — nothing is hard-coded in the UI.
 
 | Setting | Value |
@@ -261,20 +274,20 @@ Mistakes say *"Almost! Let's try again."* — never "Wrong" or "Game over".
 - 1–3 stars per round (effort always earns at least 1) + XP display; +3 bonus when the day's missions are done; +5 for each screening.
 - 10 collectible treasures unlocked by star totals (hats you can wear, friends, room decorations, gear).
 - Badges: First Adventure, per-region Explorer, Daily Adventurer, Week Champion, Level Climber.
-- **Sky Station** island unlocks after the first weekly check-in (advanced challenge on the strongest skill).
+- The **Star Observatory** (7th island) unlocks when all six skill chapters are done; finishing it (plus enough answers per skill) opens the **Star Bridge** check-in.
 - No loot boxes, no lives, no leaderboards, no streak punishment.
 
 ---
 
 ## 9. Weekly cycle, parent report and next-week plan
 
-1. **Days 1–7:** about 10 minutes a day of the generated missions.
-2. **End of week:** *"Your Next Adventure Awaits!"* → the same screening with **form B**.
+1. **Play (no time limit):** the Quest Board always offers 3 quests; each island has a 10-quest chapter (quest 10 = boss).
+2. **After all seven islands** (6 chapters + Star Observatory, ≥ 60 answers per skill, settled levels): *"The Star Bridge has appeared!"* → fresh screening.
 3. **Weekly report:** baseline → week-1 per skill, band changes, overall change, practice days / minutes / games, common slips, *What we observed*, support note.
 4. **Next adventure plan:** focus skills (with reasons such as *"Improved strongly — a lighter touch this week"*), suggested missions, new starting levels.
 5. **Learning loop** screen, then week 2 starts with a fresh plan.
 
-**Demo controls** (grown-up dashboard) for presenting quickly: load Profile A (Aarav) / Profile B (Meera), skip to tomorrow,
+**Demo controls** (grown-up dashboard): load Profile A (Aarav) / Profile B (Meera). There is no time-skipping and no retest override;
 jump to end of week (fills realistic practice), run screening now, simulate week-1 results (clearly labelled *simulated*), open screening / weekly reports, learning loop, reset.
 
 ---
@@ -451,7 +464,7 @@ flutter test
 
 ## 17. Tests
 
-`flutter test` runs **25 tests**, all passing:
+`flutter test` runs **34 tests**, all passing, including a simulated child playing a full cycle (7 islands → check-in → new season), the word database, the item generator at every step, the learner model and the retest gate. Earlier tests:
 
 - **Content:** every word's sound units rebuild the word (EN + HI); every screening activity has enough items for both forms, both age bands and both languages; forms A and B never overlap; spelling answers match targets; no duplicate options.
 - **Generators:** items for every skill × level × form × language are valid.
@@ -467,7 +480,7 @@ flutter test
 2. Show the **Skill Map** and **Personalising your world…**, then the **world map**: weak skills = big glowing islands, numbered missions.
 3. Play a mission (e.g. **Spelling Hive**). Make two mistakes on purpose → hint + warm-up level; get two right → *Power up!*. Finish → **You Did It!**
 4. Open the **grown-up dashboard** (sum gate) → show independent levels per skill and the day-by-day plan.
-5. **Demo controls** → *Jump to end of week* → *Simulate week-1 results* (or *Run screening now* for a real form-B check-in) → **weekly report** → **next adventure plan** → **learning loop**.
+5. Show the **Quest Board** and the **retest checklist** in the dashboard: the check-in opens only after all seven islands are played. Switch between Profile A and B to show different starting steps per skill.
 6. Switch to the other demo profile to show a completely different map and plan.
 
 ---
@@ -490,6 +503,18 @@ Key references:
 ---
 
 ## 20. What we built, step by step (project history)
+
+0. **(latest) Long-term game system v2:**
+   - removed the daily cap and the weekly retest
+   - per-skill learner model
+   - the screening sets each skill's starting step
+   - Quest Board, chapters, tiers and seasons
+   - Star Observatory as the 7th island
+   - evidence-based check-in gate
+   - feature-tagged English word database
+   - English-only v1
+   - cycle-based reports
+
 
 1. **Product study** — read the Akshara Path specification (six parameters, 11 games, weekly reassessment, privacy, offline-first) and the visual reference board (13 screens of the journey).
 2. **First Flutter prototype** — project setup, data model, English + Hindi language packs, item generator for all six skills, rule-based personalisation engine, central state with persistence, onboarding, avatar creator, hidden "bridge" assessment, skill map, world map, six playable games with live adaptive difficulty, rewards and collection, weekly report, next-week plan, learning loop, grown-up dashboard, demo profiles A/B, 14 tests. Bundled Devanagari font; replaced emoji that did not render on all devices.

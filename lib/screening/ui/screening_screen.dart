@@ -50,7 +50,15 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     for (final def in battery) {
       final n = def.count(band);
       if (n == 0) continue;
-      final items = bank.forSubtest(def.id, pool, band).take(n).toList();
+      // fresh items every time: least-used items first (across all forms), then this cycle's form, then difficulty
+      final all = [...bank.forSubtest(def.id, 'A', band), ...bank.forSubtest(def.id, 'B', band)];
+      all.sort((x, y) {
+        final sx = st.screeningSeen[x.id] ?? 0, sy = st.screeningSeen[y.id] ?? 0;
+        if (sx != sy) return sx.compareTo(sy);
+        if (x.pool != y.pool) return x.pool == pool ? -1 : 1;
+        return x.difficulty.compareTo(y.difficulty);
+      });
+      final items = all.take(n).toList()..sort((x, y) => x.difficulty.compareTo(y.difficulty));
       if (items.isEmpty) continue;
       plan.add((def, items));
     }

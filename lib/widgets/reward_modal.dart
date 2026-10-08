@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'props.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
+import '../engine/campaign.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import 'common.dart';
 
-Future<void> showRewardModal(BuildContext context, {required SessionOutcome outcome, required GameId game, required int companion, required int level}) {
+Future<void> showRewardModal(BuildContext context, {required SessionOutcome outcome, required GameId game, required int companion, required int level, Quest? quest}) {
   return showGeneralDialog(
     context: context,
     barrierDismissible: false,
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 450),
-    pageBuilder: (_, __, ___) => _RewardDialog(outcome: outcome, game: game, companion: companion, level: level),
+    pageBuilder: (_, __, ___) => _RewardDialog(outcome: outcome, game: game, companion: companion, level: level, quest: quest),
     transitionBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: ScaleTransition(scale: CurvedAnimation(parent: a, curve: Curves.easeOutBack), child: child)),
   );
 }
@@ -22,7 +23,8 @@ class _RewardDialog extends StatelessWidget {
   final SessionOutcome outcome;
   final GameId game;
   final int companion, level;
-  const _RewardDialog({required this.outcome, required this.game, required this.companion, required this.level});
+  final Quest? quest;
+  const _RewardDialog({required this.outcome, required this.game, required this.companion, required this.level, this.quest});
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +112,28 @@ class _RewardDialog extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text('${b.emoji}  New badge: ${b.name}', textAlign: TextAlign.center, style: ts(17, color: C.purpleDark)),
                   ],
-                  if (outcome.dayComplete) ...[
+                  if (quest != null) ...[
+                    const SizedBox(height: 12),
+                    Text('${Campaign.islandName(quest!.island)} restored', style: ts(15, color: C.inkSoft)),
+                    const SizedBox(height: 4),
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: outcome.restorationBefore / 100, end: outcome.restorationAfter / 100),
+                      duration: const Duration(milliseconds: 1200),
+                      curve: Curves.easeOutCubic,
+                      builder: (_, v, __) => Row(children: [
+                        Expanded(child: GameProgressBar(value: v, color: C.green, height: 14)),
+                        const SizedBox(width: 8),
+                        Text('${(v * 100).round()}%', style: ts(15, color: C.greenDark)),
+                      ]),
+                    ),
+                  ],
+                  if (outcome.chapterComplete) ...[
                     const SizedBox(height: 10),
-                    Text('🎉 Today’s adventure is complete! +3 bonus stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
+                    Text('🏆 Chapter complete! The island is growing. +5 stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
+                  ],
+                  if (outcome.retestUnlocked) ...[
+                    const SizedBox(height: 10),
+                    Text('🌉 The Star Bridge has appeared! Gumsum is waiting on the map.', textAlign: TextAlign.center, style: ts(17, color: C.purple)),
                   ],
                   const SizedBox(height: 20),
                   BigButton(label: 'Continue', style: BtnStyle.primary, onTap: () => Navigator.of(context).pop(), width: 240),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../data/strings.dart';
+import '../engine/campaign.dart';
 import '../engine/personalizer.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
@@ -31,8 +32,18 @@ const _regions = <_Region>[
   _Region('village', Skill.wordRecognition, 'Word Village', 'Familiar words', '🏘️🔍', Color(0xFFFFB866), Color(0xFFE08A2B), Offset(.62, .42), Offset(.73, .41)),
   _Region('treasure', Skill.spelling, 'Treasure Island', 'Spelling', '🏝️💰', Color(0xFFFFD35C), Color(0xFFE0A41A), Offset(.44, .77), Offset(.27, .53)),
   _Region('castle', Skill.comprehension, 'Story Castle', 'Comprehension', '🏰📖', Color(0xFFFF8FB8), Color(0xFFD9578A), Offset(.83, .72), Offset(.73, .66)),
-  _Region('sky', null, 'Sky Station', 'Advanced', '🛰️🚀', Color(0xFF9AA8FF), Color(0xFF6A78E0), Offset(.86, .20), Offset(.27, .88)),
+  _Region('sky', null, 'Star Observatory', 'All skills', '🛰️🚀', Color(0xFF9AA8FF), Color(0xFF6A78E0), Offset(.86, .20), Offset(.27, .88)),
 ];
+
+const _regionIsland = {
+  'forest': IslandId.forest,
+  'valley': IslandId.valley,
+  'ocean': IslandId.ocean,
+  'village': IslandId.village,
+  'treasure': IslandId.treasure,
+  'castle': IslandId.castle,
+  'sky': IslandId.observatory,
+};
 
 class WorldMapScreen extends StatefulWidget {
   const WorldMapScreen({super.key});
@@ -49,8 +60,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final st = context.read<AppState>();
-      if (st.history.length >= 2 && !st.badges.contains('sky-seen')) {
-        st.badges.add('sky-seen');
+      if (st.campaign.observatoryUnlocked && !st.badges.contains('obs-s${st.campaign.season}')) {
+        st.badges.add('obs-s${st.campaign.season}');
         setState(() => _skyToast = true);
         st.changed();
         Future.delayed(const Duration(seconds: 4), () {
@@ -66,29 +77,24 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     super.dispose();
   }
 
-  Future<void> _play(GameId g, {int? level}) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(game: g, levelOverride: level)));
+  Future<void> _play(Quest q) async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q)));
   }
 
   void _openRegion(_Region r) {
     final st = context.read<AppState>();
-    if (r.skill == null) {
-      if (st.history.length < 2) {
-        _toast('Finish the next adventure checkpoint to unlock the Sky Station!');
-        return;
-      }
-      // advanced challenge: stretch the strongest skill
-      final strongest = Personalizer.ranked(st.skills).last;
-      _play(Skills.of(strongest).demoGame, level: 4);
+    final island = _regionIsland[r.id]!;
+    if (island == IslandId.observatory && !st.campaign.observatoryUnlocked) {
+      _toast('Finish the chapter on all six islands to open the Star Observatory!');
       return;
     }
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => _RegionSheet(skill: r.skill!, onPlay: (g) {
+      builder: (_) => _RegionSheet(island: island, onPlay: (q) {
         Navigator.of(context).pop();
-        _play(g);
+        _play(q);
       }),
     );
   }
@@ -100,8 +106,9 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
-    final rank = Personalizer.ranked(st.skills);
-    final nextMission = st.missions.where((m) => !m.done).firstOrNull;
+    final rank = Personalizer.byNeed(st.models);
+    final board = st.board;
+    final nextMission = board.isEmpty ? null : board.first;
     return Scaffold(
       body: Stack(children: [
         Positioned.fill(child: AnimatedBuilder(animation: _wave, builder: (_, __) => CustomPaint(painter: WavesPainter(_wave.value)))),
@@ -122,7 +129,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                         height: canvasH,
                         child: Stack(children: [
                           Positioned.fill(child: CustomPaint(painter: _TrailPainter([for (final r in _regions) Offset(r.tall.dx * canvasW, r.tall.dy * mapH + base * .35)]))),
-                          for (final r in _regions) _island(r, st, rank, nextMission, canvasW, mapH, false, base),
+                          for (final r in _regions) _island(r, st, rank, nextMission, board, canvasW, mapH, false, base),
                         ]),
                       ),
                     ),
@@ -157,7 +164,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                 child: Panel(
                   color: const Color(0xFFFFF9E8),
                   padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-                  child: Text('🛰️ New area unlocked: Sky Station!', textAlign: TextAlign.center, style: ts(22, color: C.purple)),
+                  child: Text('🔭 New island unlocked: the Star Observatory!', textAlign: TextAlign.center, style: ts(22, color: C.purple)),
                 ),
               ),
             ),
@@ -166,22 +173,21 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     );
   }
 
-  Widget _island(_Region r, AppState st, List<Skill> rank, Mission? next, double w, double h, bool wide, double base) {
+  Widget _island(_Region r, AppState st, List<Skill> rank, Quest? next, List<Quest> board, double w, double h, bool wide, double base) {
     final pos = wide ? r.wide : r.tall;
-    final locked = r.skill == null && st.history.length < 2;
+    final island = _regionIsland[r.id]!;
+    final locked = island == IslandId.observatory && !st.campaign.observatoryUnlocked;
     var scale = 1.0;
-    int? order;
-    var done = false;
+    final bi = board.indexWhere((q) => q.island == island);
+    final int? order = bi >= 0 ? bi + 1 : null;
+    final done = st.campaign.chapterDone(island);
     if (r.skill != null) {
       final rk = rank.indexOf(r.skill!);
       scale = [1.28, 1.16, 1.06, .98, .94, .9][rk];
-      final mi = st.missions.indexWhere((m) => m.skill == r.skill);
-      if (mi >= 0) {
-        order = mi + 1;
-        done = st.missions[mi].done;
-      }
     }
-    final isNext = next != null && r.skill == next.skill;
+    final isNext = next != null && next.island == island;
+    final restoration = st.campaign.restoration(island, st.models);
+    final tier = st.campaign.islands[island]!.tier;
     final size = base * scale;
     final totalH = size * .95 + 70;
     final level = r.skill == null ? 0 : st.skills[r.skill!]!.level;
@@ -209,8 +215,21 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                     if (locked) Positioned(top: size * .2, child: Container(padding: const EdgeInsets.all(10), decoration: const BoxDecoration(color: Color(0xCC1E2753), shape: BoxShape.circle), child: Icon(Icons.lock_rounded, color: Colors.white, size: size * .16))),
                     if (band == Band.strong) Positioned(right: size * .04, top: size * .04, child: Text('✨', style: TextStyle(fontSize: size * .15))),
                     if (isNext) Positioned(top: -4, child: _Bounce(child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: C.gold, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white, width: 2)), child: Text('Start here!', style: ts(12, color: C.ink))))),
-                    if (r.skill != null)
-                      Positioned(bottom: size * .1, child: Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .92), borderRadius: BorderRadius.circular(14), boxShadow: [softShadow(const Color(0x33000000), 6, 2)]), child: PowerPips(level: level, emoji: '⭐'))),
+                    if (!locked)
+                      Positioned(
+                        bottom: size * .08,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(color: Colors.white.withValues(alpha: .94), borderRadius: BorderRadius.circular(14), boxShadow: [softShadow(const Color(0x33000000), 6, 2)]),
+                          child: Row(mainAxisSize: MainAxisSize.min, children: [
+                            Text(tier > 1 ? '${tierName(tier)} ' : '', style: ts(11, color: C.purple)),
+                            SizedBox(width: size * .32, child: GameProgressBar(value: restoration / 100, color: C.green, height: 8)),
+                            const SizedBox(width: 4),
+                            Text('${restoration.round()}%', style: ts(11, color: C.greenDark)),
+                            if (r.skill != null) ...[const SizedBox(width: 4), PowerPips(level: level, emoji: '⭐', max: 4)],
+                          ]),
+                        ),
+                      ),
                   ]),
                 ),
               ]),
@@ -243,7 +262,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             FittedBox(fit: BoxFit.scaleDown, child: Text(r.name, style: ts(15, color: Colors.white))),
-            FittedBox(fit: BoxFit.scaleDown, child: Text(r.tag, style: ts(11, color: Colors.white70, w: FontWeight.w600))),
+            FittedBox(fit: BoxFit.scaleDown, child: Text(done ? '✓ chapter complete' : r.tag, style: ts(11, color: Colors.white70, w: FontWeight.w600))),
           ]),
         ),
       ),
@@ -279,37 +298,27 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
   }
 
   Widget _bottom(AppState st) {
+    final board = st.board;
     Widget content;
-    if (st.weekReady) {
+    if (st.retestReady) {
       content = Row(children: [
-        Companion(type: st.avatar.companion, size: 76),
+        Companion(type: st.avatar.companion, size: 70),
         const SizedBox(width: 8),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Your Next Adventure Awaits!', style: ts(20, color: Colors.white)),
-            Text('New challenges, new treasure!', style: ts(14, color: Colors.white70, w: FontWeight.w600)),
+            Text('🌉 The Star Bridge has appeared!', style: ts(18, color: Colors.white)),
+            Text('All seven islands played — Gumsum is waiting.', style: ts(13, color: Colors.white70, w: FontWeight.w600)),
           ]),
         ),
-        BigButton(label: 'Let’s Go!', style: BtnStyle.go, height: 56, fontSize: 20, onTap: () => st.go(AppScreen.intro)),
-      ]);
-    } else if (st.dayDone) {
-      content = Row(children: [
-        Companion(type: st.avatar.companion, size: 76),
-        const SizedBox(width: 8),
-        Expanded(child: Text('🎉 Today’s adventure is done! See you tomorrow, ${st.explorerName}!', style: ts(17, color: Colors.white))),
-        BigButton(label: 'Tomorrow', icon: Icons.skip_next_rounded, style: BtnStyle.soft, height: 52, fontSize: 16, onTap: st.advanceDay),
+        BigButton(label: 'Let’s Go!', style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => st.go(AppScreen.intro)),
       ]);
     } else {
-      content = Row(children: [
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-            Text('Day ${st.day} • Today’s adventure', style: ts(15, color: Colors.white)),
-            const SizedBox(height: 6),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [for (var i = 0; i < st.missions.length; i++) _missionChip(st, i)]),
-            ),
-          ]),
+      content = Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+        Text('${seasonName(st.campaign.season)} · Quest board', style: ts(15, color: Colors.white)),
+        const SizedBox(height: 6),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: [for (final q in board) _questChip(q)]),
         ),
       ]);
     }
@@ -320,24 +329,32 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     );
   }
 
-  Widget _missionChip(AppState st, int i) {
-    final m = st.missions[i];
-    final g = Skills.game(m.game);
+  Widget _questChip(Quest q) {
+    final g = Skills.game(q.game);
+    final color = switch (q.kind) {
+      QuestKind.boss => const Color(0xFFE5483F),
+      QuestKind.challenge => C.purple,
+      QuestKind.support => C.green,
+      QuestKind.observatory => const Color(0xFF6A78E0),
+      _ => C.orange,
+    };
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: GestureDetector(
-        onTap: m.done ? null : () => _play(m.game),
+        onTap: () => _play(q),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            color: m.done ? C.green.withValues(alpha: .35) : Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: m.done ? C.green : C.orange, width: 3),
-          ),
-          child: Row(children: [
-            Text(m.done ? '✅' : g.emoji, style: const TextStyle(fontSize: 24)),
+          constraints: const BoxConstraints(maxWidth: 240),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22), border: Border.all(color: color, width: 3)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(g.emoji, style: const TextStyle(fontSize: 26)),
             const SizedBox(width: 8),
-            Text(g.name, style: ts(15, color: m.done ? Colors.white : C.ink)),
+            Flexible(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                Text(questKindLabel(q.kind).toUpperCase(), style: ts(10, color: color)),
+                Text(q.title, style: ts(14, color: C.ink), maxLines: 1, overflow: TextOverflow.ellipsis),
+              ]),
+            ),
           ]),
         ),
       ),
@@ -372,14 +389,19 @@ class _PulseRingState extends State<_PulseRing> with SingleTickerProviderStateMi
 }
 
 class _RegionSheet extends StatelessWidget {
-  final Skill skill;
-  final void Function(GameId) onPlay;
-  const _RegionSheet({required this.skill, required this.onPlay});
+  final IslandId island;
+  final void Function(Quest) onPlay;
+  const _RegionSheet({required this.island, required this.onPlay});
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
-    final meta = Skills.of(skill);
-    final level = st.skills[skill]!.level;
+    final camp = st.campaign;
+    final ist = camp.islands[island]!;
+    final skill = islandSkill[island];
+    final q = camp.questFor(island, st.models);
+    final need = camp.nodesNeeded(island);
+    final restoration = camp.restoration(island, st.models);
+    final emoji = skill == null ? '🔭' : Skills.of(skill).emoji;
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       decoration: const BoxDecoration(color: Color(0xFFFFF9E8), borderRadius: BorderRadius.vertical(top: Radius.circular(34))),
@@ -388,11 +410,39 @@ class _RegionSheet extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(width: 48, height: 5, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(3))),
           const SizedBox(height: 12),
-          Text('${meta.emoji}  ${meta.region}', style: ts(30)),
-          const SizedBox(height: 4),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Your power: ', style: ts(15, color: C.inkSoft)), PowerPips(level: level, emoji: '⚡')]),
+          Text('$emoji  ${Campaign.islandName(island)}', style: ts(28)),
+          Text('${tierName(ist.tier)} · chapter ${ist.nodes.clamp(0, need)}/$need', style: ts(15, color: C.inkSoft)),
+          const SizedBox(height: 8),
+          Row(children: [
+            Expanded(child: GameProgressBar(value: restoration / 100, color: C.green, height: 14)),
+            const SizedBox(width: 8),
+            Text('${restoration.round()}% restored', style: ts(14, color: C.greenDark)),
+          ]),
+          if (skill != null) ...[
+            const SizedBox(height: 6),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Your power: ', style: ts(15, color: C.inkSoft)), PowerPips(level: st.model(skill).band, emoji: '⚡')]),
+          ],
           const SizedBox(height: 14),
-          for (final gid in meta.games) _GameRow(game: Skills.game(gid), onPlay: onPlay),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: C.orange, width: 3)),
+            child: Row(children: [
+              Text(Skills.game(q.game).emoji, style: const TextStyle(fontSize: 38)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(questKindLabel(q.kind).toUpperCase(), style: ts(12, color: C.orangeDark)),
+                  Text(q.title, style: ts(19)),
+                  Text('${Skills.game(q.game).name} · ${q.items} challenges', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+                ]),
+              ),
+              BigButton(label: 'Play', icon: Icons.play_arrow_rounded, style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => onPlay(q)),
+            ]),
+          ),
+          if (skill != null) ...[
+            const SizedBox(height: 10),
+            for (final gid in Skills.of(skill).games.where((g) => !Skills.game(g).playable)) _GameRow(game: Skills.game(gid)),
+          ],
         ]),
       ),
     );
@@ -401,8 +451,7 @@ class _RegionSheet extends StatelessWidget {
 
 class _GameRow extends StatelessWidget {
   final GameMeta game;
-  final void Function(GameId) onPlay;
-  const _GameRow({required this.game, required this.onPlay});
+  const _GameRow({required this.game});
   @override
   Widget build(BuildContext context) {
     final locked = !game.playable;
@@ -420,7 +469,6 @@ class _GameRow extends StatelessWidget {
               Text(locked ? 'Coming on a future adventure' : game.tagline, style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
             ]),
           ),
-          if (!locked) BigButton(label: 'Play', icon: Icons.play_arrow_rounded, style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => onPlay(game.id)),
         ]),
       ),
     );

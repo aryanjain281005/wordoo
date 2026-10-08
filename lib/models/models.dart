@@ -16,6 +16,7 @@ enum GameId {
   spellingHive,
   magicWriter,
   storyQuest,
+  starObservatory, // mixed review of all six skills (7th island)
 }
 
 /// One answer option in a choice item.
@@ -45,6 +46,8 @@ class Item {
   final String hint;
   final String? replaySay; // what the speaker button replays
   final bool timed;
+  final double diff; // difficulty on the 1–10 step scale (for the learner model)
+  final bool audioOptions; // options are heard, not read (tap to listen, tap again to choose)
 
   const Item({
     required this.id,
@@ -63,7 +66,9 @@ class Item {
     this.hint = '',
     this.replaySay,
     this.timed = false,
-  });
+    double? diff,
+    this.audioOptions = false,
+  }) : diff = diff ?? (level + .0);
 }
 
 class ItemResult {

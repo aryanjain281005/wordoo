@@ -29,7 +29,7 @@ class AppShell extends StatelessWidget {
       AppScreen.dashboard => const ParentDashboard(),
       AppScreen.weeklyReport => const WeeklyReportScreen(),
       AppScreen.nextAdventure => const NextAdventureScreen(),
-      AppScreen.loop => LoopScreen(onContinue: st.startNextWeek),
+      AppScreen.loop => LoopScreen(onContinue: st.startNextCycle),
     };
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 450),

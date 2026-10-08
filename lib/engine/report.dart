@@ -15,7 +15,7 @@ class Report {
   static List<ErrorStat> errors(AppState st, {bool lastWeek = false}) {
     final out = <ErrorStat>[];
     if (lastWeek) {
-      st.lastWeekErrors.forEach((k, n) {
+      st.lastCycleErrors.forEach((k, n) {
         final parts = k.split('|');
         out.add(ErrorStat(Skill.values[int.parse(parts[0])], parts[1], n));
       });
@@ -92,6 +92,6 @@ class Report {
       if (b == Band.needsSupport) return 'Still needs support — more targeted practice';
       return 'Developing — steady practice';
     }
-    return Personalizer.reasonFor(s, st.skills[s]!);
+    return Personalizer.reasonFor(s, st.model(s));
   }
 }

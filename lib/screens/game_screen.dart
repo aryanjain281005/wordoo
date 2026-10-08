@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/config.dart';
 import '../core/theme.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
 import '../data/skills.dart';
 import '../data/strings.dart';
-import '../engine/item_factory.dart';
+import '../engine/campaign.dart';
+import '../engine/item_gen.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import '../widgets/art.dart';
@@ -25,43 +25,40 @@ Scene sceneFor(Skill s) => switch (s) {
 
 enum _Phase { intro, play }
 
-/// Every game follows: short explanation → demonstration → gameplay → feedback → reward → back to the map.
+/// Plays one quest: short explanation → demonstration → items → reward. Every answer immediately
+/// updates that skill's learner model, so the next item already uses the new difficulty.
 class GameScreen extends StatefulWidget {
-  final GameId game;
-  final int? levelOverride;
-  const GameScreen({super.key, required this.game, this.levelOverride});
+  final Quest quest;
+  const GameScreen({super.key, required this.quest});
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
   _Phase phase = _Phase.intro;
-  late final GameMeta meta = Skills.game(widget.game);
+  late final Quest quest = widget.quest;
+  late final GameMeta meta = Skills.game(quest.game);
   late final AppState st = context.read<AppState>();
   late final LangPack pack = st.pack;
-  late final ItemFactory factory = ItemFactory(pack);
-  late int level;
-  late int startLevel;
-  late bool scaffold;
+  late final ItemGen gen = ItemGen(st.content, seen: st.itemSeen);
+  late final Map<Skill, int> startSteps = {for (final s in quest.skills.toSet()) s: st.model(s).step};
   final List<ItemResult> results = [];
-  final Set<String> used = {};
   Item? item;
   Item? demoItem;
+  bool scaffold = false;
   int index = 0;
-  int streak = 0, misses = 0;
   late String msg;
   bool happy = true;
   String? banner;
   late final DateTime startedAt;
 
+  Skill get skillNow => quest.skills[index % quest.skills.length];
+
   @override
   void initState() {
     super.initState();
-    final ss = st.skills[meta.skill]!;
-    level = widget.levelOverride ?? ss.level;
-    startLevel = level;
-    scaffold = ss.scaffold;
-    demoItem = factory.make(meta.skill, level.clamp(1, 2), {Pool.p});
+    final s0 = quest.skills.first;
+    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).make(s0, (st.model(s0).step - 1).clamp(1, 10));
     msg = Str.t(pack.code, 'tryDemo');
     startedAt = DateTime.now();
   }
@@ -82,9 +79,9 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _nextItem() {
-    final it = factory.make(meta.skill, level, {Pool.p}, used: used);
-    used.add(it.id);
-    item = it;
+    final m = st.model(skillNow);
+    item = gen.make(skillNow, m.step, focus: m.focusErrors);
+    scaffold = m.needsScaffold || quest.kind == QuestKind.support;
   }
 
   void _onFeedback(String m, bool good) => setState(() {
@@ -93,30 +90,21 @@ class _GameScreenState extends State<GameScreen> {
       });
 
   void _onDone(ItemResult r) {
+    final it = item!;
+    final before = st.model(it.skill).step;
     results.add(r);
+    st.recordItem(it, r);
+    final after = st.model(it.skill).step;
     String? ban;
-    if (r.correct) {
-      streak++;
-      misses = 0;
-    } else {
-      misses++;
-      streak = 0;
-    }
     var nextMsg = Str.t(pack.code, 'ready');
-    if (streak >= Cfg.streakToLevelUp && level < Cfg.maxLevel) {
-      level++;
-      streak = 0;
-      scaffold = false;
-      ban = '${meta.emoji} ${Str.t(pack.code, 'powerUp')}';
+    if (after > before) {
+      ban = '${quest.mixed ? Skills.of(it.skill).emoji : meta.emoji} ${Str.t(pack.code, 'powerUp')}';
       nextMsg = Str.t(pack.code, 'stronger');
-    } else if (misses >= Cfg.missesToLevelDown) {
-      if (level > Cfg.minLevel) level--;
-      misses = 0;
-      scaffold = true;
+    } else if (after < before) {
       nextMsg = Str.t(pack.code, 'warmUp');
     }
     index++;
-    if (index >= Cfg.itemsPerRound) {
+    if (index >= quest.items) {
       _finish();
       return;
     }
@@ -135,9 +123,9 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _finish() async {
     final seconds = DateTime.now().difference(startedAt).inSeconds.toDouble();
-    final out = st.recordGame(widget.game, results, seconds, endLevel: level);
-    final newLevel = st.skills[meta.skill]!.level;
-    await showRewardModal(context, outcome: out, game: widget.game, companion: st.avatar.companion, level: newLevel);
+    final out = st.completeQuest(quest, results, seconds, startSteps);
+    final band = st.model(quest.skills.first).band;
+    await showRewardModal(context, outcome: out, game: quest.game, companion: st.avatar.companion, level: band, quest: quest);
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -145,7 +133,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AdventureBackground(
-        scene: sceneFor(meta.skill),
+        scene: quest.mixed ? Scene.night : sceneFor(quest.skills.first),
         calm: true,
         child: SafeArea(
           child: AnimatedSwitcher(
@@ -157,19 +145,9 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  static const _missions = {
-    GameId.soundOrchestra: 'Wake the Forest Band!',
-    GameId.letterArcher: 'Hit the Letter Targets!',
-    GameId.wordRocket: 'Launch the Word Rocket!',
-    GameId.wordDetective: 'Catch the Right Word!',
-    GameId.spellingHive: 'Fix the Pirate Map!',
-    GameId.storyQuest: 'Read the Magic Scroll!',
-  };
-
   Widget _topBar({bool play = false}) {
-    final st2 = context.read<AppState>();
-    final mi = st2.missions.indexWhere((m) => m.game == widget.game);
-    final region = Skills.of(meta.skill).region;
+    final region = Campaign.islandName(quest.island);
+    final m = st.model(play ? skillNow : quest.skills.first);
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -186,22 +164,25 @@ class _GameScreenState extends State<GameScreen> {
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Expanded(child: Text(region, style: ts(14, color: const Color(0xFFFFE17A)))),
+                Expanded(child: Text('$region · ${questKindLabel(quest.kind)}', style: ts(14, color: const Color(0xFFFFE17A)))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: .18), borderRadius: BorderRadius.circular(10)),
-                  child: PowerPips(level: level),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    if (quest.mixed) Text('${Skills.of(skillNow).emoji} ', style: const TextStyle(fontSize: 14)),
+                    PowerPips(level: m.band),
+                  ]),
                 ),
               ]),
-              Text(mi >= 0 ? 'Mission ${mi + 1}: ${_missions[widget.game] ?? meta.tagline}' : (_missions[widget.game] ?? meta.tagline), style: ts(17, color: Colors.white), maxLines: 2),
+              Text(quest.title, style: ts(17, color: Colors.white), maxLines: 2),
               if (play) ...[
                 const SizedBox(height: 8),
                 Row(children: [
-                  Expanded(child: GameProgressBar(value: index / Cfg.itemsPerRound, color: C.gold, height: 14)),
+                  Expanded(child: GameProgressBar(value: index / quest.items, color: C.gold, height: 14)),
                   const SizedBox(width: 8),
                   const Text('⭐', style: TextStyle(fontSize: 20)),
                   const SizedBox(width: 3),
-                  Text('$index/${Cfg.itemsPerRound}', style: ts(15, color: Colors.white)),
+                  Text('$index/${quest.items}', style: ts(15, color: Colors.white)),
                 ]),
               ],
             ]),
@@ -231,7 +212,7 @@ class _GameScreenState extends State<GameScreen> {
                     decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white54, width: 2)),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(28),
-                      child: ItemView(key: const ValueKey('demo'), item: demoItem!, skin: skinFor(meta.skill), pack: pack, demo: true, autoSpeak: true, onDone: (_) {}, onFeedback: (_, __) {}),
+                      child: ItemView(key: const ValueKey('demo'), item: demoItem!, skin: skinFor(demoItem!.skill), pack: pack, demo: true, autoSpeak: true, onDone: (_) {}, onFeedback: (_, __) {}),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -265,7 +246,7 @@ class _GameScreenState extends State<GameScreen> {
                     child: ItemView(
                       key: ValueKey('${item!.id}-$index'),
                       item: item!,
-                      skin: skinFor(meta.skill),
+                      skin: skinFor(item!.skill),
                       pack: pack,
                       scaffold: scaffold,
                       onFeedback: _onFeedback,

@@ -3,7 +3,9 @@ import '../core/config.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../engine/personalizer.dart';
+import '../engine/campaign.dart';
 import '../engine/report.dart';
+import '../engine/skill_model.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import 'common.dart';
@@ -83,26 +85,18 @@ class PracticeCard extends StatelessWidget {
   const PracticeCard(this.st, {super.key});
   @override
   Widget build(BuildContext context) {
-    final days = st.practiceDays.length;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        for (var d = 1; d <= Cfg.daysPerWeek; d++)
-          Column(children: [
-            Container(
-              width: 36,
-              height: 36,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: st.practiceDays.contains(d) ? C.green : (d == st.day ? C.gold.withValues(alpha: .4) : Colors.black12),
-                border: d == st.day ? Border.all(color: C.gold, width: 3) : null,
-              ),
-              child: st.practiceDays.contains(d) ? const Icon(Icons.check_rounded, color: Colors.white, size: 20) : Text('$d', style: ts(14, color: C.inkSoft)),
-            ),
+    final items = Skill.values.fold<int>(0, (a, s) => a + st.model(s).cycleItems);
+    Widget stat(String v, String l) => Expanded(
+          child: Column(children: [
+            Text(v, style: ts(24, color: C.purple)),
+            Text(l, textAlign: TextAlign.center, style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
           ]),
-      ]),
-      const SizedBox(height: 10),
-      Text('$days of ${Cfg.daysPerWeek} days practised  •  about ${st.minutes.round()} minutes this week  •  ${st.sessionsThisWeek} games played', style: ts(15, color: C.inkSoft, w: FontWeight.w600)),
+        );
+    return Row(children: [
+      stat('${st.cycleDays}', 'days played'),
+      stat('${st.cycleMinutes.round()}', 'minutes'),
+      stat('${st.cycleRounds}', 'quests'),
+      stat('$items', 'answers'),
     ]);
   }
 }
@@ -195,29 +189,69 @@ class OverallBars extends StatelessWidget {
   }
 }
 
-/// Day-by-day plan generated from the profile — shows personalisation at a glance.
-class WeekPlan extends StatelessWidget {
+/// Per-skill learning picture: starting step from the screening → current step, status and practice targets.
+class SkillPlan extends StatelessWidget {
   final AppState st;
-  const WeekPlan(this.st, {super.key});
+  const SkillPlan(this.st, {super.key});
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      for (var d = 1; d <= Cfg.daysPerWeek; d++)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(children: [
-            SizedBox(width: 52, child: Text('Day $d', style: ts(14, color: d == st.day ? C.purple : C.inkSoft))),
-            for (final m in Personalizer.dailyPlan(st.skills, d))
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(right: 6),
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-                  decoration: BoxDecoration(color: Skills.of(m.skill).color.withValues(alpha: .14), borderRadius: BorderRadius.circular(14)),
-                  child: FittedBox(fit: BoxFit.scaleDown, child: Text('${Skills.game(m.game).emoji} ${Skills.game(m.game).name}', style: ts(13))),
-                ),
-              ),
+      for (final s in Skill.values) _row(s),
+    ]);
+  }
+
+  Widget _row(Skill s) {
+    final m = st.model(s);
+    final start = st.cycleStartStep[s] ?? m.step;
+    final island = islandOf(s);
+    final ist = st.campaign.islands[island]!;
+    final focus = m.focusErrors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(Skills.of(s).emoji, style: const TextStyle(fontSize: 22)),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(Skills.of(s).name, style: ts(15)),
+            Text('Step $start → ${m.step} of 10 · ${statusLabel(m.status)}', style: ts(13, color: C.purple)),
+            Text('${Campaign.islandName(island)}: ${tierName(ist.tier)}, chapter ${ist.nodes.clamp(0, Cfg.chapterNodes)}/${Cfg.chapterNodes} · ${m.cycleItems} answers',
+                style: ts(12, color: C.inkSoft, w: FontWeight.w500)),
+            if (focus.isNotEmpty) Text('Practising: ${focus.join(', ').toLowerCase()}', style: ts(12, color: C.orangeDark, w: FontWeight.w600)),
           ]),
         ),
+      ]),
+    );
+  }
+}
+
+/// What still has to happen before the next check-in (never a date).
+class RetestChecklist extends StatelessWidget {
+  final AppState st;
+  const RetestChecklist(this.st, {super.key});
+  @override
+  Widget build(BuildContext context) {
+    final r = st.retest;
+    if (r.ready) {
+      return Row(children: [
+        const Icon(Icons.check_circle_rounded, color: C.green),
+        const SizedBox(width: 8),
+        Expanded(child: Text('Ready! The Star Bridge check-in is open on the map.', style: ts(15))),
+      ]);
+    }
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('The check-in opens after all seven islands are played through:', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
+      const SizedBox(height: 6),
+      for (final m in r.missing.take(8))
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            const Icon(Icons.radio_button_unchecked_rounded, size: 16, color: C.inkSoft),
+            const SizedBox(width: 8),
+            Expanded(child: Text(m, style: ts(13, w: FontWeight.w500))),
+          ]),
+        ),
+      if (r.missing.length > 8) Text('…and ${r.missing.length - 8} more', style: ts(12, color: C.inkSoft)),
     ]);
   }
 }
