@@ -8,6 +8,7 @@ import '../data/lang.dart';
 import '../data/skills.dart';
 import '../engine/personalizer.dart';
 import '../models/models.dart';
+import '../screening/models.dart' as scr;
 
 enum AppScreen { landing, parent, avatar, intro, assessment, skillMap, home, dashboard, weeklyReport, nextAdventure, loop }
 
@@ -35,6 +36,11 @@ class AppState extends ChangeNotifier {
   String langCode = 'en';
   bool consent = false;
   Avatar avatar = Avatar();
+
+  // screening
+  scr.Background background = scr.Background();
+  List<scr.ScreeningReport> screenings = [];
+  scr.ScreeningReport? get lastScreening => screenings.isEmpty ? null : screenings.last;
 
   // learning data
   Map<Skill, SkillState> skills = {for (final s in Skill.values) s: SkillState()};
@@ -118,6 +124,8 @@ class AppState extends ChangeNotifier {
         'extraSpacing': extraSpacing,
         'voiceOn': voiceOn,
         'highContrast': highContrast,
+        'background': background.toJson(),
+        'screenings': screenings.map((r) => r.toJson()).toList(),
       };
 
   void _fromJson(Map<String, dynamic> j) {
@@ -149,6 +157,8 @@ class AppState extends ChangeNotifier {
     extraSpacing = j['extraSpacing'] as bool;
     voiceOn = j['voiceOn'] as bool;
     highContrast = j['highContrast'] as bool? ?? false;
+    if (j['background'] != null) background = scr.Background.fromJson(Map<String, dynamic>.from(j['background'] as Map));
+    screenings = [for (final e in (j['screenings'] as List? ?? const [])) scr.ScreeningReport.fromJson(Map<String, dynamic>.from(e as Map))];
     if (screen == AppScreen.home && history.isEmpty) screen = AppScreen.landing;
   }
 
@@ -175,6 +185,8 @@ class AppState extends ChangeNotifier {
     sessionsThisWeek = 0;
     stars = 0;
     badges = {};
+    screenings = [];
+    background = scr.Background();
     textSize = keepText;
     extraSpacing = keepSpacing;
     voiceOn = keepVoice;
@@ -218,20 +230,20 @@ class AppState extends ChangeNotifier {
   // ---------------- demo profiles ----------------
   static const _demoScores = <int, Map<Skill, double>>{
     0: {
-      Skill.phonological: 38,
-      Skill.gpc: 86,
-      Skill.decoding: 58,
-      Skill.wordRecognition: 88,
-      Skill.spelling: 35,
-      Skill.comprehension: 60,
+      Skill.phonological: 9,
+      Skill.gpc: 78,
+      Skill.decoding: 30,
+      Skill.wordRecognition: 82,
+      Skill.spelling: 7,
+      Skill.comprehension: 35,
     },
     1: {
-      Skill.phonological: 86,
-      Skill.gpc: 60,
-      Skill.decoding: 34,
-      Skill.wordRecognition: 58,
-      Skill.spelling: 82,
-      Skill.comprehension: 84,
+      Skill.phonological: 80,
+      Skill.gpc: 34,
+      Skill.decoding: 8,
+      Skill.wordRecognition: 30,
+      Skill.spelling: 75,
+      Skill.comprehension: 72,
     },
   };
 
@@ -250,6 +262,7 @@ class AppState extends ChangeNotifier {
   }
 
   void resetAllSync() {
+    screenings = [];
     skills = {for (final s in Skill.values) s: SkillState()};
     history = [];
     lastWeekErrors = {};
@@ -310,6 +323,64 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  static const _constructSkill = {
+    scr.Construct.phonological: Skill.phonological,
+    scr.Construct.gpc: Skill.gpc,
+    scr.Construct.decoding: Skill.decoding,
+    scr.Construct.wordRecognition: Skill.wordRecognition,
+    scr.Construct.spelling: Skill.spelling,
+    scr.Construct.comprehension: Skill.comprehension,
+  };
+
+  void saveBackground(scr.Background b) {
+    background = b;
+    changed();
+  }
+
+  /// Screening finished: the report's construct percentiles become the six skill scores,
+  /// which set every game's starting level (strong → higher, weak → foundational).
+  void completeScreening(scr.ScreeningReport report, Map<String, List<scr.ItemResponse>> responses) {
+    final measured = [for (final c in report.constructs) if (c.band != scr.ScreenBand.notMeasured) c.percentile];
+    final fallback = measured.isEmpty ? 30.0 : measured.reduce((a, b) => a + b) / measured.length;
+    final scores = <Skill, double>{
+      for (final e in _constructSkill.entries)
+        e.value: (report.of(e.key)?.band ?? scr.ScreenBand.notMeasured) == scr.ScreenBand.notMeasured ? fallback.roundToDouble() : report.of(e.key)!.percentile,
+    };
+    final first = !hasBaseline;
+    screenings = [...screenings, report];
+    if (first) {
+      _applyBaseline(scores);
+    } else {
+      _applyReassessment(scores);
+    }
+    // carry the screening's error patterns into the engine
+    for (final list in responses.values) {
+      for (final r in list) {
+        if (r.tag == null || r.tag == 'discontinued' || !r.measured) continue;
+        final c = _subtestConstruct[r.subtest];
+        final skill = c == null ? null : _constructSkill[c];
+        if (skill == null) continue;
+        final m = skills[skill]!.errors;
+        m[r.tag!] = (m[r.tag!] ?? 0) + 1;
+      }
+    }
+    stars += 5;
+    screen = first ? AppScreen.skillMap : AppScreen.weeklyReport;
+    changed();
+  }
+
+  static const _subtestConstruct = {
+    'rhyme': scr.Construct.phonological,
+    'firstSound': scr.Construct.phonological,
+    'phonemeManip': scr.Construct.phonological,
+    'letterSound': scr.Construct.gpc,
+    'nonwordReading': scr.Construct.decoding,
+    'wordReading': scr.Construct.wordRecognition,
+    'spelling': scr.Construct.spelling,
+    'readingComp': scr.Construct.comprehension,
+    'oralReading': scr.Construct.comprehension,
+  };
+
   /// Fresh-item reassessment finished: update profile and move to the report.
   void completeReassessment(List<ItemResult> results, {bool simulated = false, Map<Skill, double>? override}) {
     final scores = override ?? scoresFrom(results);
@@ -349,7 +420,7 @@ class AppState extends ChangeNotifier {
       final practiced = st.sessions;
       final acc = st.recent.isEmpty ? 0.7 : Personalizer.accuracy(st.recent);
       var gain = 4.0 + practiced * 3.5 + acc * 6 + rng.nextInt(4);
-      if (st.score >= 85) gain = gain * 0.35;
+      if (st.score >= 80) gain = gain * 0.35;
       if (practiced == 0) gain = min(gain, 4);
       out[s] = (st.score + gain).clamp(0, 98).roundToDouble();
     }

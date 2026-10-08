@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../data/lang.dart';
+import '../screening/models.dart' as scr;
 import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
@@ -19,7 +20,8 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
   int age = 6;
   String grade = 'Class 1';
   String lang = 'en';
-  bool guardian = false, consentData = false;
+  bool guardian = false, consentData = false, voice = false;
+  late scr.Background bg;
 
   @override
   void initState() {
@@ -31,6 +33,8 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
     lang = st.langCode;
     guardian = st.consent;
     consentData = st.consent;
+    bg = scr.Background.fromJson(st.background.toJson());
+    voice = bg.voiceConsent;
   }
 
   @override
@@ -43,9 +47,11 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
 
   void _next() {
     final st = context.read<AppState>();
-    if (step < 2) {
+    if (step < 3) {
       setState(() => step++);
     } else {
+      bg.voiceConsent = voice;
+      st.saveBackground(bg);
       st.saveParentSetup(name: name.text, age: age, grade: grade, lang: lang, consent: true);
       st.go(AppScreen.avatar);
     }
@@ -64,7 +70,7 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
               child: Column(children: [
-                Pop(child: Companion(type: 0, size: 84, message: step == 0 ? 'Hi grown-up! Tell me about your explorer.' : (step == 1 ? 'Your privacy matters to us.' : 'Here is how our adventure works!'), speakLocale: null)),
+                Pop(child: Companion(type: 0, size: 84, message: ['Hi grown-up! Tell me about your explorer.', 'Your privacy matters to us.', 'A few quick questions help us read the results fairly.', 'Here is how our adventure works!'][step], speakLocale: null)),
                 const SizedBox(height: 8),
                 Panel(
                   color: const Color(0xFFFFFDF5),
@@ -81,10 +87,10 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
                     const SizedBox(height: 18),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      child: KeyedSubtree(key: ValueKey(step), child: [_step1(), _step2(), _step3()][step]),
+                      child: KeyedSubtree(key: ValueKey(step), child: [_step1(), _step2(), _stepBackground(), _step3()][step]),
                     ),
                     const SizedBox(height: 20),
-                    Center(child: BigButton(label: step == 2 ? 'Create the Explorer' : 'Continue', icon: Icons.arrow_forward_rounded, width: 320, onTap: canNext ? _next : null)),
+                    Center(child: BigButton(label: step == 3 ? 'Create the Explorer' : 'Continue', icon: Icons.arrow_forward_rounded, width: 320, onTap: canNext ? _next : null)),
                   ]),
                 ),
                 if (step == 0) ...[
@@ -158,12 +164,28 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
         const SizedBox(height: 10),
         _check('I am the parent / guardian', guardian, (v) => setState(() => guardian = v)),
         _check('I consent to saving learning results on this device', consentData, (v) => setState(() => consentData = v)),
+        _check('I consent to voice recording for reading-aloud activities (audio is analysed on this phone and not stored)', voice, (v) => setState(() => voice = v)),
+      ]);
+
+  Widget _stepBackground() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('About learning', style: ts(21)),
+        _label('Language spoken at home'),
+        Wrap(spacing: 8, runSpacing: 8, children: [for (final l in ['Hindi', 'English', 'Kannada', 'Marathi', 'Other']) _chip(l, bg.homeLanguage == l, () => setState(() => bg.homeLanguage = l))]),
+        _label('Medium of instruction at school'),
+        Wrap(spacing: 8, runSpacing: 8, children: [for (final l in ['English', 'Hindi', 'Kannada', 'Marathi', 'Other']) _chip(l, bg.schoolMedium == l, () => setState(() => bg.schoolMedium = l))]),
+        _label('Years in school so far'),
+        Wrap(spacing: 8, runSpacing: 8, children: [for (final y in [0, 1, 2, 3, 4, 5]) _chip(y == 5 ? '5+' : '$y', bg.yearsInSchool == y, () => setState(() => bg.yearsInSchool = y))]),
+        const SizedBox(height: 8),
+        _check('Vision has been checked', bg.visionChecked, (v) => setState(() => bg.visionChecked = v)),
+        _check('Hearing has been checked', bg.hearingChecked, (v) => setState(() => bg.hearingChecked = v)),
+        _check('Started speaking later than other children', bg.speechDelay, (v) => setState(() => bg.speechDelay = v)),
+        _check('A family member has had difficulty with reading', bg.familyHistory, (v) => setState(() => bg.familyHistory = v)),
       ]);
 
   Widget _step3() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('How it works', style: ts(21)),
         const SizedBox(height: 10),
-        _bullet('🌉', 'First adventure: a short story game that checks six reading & writing skills (about 5 minutes).'),
+        _bullet('🌉', 'First adventure: a story game with a literacy screening (about 15 minutes) in the language you chose — sounds, letters, reading aloud, spelling and understanding. The phone listens and scores automatically.'),
         _bullet('🗺️', 'Personal map: each skill gets its own game and its own difficulty.'),
         _bullet('⏱️', 'Daily play: about 10 minutes, chosen from your child’s profile.'),
         _bullet('📈', 'Weekly check-in: fresh questions show real progress and plan the next week.'),
@@ -203,7 +225,7 @@ class _Progress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      for (var i = 0; i < 3; i++) ...[
+      for (var i = 0; i < 4; i++) ...[
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           width: 40,
@@ -212,7 +234,7 @@ class _Progress extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.circle, color: i <= step ? C.purple : const Color(0xFFE6E2FA), border: Border.all(color: i == step ? C.gold : Colors.transparent, width: 3)),
           child: i < step ? const Icon(Icons.check_rounded, color: Colors.white) : Text('${i + 1}', style: ts(18, color: i <= step ? Colors.white : C.inkSoft)),
         ),
-        if (i < 2) Expanded(child: AnimatedContainer(duration: const Duration(milliseconds: 300), height: 5, margin: const EdgeInsets.symmetric(horizontal: 6), decoration: BoxDecoration(color: i < step ? C.purple : const Color(0xFFE6E2FA), borderRadius: BorderRadius.circular(3)))),
+        if (i < 3) Expanded(child: AnimatedContainer(duration: const Duration(milliseconds: 300), height: 5, margin: const EdgeInsets.symmetric(horizontal: 6), decoration: BoxDecoration(color: i < step ? C.purple : const Color(0xFFE6E2FA), borderRadius: BorderRadius.circular(3)))),
       ],
     ]);
   }

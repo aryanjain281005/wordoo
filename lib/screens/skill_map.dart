@@ -8,6 +8,8 @@ import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/props.dart';
+import '../screening/scorer.dart';
+import '../screening/ui/report_screen.dart';
 
 /// Result of the first adventure: the six-skill map (a grown-up/system view) + how the world is personalised.
 class SkillMapScreen extends StatelessWidget {
@@ -47,6 +49,29 @@ class SkillMapScreen extends StatelessWidget {
                   ]),
                 ),
                 const _ScrollRoll(),
+                if (st.lastScreening != null) ...[
+                  const SizedBox(height: 12),
+                  Pop(
+                    index: 5,
+                    child: Panel(
+                      color: Colors.white.withValues(alpha: .95),
+                      child: Column(children: [
+                        Text('Screening result: ${indicatorLabel(st.lastScreening!.indicator)}', textAlign: TextAlign.center, style: ts(18)),
+                        const SizedBox(height: 6),
+                        Text(indicatorAdvice(st.lastScreening!.indicator), textAlign: TextAlign.center, style: ts(13, color: C.inkSoft, w: FontWeight.w500)),
+                        const SizedBox(height: 10),
+                        BigButton(
+                          label: 'Full screening report',
+                          icon: Icons.description_rounded,
+                          style: BtnStyle.soft,
+                          height: 52,
+                          fontSize: 17,
+                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScreeningReportScreen(report: st.lastScreening!, childName: st.explorerName))),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 SizedBox(
                   height: 96,

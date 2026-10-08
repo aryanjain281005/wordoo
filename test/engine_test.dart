@@ -70,8 +70,8 @@ void main() {
 
   test('personalizer thresholds', () {
     expect(Personalizer.classify(80), Band.strong);
-    expect(Personalizer.classify(60), Band.developing);
-    expect(Personalizer.classify(30), Band.needsSupport);
+    expect(Personalizer.classify(30), Band.developing);
+    expect(Personalizer.classify(10), Band.needsSupport);
     expect(Personalizer.adapt([1, 1, 1, 1, 1], 2).level, 3);
     expect(Personalizer.adapt([1, 0, 1, 1, 0], 2).level, 2);
     final low = Personalizer.adapt([0, 0, 1, 0, 0], 2);

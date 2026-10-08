@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
+import '../screening/ui/screening_screen.dart';
 import 'adventure.dart';
 import 'avatar_creator.dart';
 import 'landing.dart';
@@ -22,7 +23,7 @@ class AppShell extends StatelessWidget {
       AppScreen.parent => const ParentOnboarding(),
       AppScreen.avatar => const AvatarCreator(),
       AppScreen.intro => const AdventureIntro(),
-      AppScreen.assessment => const AssessmentScreen(),
+      AppScreen.assessment => const ScreeningScreen(),
       AppScreen.skillMap => const SkillMapScreen(),
       AppScreen.home => const WorldMapScreen(),
       AppScreen.dashboard => const ParentDashboard(),

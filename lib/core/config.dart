@@ -19,9 +19,10 @@ class Cfg {
   static const int levelDeveloping = 2;
   static const int levelNeedsSupport = 1;
 
-  // Assessment banding (score 0..100)
-  static const double strongCut = 75;
-  static const double developingCut = 45;
+  // Skill banding. Skill scores are screening percentiles (0..100):
+  // Strong ≥ 50th percentile, Developing 16th–50th, Needs Support < 16th.
+  static const double strongCut = 50;
+  static const double developingCut = 16;
 
   // Practice shape
   static const int itemsPerRound = 5;

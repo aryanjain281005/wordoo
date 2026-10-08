@@ -12,6 +12,7 @@ import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/report_widgets.dart';
 import 'loop_screen.dart';
+import '../screening/ui/report_screen.dart';
 
 Widget _scroll(Widget child) => SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -283,8 +284,9 @@ class ParentDashboard extends StatelessWidget {
           BigButton(label: 'Profile B (Meera)', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => st.loadDemoProfile(1)),
           BigButton(label: 'Skip to tomorrow', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.day > Cfg.daysPerWeek ? null : st.advanceDay),
           BigButton(label: 'Jump to end of week', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.weekReady ? null : st.jumpToEndOfWeek),
-          BigButton(label: 'Play week-1 check-in', style: BtnStyle.go, height: 50, fontSize: 15, onTap: st.weekReady ? () => st.go(AppScreen.intro) : null),
+          BigButton(label: 'Run screening now', style: BtnStyle.go, height: 50, fontSize: 15, onTap: () => st.go(AppScreen.intro)),
           BigButton(label: 'Simulate week-1 results', style: BtnStyle.primary, height: 50, fontSize: 15, onTap: st.hasBaseline && st.history.length < 2 ? st.simulateWeekOne : null),
+          BigButton(label: 'Screening report', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.lastScreening == null ? null : () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScreeningReportScreen(report: st.lastScreening!, childName: st.explorerName)))),
           BigButton(label: 'Latest report', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: st.history.length >= 2 ? () => st.go(AppScreen.weeklyReport) : null),
           BigButton(label: 'Learning loop', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoopScreen(buttonLabel: 'Close', onContinue: () => Navigator.of(context).pop())))),
           BigButton(label: 'Reset everything', style: BtnStyle.soft, height: 50, fontSize: 15, onTap: () => st.resetAll()),
