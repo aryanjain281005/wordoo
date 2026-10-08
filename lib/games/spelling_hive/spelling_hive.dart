@@ -341,7 +341,7 @@ class _SpellingHiveItemState extends State<SpellingHiveItem> with TickerProvider
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeOutBack,
                         builder: (_, v, child) => Transform.scale(scale: v, child: child),
-                        child: Text(letter, style: ts(size * .5, color: f > .5 ? const Color(0xFF5A3300) : C.ink)),
+                        child: Text(letter, style: ts(size * .62, color: f > .5 ? const Color(0xFF5A3300) : C.ink)),
                       ),
               ),
             );
