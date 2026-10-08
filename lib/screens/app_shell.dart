@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/audio.dart';
 import '../state/app_state.dart';
 import '../story/play_scene.dart';
 import '../screening/ui/screening_screen.dart';
@@ -35,6 +36,11 @@ class AppShell extends StatelessWidget {
             playScene(ctx, 'season_opener');
           })),
     };
+    AudioManager.instance.music(switch (st.screen) {
+      AppScreen.assessment => 'music.bridge',
+      AppScreen.dashboard || AppScreen.weeklyReport => 'music.calm',
+      _ => 'music.aksharpur',
+    });
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 450),
       switchInCurve: Curves.easeOut,

@@ -33,8 +33,18 @@ class ReadleAssets {
     _loaded = true;
   }
 
-  String? art(String id) => _art[id];
-  String? music(String id) => _music[id];
+  /// Manifest entry first; otherwise a file simply named after the id, e.g. `assets/art/char.milo.png`.
+  String? art(String id) => _art[id] ?? _find('assets/art/$id', const ['webp', 'png', 'jpg']);
+
+  /// Manifest entry first; otherwise e.g. `assets/music/music.forest.mp3`.
+  String? music(String id) => _music[id] ?? _find('assets/music/$id', const ['ogg', 'mp3', 'm4a']);
+
+  String? _find(String base, List<String> exts) {
+    for (final e in exts) {
+      if (_bundled.contains('$base.$e')) return '$base.$e';
+    }
+    return null;
+  }
 
   /// True when a file is really bundled in the app (used to auto-discover sfx and voice files).
   bool bundled(String path) => _bundled.contains(path);
@@ -50,6 +60,6 @@ class ArtImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = ReadleAssets.instance.art(id);
     if (p == null) return fallback;
-    return Image.asset(p, fit: fit, errorBuilder: (_, __, ___) => fallback);
+    return Image.asset(p, fit: fit, errorBuilder: (_, _, _) => fallback);
   }
 }

@@ -217,7 +217,7 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
       'sea' => AnimatedBuilder(animation: _ambient, builder: (_, __) => CustomPaint(painter: WavesPainter(_ambient.value))),
       _ => const AdventureBackground(scene: Scene.day),
     };
-    return ArtImage('bg.${s.bg}', fit: BoxFit.cover, fallback: fallback);
+    return ArtImage('bg.cut.${s.bg}', fit: BoxFit.cover, fallback: fallback);
   }
 
   Widget _fx(Shot s) {

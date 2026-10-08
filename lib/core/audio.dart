@@ -84,6 +84,18 @@ class AudioManager {
     }
   }
 
+  /// Settings switch: stops the music, or restarts the track that should be playing now.
+  Future<void> setMusicOn(bool on) async {
+    musicOn = on;
+    final id = _musicId;
+    _musicId = null;
+    if (on && id != null) return music(id);
+    if (!on) {
+      _musicId = id;
+      await stopMusic();
+    }
+  }
+
   Future<void> stopMusic() async {
     try {
       await _music?.stop();

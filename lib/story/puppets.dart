@@ -96,7 +96,9 @@ class _PuppetState extends State<Puppet> with SingleTickerProviderStateMixin {
             child: SizedBox(
               width: widget.size,
               height: widget.size,
-              child: ArtImage('char.${widget.id}.${widget.mood}', fallback: ArtImage('char.${widget.id}', fallback: body)),
+              child: (talking && mouth > .35 && ReadleAssets.instance.art('char.${widget.id}.talk') != null)
+                  ? ArtImage('char.${widget.id}.talk', fallback: body) // mouth-open drawing while the voice is loud
+                  : ArtImage('char.${widget.id}.${widget.mood}', fallback: ArtImage('char.${widget.id}', fallback: body)),
             ),
           ),
         );

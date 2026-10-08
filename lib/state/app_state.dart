@@ -290,8 +290,7 @@ class AppState extends ChangeNotifier {
   void setSettings({int? textSize, bool? extraSpacing, bool? voiceOn, bool? highContrast, bool? sfxOn, bool? musicOn}) {
     if (sfxOn != null) AudioManager.instance.sfxOn = this.sfxOn = sfxOn;
     if (musicOn != null) {
-      AudioManager.instance.musicOn = this.musicOn = musicOn;
-      if (!musicOn) AudioManager.instance.stopMusic();
+      AudioManager.instance.setMusicOn(this.musicOn = musicOn);
     }
     if (textSize != null) this.textSize = textSize;
     if (extraSpacing != null) this.extraSpacing = extraSpacing;

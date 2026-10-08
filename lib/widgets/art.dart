@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../core/assets.dart';
 import '../core/theme.dart';
 import 'props.dart';
 
@@ -397,7 +398,8 @@ class AdventureBackground extends StatefulWidget {
   final Scene scene;
   final Widget? child;
   final bool calm; // fewer particles for game screens
-  const AdventureBackground({super.key, this.scene = Scene.day, this.child, this.calm = false});
+  final String? artId; // painted art from ART_PROMPTS.md replaces the code-drawn scene when the file exists
+  const AdventureBackground({super.key, this.scene = Scene.day, this.child, this.calm = false, this.artId});
   @override
   State<AdventureBackground> createState() => _AdventureBackgroundState();
 }
@@ -420,6 +422,7 @@ class _AdventureBackgroundState extends State<AdventureBackground> with SingleTi
           builder: (_, __) => CustomPaint(painter: _ScenePainter(widget.scene, _c.value, widget.calm)),
         ),
       ),
+      if (ReadleAssets.instance.art(widget.artId ?? 'bg.${widget.scene.name}') case final p?) Image.asset(p, fit: BoxFit.cover),
       if (widget.child != null) widget.child!,
     ]);
   }

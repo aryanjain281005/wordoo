@@ -76,6 +76,7 @@ class _GameScreenState extends State<GameScreen> {
     beatId = beatLineFor(quest, st.campaign);
     guardian = islandGuardian[quest.island]!;
     WidgetsBinding.instance.addPostFrameCallback((_) => _tellBeat());
+    AudioManager.instance.music('music.${quest.island.name}');
   }
 
   late final String beatId;
@@ -115,6 +116,7 @@ class _GameScreenState extends State<GameScreen> {
   void dispose() {
     Speaker.instance.stop();
     AudioManager.instance.stopVoice();
+    AudioManager.instance.music('music.aksharpur');
     super.dispose();
   }
 
@@ -202,6 +204,7 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       body: AdventureBackground(
         scene: quest.mixed ? Scene.night : sceneFor(quest.skills.first),
+        artId: 'bg.island.${quest.island.name}',
         calm: true,
         child: SafeArea(
           child: AnimatedSwitcher(
