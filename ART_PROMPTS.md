@@ -31,6 +31,16 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 
 ---
 
+## Status of the first batch (9 Oct)
+
+| Group | Result | What happens now |
+|---|---|---|
+| `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
+| All 9 `bg.cut.*` | ❌ Came out as a grid of 12 small variations, so each picture is only ~300 px | **Please make these again** (single scene, see the rule in the Style block). Until then, cutscenes use the nearest good background |
+| Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they work now. Making them again as single images gives sharper art (optional, after the cutscene backgrounds) |
+
+---
+
 ## Style block (paste at the start of EVERY prompt)
 
 > Children's storybook illustration for a mobile game for Indian kids aged 5–10. Soft 2.5D painted style with rounded
@@ -38,9 +48,16 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 > texture. Cute, kind, expressive, never scary. Indian cultural details where natural (rangoli patterns, kurtas, diyas,
 > marigolds, mango trees, tabla, kites). Bright cheerful saturated colours, soft shadows, clean readable silhouette,
 > high detail but uncluttered. No text, no letters, no watermark, no signature, no frame.
+> **ONE single image: one character in one pose (or one scene from one camera angle). NOT a character sheet, NOT a
+> turnaround, NOT multiple views, NO grid, NO collage, NO labels, NO close-up detail boxes.**
 
 **Avoid (negative prompt, if the tool has a box for it):** realistic photo, 3D render plastic look, horror, sharp teeth,
-weapons pointed at viewer, dark gloomy palette, text, watermark, logo, extra limbs, extra fingers, cropped head, busy background behind characters.
+weapons pointed at viewer, dark gloomy palette, text, watermark, logo, extra limbs, extra fingers, cropped head, busy background behind characters,
+**character sheet, turnaround, model sheet, reference sheet, multiple views, front/side/back views, grid, collage, labels, captions, detail insets**.
+
+> **If the tool still makes a sheet:** reply to it with *"Only ONE image: the front view, single character, centred, full body,
+> plain white background, no other views and no labels."* For a background: *"Only ONE scene, one full-bleed vertical
+> picture, no grid of variations."*
 
 ### Technical specs
 | Kind | Size | Background | Format |
@@ -205,3 +222,88 @@ Prompts for these will be added to this file when each phase starts:
 3. `bg.cut.tree`, `bg.cut.tree_grey`, `bg.cut.aksharpur`, `bg.cut.night`, `bg.cut.day`
 4. `char.madhu.happy` + `.talk`, `bg.island.treasure`, the Spelling Hive props (Phase 2a)
 5. The other guardians and island backgrounds
+
+---
+
+## H. Phase 2b — Story Quest ("The Living Books of Story Castle")
+
+Story Quest turns each story into a little comic book: one panel per sentence, read aloud with the words
+lighting up. These images make the panels and the Library look real. The app draws placeholders until they exist.
+
+### H1. Princess Pari & Kitabu moods (1024 × 1024, plain white background, ONE pose)
+Use your existing `char.pari.happy` / `char.kitabu.happy` as the reference image so they stay the same character.
+
+**Pari block:** Princess Pari, an adventurous Indian princess of about 10, big bright eyes, long black hair in a side
+braid, pink and gold lehenga with comfortable white sneakers, a small golden crown shaped like a glowing lantern.
+
+**Kitabu block:** Kitabu, a chubby old talking storybook with a blue cloth cover and gold corners, big googly eyes on
+the cover, pages forming two little arms, a red bookmark ribbon, forgetful funny face.
+
+| File name | Prompt (after Style block + the character's block) |
+|---|---|
+| `char.pari.talk.png` | **Edit of `char.pari.happy`:** identical, only the mouth open while speaking. |
+| `char.pari.cheer.png` | Pari jumping with joy, both arms up, eyes closed happily, crown glowing brightly, sparkles. |
+| `char.pari.thinking.png` | Pari with a finger on her chin, looking up thoughtfully, small smile. |
+| `char.pari.sad.png` | Pari looking gently worried, eyebrows up, hands clasped (a story is missing its ending). |
+| `char.kitabu.talk.png` | **Edit of `char.kitabu.happy`:** identical, only the mouth open while speaking. |
+| `char.kitabu.thinking.png` | Kitabu scratching his cover with a page-arm, one eye squinting, a question mark made of paper above him. |
+| `char.kitabu.cheer.png` | Kitabu flapping wide open with pages fluttering like wings, laughing, little paper stars flying out. |
+| `char.kitabu.surprised.png` | Kitabu with eyes huge and cover wide open, pages standing up like hair. |
+
+### H2. Book-world backgrounds for comic panels (**landscape 1536 × 1024**, full scene, calm centre)
+Panels show these behind the story characters, so keep the **centre fairly empty** and the detail at the edges.
+
+| File name | Prompt (after Style block) |
+|---|---|
+| `bg.book.park.png` | A friendly Indian city park: green lawn, a curved path, a wooden bench, a gulmohar tree with red flowers, a small pond with ducks far away. Daytime. Landscape. |
+| `bg.book.garden.png` | A home courtyard garden: clay pots with plants, a tulsi planter, a watering can, a low brick wall, morning sun. Landscape. |
+| `bg.book.market.png` | A colourful Indian vegetable and fruit market: stalls with mangoes, bananas and tomatoes under striped awnings, hanging baskets, marigold garlands. Landscape. |
+| `bg.book.beach.png` | A sunny beach: soft sand, gentle waves, palm trees, shells, an island far across the sea on the horizon. Landscape. |
+| `bg.book.village.png` | An Indian village at the edge of fields: mud houses with painted walls, a well, a cow resting under a neem tree, dry golden fields. Landscape. |
+| `bg.book.hill.png` | A grassy hill at dawn with a single tree on top, the sun just rising over the horizon in pink and orange. Landscape. |
+| `bg.book.home.png` | A cosy Indian home room: a low bed with a patterned quilt, a window with curtains, a shelf with toys and books, warm lamp light. Landscape. |
+| `bg.book.library.png` | A calm school library: tall shelves, reading tables with children's books, a big open window with a tree outside. Landscape. |
+| `bg.book.night.png` | A rooftop at night: a starry sky, a big round moon, a small grey cloud in the sky, terrace plants, fairy lights. Landscape. |
+| `bg.book.street.png` | A small town street on festival night: lanterns hanging between houses, rangoli on the ground, lights in windows. Landscape. |
+
+### H3. Story covers (landscape 1536 × 1024) — one per authored story
+These are the book covers on the Library shelf and the first comic panel. No text on the image (the app writes the title).
+
+| File name | Story | Prompt (after Style block) |
+|---|---|---|
+| `story.s-hat.png` | Milo's Hat | Milo the orange fox (green scarf) in a park looking around sadly in light rain, while a kind white duck waddles towards him holding his small red hat in its beak. |
+| `story.s-seeds.png` | Tia's Seeds | A little Indian girl, Tia, in a yellow frock watering a clay pot with a tiny green sprout, with a small watering can, morning sun on a home balcony. |
+| `story.s-berries.png` | Fox and the Berries | Milo the fox standing on three stacked logs, stretching up to pick bright red berries from a tall bush, tongue out in concentration. |
+| `story.s-kite.png` | The Red Kite | A boy, Leo, on a windy hill holding a kite string while his red kite flies very high among clouds, his hair blowing in the wind. |
+| `story.s-puppy.png` | Lost Puppy | A girl, Anu, with a pink umbrella crouching to wrap a small wet shivering puppy in her striped scarf under a park bench in the rain. |
+| `story.s-rocket.png` | The Cardboard Rocket | A boy, Kabir, beside a big cardboard-box rocket painted silver with hand-drawn stars, his little sister clapping happily next to it, in a living room. |
+| `story.s-market.png` | Market Day | A girl, Meera, at a busy fruit market carrying mangoes in the fold of her skirt, her laughing grandfather in a white kurta and cap beside her. |
+| `story.s-turtle.png` | The Slow Turtle | Tortu, a small smiling green turtle, sitting proudly at the top of a grassy hill as the sun rises in pink and gold behind him. |
+| `story.s-library.png` | The Quiet Library | A girl, Zoya, with a book at a library table looking up in delight as a small yellow bird sings on top of a bookshelf, sunlight from an open window. |
+| `story.s-rain.png` | The Rain Dance | Village children dancing and splashing in puddles in the first monsoon rain, dark clouds above, green fields, happy cows in the background. |
+| `story.s-robot.png` | Bolt's First Friend | Bolt, the small round teal tin robot on one wheel, sitting beside a little girl on a bench, offering his metal hand, a dropped ice cream cone on the ground. |
+| `story.s-island.png` | The Message in a Bottle | A boy, Arjun, on a beach at sunset holding a glass bottle with a rolled-up note inside, an island far away on the horizon. |
+| `story.s-festival.png` | Lanterns for Everyone | Arya (purple tunic, black braid) at night handing small handmade paper lanterns to smiling children, the sky full of glowing floating lanterns. |
+| `story.s-cloud.png` | The Cloud Who Wanted a Story | A girl on a rooftop at night reading a book out loud to the sky, and Gumsum, a small grey cloud with big eyes, leaning down to listen happily. |
+
+### H4. Story Quest props (512 × 512, plain white background, ONE object)
+
+| File name | Prompt (after Style block) |
+|---|---|
+| `prop.book.closed.png` | A single closed storybook standing upright, coloured cloth cover with gold corners and a ribbon bookmark, no text. |
+| `prop.book.open.png` | An open storybook seen from above at a slight angle, blank pages with soft golden glow rising from them, no text. |
+| `prop.castle.tower_broken.png` | A small fairytale castle tower in pink stone, faded grey and cracked, roof missing, a few loose bricks, gentle not scary. |
+| `prop.castle.tower_restored.png` | The same small fairytale castle tower restored: pink and gold, a pointed roof with a flag shaped like a bookmark, glowing windows. |
+| `prop.emotion.happy.png` | A round cartoon face sticker, big smile, yellow, rosy cheeks. |
+| `prop.emotion.sad.png` | A round cartoon face sticker, gentle sad face with a small tear, blue. |
+| `prop.emotion.scared.png` | A round cartoon face sticker, worried scared face (not frightening), lilac. |
+| `prop.emotion.angry.png` | A round cartoon face sticker, grumpy cross face with puffed cheeks (cute, not mean), orange-red. |
+| `prop.emotion.surprised.png` | A round cartoon face sticker, surprised face with a round open mouth, teal. |
+| `prop.emotion.proud.png` | A round cartoon face sticker, proud happy face with closed eyes and a big grin, gold, little sparkle. |
+
+### Priority for Phase 2b
+1. The **9 `bg.cut.*` redos** (cutscenes use them right away)
+2. `char.pari.talk`, `char.kitabu.talk`, `char.kitabu.thinking`, `char.pari.cheer`
+3. The 14 `story.*` covers
+4. The `bg.book.*` backgrounds, then the props
+

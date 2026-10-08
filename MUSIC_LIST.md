@@ -14,7 +14,19 @@ attribution required, but the raw files must not be resold on their own).
 **General rules for all tracks:** instrumental only (no singing; children must hear the voices clearly), gentle and
 steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 
-## Tracks
+## Status (9 Oct)
+✅ All 10 tracks are in the app. Claude converted them to small looping OGG files (about 1–2 MB each instead of 2–8 MB).
+**Still needed from you:** the **Pixabay page link** for each of the 10 tracks you picked, so they can be listed in `assets/music/CREDITS.txt` (good practice, and proof of licence if a store ever asks).
+
+## Next tracks (Phase 2b and story scenes)
+
+| # | File name | Where it plays | Mood | Search on Pixabay | Pick if… |
+|---|---|---|---|---|---|
+| 11 | `music.story.mp3` | Under the story cutscenes (prologue, Star Bridge, new season) | Gentle "once upon a time" | [storytelling magical soft](https://pixabay.com/music/search/storytelling%20magical%20soft/) · [fairy tale intro](https://pixabay.com/music/search/fairy%20tale%20intro/) | Soft and slow, harp, celesta or strings, mysterious but warm. Dadi narrates over it, so keep it quiet |
+| 12 | `music.library.mp3` | Story Quest comic books (while the story is read aloud) | Very calm reading | [calm reading kids](https://pixabay.com/music/search/calm%20reading%20kids/) · [soft music box](https://pixabay.com/music/search/soft%20music%20box/) | Almost ambient, very sparse, no melody that competes with the narration |
+| 13 | `music.boss.mp3` | Boss quests (the 10th quest of every chapter) | Exciting but friendly | [kids adventure upbeat](https://pixabay.com/music/search/kids%20adventure%20upbeat/) · [heroic cartoon](https://pixabay.com/music/search/heroic%20cartoon/) | A bit more energy and drums than the island tracks, still happy, never scary |
+
+## First batch (done)
 
 | # | File name | Where it plays | Mood | Search on Pixabay | Pick if… |
 |---|---|---|---|---|---|
