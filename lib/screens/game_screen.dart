@@ -7,11 +7,13 @@ import '../data/skills.dart';
 import '../data/strings.dart';
 import '../engine/campaign.dart';
 import '../engine/item_gen.dart';
+import '../engine/skill_model.dart';
+import '../core/audio.dart';
+import '../games/game_module.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
-import '../widgets/item_views.dart';
 import '../widgets/reward_modal.dart';
 
 Scene sceneFor(Skill s) => switch (s) {
@@ -29,7 +31,9 @@ enum _Phase { intro, play }
 /// updates that skill's learner model, so the next item already uses the new difficulty.
 class GameScreen extends StatefulWidget {
   final Quest quest;
-  const GameScreen({super.key, required this.quest});
+  /// Developer test mode: play at a fixed starting step without touching the child's progress.
+  final int? devStep;
+  const GameScreen({super.key, required this.quest, this.devStep});
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
@@ -41,7 +45,12 @@ class _GameScreenState extends State<GameScreen> {
   late final AppState st = context.read<AppState>();
   late final LangPack pack = st.pack;
   late final ItemGen gen = ItemGen(st.content, seen: st.itemSeen);
-  late final Map<Skill, int> startSteps = {for (final s in quest.skills.toSet()) s: st.model(s).step};
+  late final bool dev = widget.devStep != null;
+  late final Map<Skill, SkillModel> devModels = {
+    for (final s in quest.skills.toSet()) s: SkillModel(theta: (widget.devStep ?? 1) + 1.27, calibrationLeft: 0),
+  };
+  SkillModel model(Skill s) => dev ? devModels[s]! : model(s);
+  late final Map<Skill, int> startSteps = {for (final s in quest.skills.toSet()) s: model(s).step};
   final List<ItemResult> results = [];
   Item? item;
   Item? demoItem;
@@ -58,7 +67,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     final s0 = quest.skills.first;
-    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).make(s0, (st.model(s0).step - 1).clamp(1, 10));
+    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).make(s0, (model(s0).step - 1).clamp(1, 10));
     msg = Str.t(pack.code, 'tryDemo');
     startedAt = DateTime.now();
   }
@@ -79,25 +88,36 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _nextItem() {
-    final m = st.model(skillNow);
+    final m = model(skillNow);
     item = gen.make(skillNow, m.step, focus: m.focusErrors);
     scaffold = m.needsScaffold || quest.kind == QuestKind.support;
   }
 
-  void _onFeedback(String m, bool good) => setState(() {
-        msg = m;
-        happy = good;
-      });
+  void _onFeedback(String m, bool good) {
+    AudioManager.instance.sfxOneOf(good ? const ['correct_1', 'correct_2', 'correct_3'] : const ['miss_soft']);
+    setState(() {
+      msg = m;
+      happy = good;
+    });
+  }
+
+  GameId _moduleFor(Item it) => quest.mixed ? Skills.of(it.skill).demoGame : quest.game;
 
   void _onDone(ItemResult r) {
     final it = item!;
-    final before = st.model(it.skill).step;
+    final before = model(it.skill).step;
     results.add(r);
-    st.recordItem(it, r);
-    final after = st.model(it.skill).step;
+    if (dev) {
+      final m = model(it.skill);
+      m.update(r.correct ? 1 : 0, it.diff, ms: r.ms, tag: r.tags.isEmpty ? null : r.tags.first);
+    } else {
+      st.recordItem(it, r);
+    }
+    final after = model(it.skill).step;
     String? ban;
     var nextMsg = Str.t(pack.code, 'ready');
     if (after > before) {
+      AudioManager.instance.sfx('power_up');
       ban = '${quest.mixed ? Skills.of(it.skill).emoji : meta.emoji} ${Str.t(pack.code, 'powerUp')}';
       nextMsg = Str.t(pack.code, 'stronger');
     } else if (after < before) {
@@ -123,8 +143,15 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _finish() async {
     final seconds = DateTime.now().difference(startedAt).inSeconds.toDouble();
+    if (dev) {
+      final right = results.where((r) => r.correct).length;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Dev round: $right/${results.length} right · ended at step ${model(quest.skills.first).step}')));
+      Navigator.of(context).pop();
+      return;
+    }
+    AudioManager.instance.sfx('reward_fanfare');
     final out = st.completeQuest(quest, results, seconds, startSteps);
-    final band = st.model(quest.skills.first).band;
+    final band = model(quest.skills.first).band;
     await showRewardModal(context, outcome: out, game: quest.game, companion: st.avatar.companion, level: band, quest: quest);
     if (mounted) Navigator.of(context).pop();
   }
@@ -147,7 +174,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Widget _topBar({bool play = false}) {
     final region = Campaign.islandName(quest.island);
-    final m = st.model(play ? skillNow : quest.skills.first);
+    final m = model(play ? skillNow : quest.skills.first);
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -212,7 +239,8 @@ class _GameScreenState extends State<GameScreen> {
                     decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white54, width: 2)),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(28),
-                      child: ItemView(key: const ValueKey('demo'), item: demoItem!, skin: skinFor(demoItem!.skill), pack: pack, demo: true, autoSpeak: true, onDone: (_) {}, onFeedback: (_, __) {}),
+                      child: GameModules.of(_moduleFor(demoItem!))(
+                          context, GameCtx(item: demoItem!, scaffold: false, pack: pack, demo: true, feedback: (_, __) {}, done: (_) {}), const ValueKey('demo')),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -243,14 +271,10 @@ class _GameScreenState extends State<GameScreen> {
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 350),
                     transitionBuilder: (c, a) => FadeTransition(opacity: a, child: SlideTransition(position: Tween(begin: const Offset(.08, 0), end: Offset.zero).animate(a), child: c)),
-                    child: ItemView(
-                      key: ValueKey('${item!.id}-$index'),
-                      item: item!,
-                      skin: skinFor(item!.skill),
-                      pack: pack,
-                      scaffold: scaffold,
-                      onFeedback: _onFeedback,
-                      onDone: _onDone,
+                    child: GameModules.of(_moduleFor(item!))(
+                      context,
+                      GameCtx(item: item!, scaffold: scaffold, pack: pack, feedback: _onFeedback, done: _onDone),
+                      ValueKey('${item!.id}-$index'),
                     ),
                   ),
                 ),

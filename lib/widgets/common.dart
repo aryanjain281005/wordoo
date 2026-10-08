@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/theme.dart';
+import '../core/audio.dart';
 import '../core/tts.dart';
 import 'art.dart';
 
@@ -59,6 +60,7 @@ class _BigButtonState extends State<BigButton> {
         onTap: enabled
             ? () {
                 HapticFeedback.selectionClick();
+                AudioManager.instance.sfx('ui_tap', volume: .5);
                 widget.onTap!();
               }
             : null,

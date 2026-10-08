@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'core/audio.dart';
 import 'core/theme.dart';
 import 'data/strings.dart';
 import 'screens/app_shell.dart';
@@ -10,6 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  AudioManager.instance.init();
   runApp(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
 }
 

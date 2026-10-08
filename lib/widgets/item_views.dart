@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../core/config.dart';
 import '../core/theme.dart';
+import '../core/audio.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
 import '../data/strings.dart';
@@ -187,6 +188,7 @@ class _ItemViewState extends State<ItemView> {
     if (_usedTiles.contains(tileIdx)) return;
     final slot = _slots.indexOf(null);
     if (slot < 0) return;
+    AudioManager.instance.sfx('tile_snap');
     _say(it.tiles[tileIdx]);
     setState(() {
       _slots[slot] = tileIdx;
@@ -197,6 +199,7 @@ class _ItemViewState extends State<ItemView> {
 
   void _removeSlot(int s) {
     if (_resolved || widget.demo || _locked.contains(s) || _slots[s] == null) return;
+    AudioManager.instance.sfx('tile_return');
     setState(() {
       _usedTiles.remove(_slots[s]);
       _slots[s] = null;

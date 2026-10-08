@@ -38,6 +38,8 @@ dependencies:
   shared_preferences: ^2.5.6
   flutter_tts: ^4.2.5
   speech_to_text: ^7.5.0
+  flame: ^1.38.2
+  flame_audio: ^2.12.2
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +62,14 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/manifest.json
+    - assets/sfx/
+    - assets/vo/en/
+    - assets/art/
+    - assets/music/
+    - assets/cutscenes/
 
   fonts:
     - family: Fredoka

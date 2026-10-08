@@ -1,0 +1,7 @@
+{
+  "_readme": "Logical asset id -> file path. Missing ids fall back to built-in placeholders (code-drawn art, generated sounds, device text-to-speech). Add a line here when a real file arrives — no code changes needed.",
+  "art": {},
+  "music": {},
+  "sfx_auto": true,
+  "vo_auto": true
+}

@@ -11,6 +11,7 @@ import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/report_widgets.dart';
+import 'dev_panel.dart';
 import 'loop_screen.dart';
 import '../screening/ui/report_screen.dart';
 
@@ -159,7 +160,7 @@ class ParentDashboard extends StatelessWidget {
             child: Row(children: [
               RoundIconButton(icon: Icons.arrow_back_rounded, label: 'Back to adventure', onTap: () => st.go(AppScreen.home)),
               const SizedBox(width: 12),
-              Expanded(child: Text('Grown-up Dashboard', style: ts(26, color: Colors.white))),
+              Expanded(child: GestureDetector(onLongPress: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DevPanel())), child: Text('Grown-up Dashboard', style: ts(26, color: Colors.white)))),
             ]),
           ),
           Expanded(
@@ -268,6 +269,8 @@ class ParentDashboard extends StatelessWidget {
         const SizedBox(height: 12),
         SwitchListTile(contentPadding: EdgeInsets.zero, title: Text('Extra letter spacing', style: ts(16)), value: st.extraSpacing, onChanged: (v) => st.setSettings(extraSpacing: v)),
         SwitchListTile(contentPadding: EdgeInsets.zero, title: Text('Spoken instructions (read aloud)', style: ts(16)), value: st.voiceOn, onChanged: (v) => st.setSettings(voiceOn: v)),
+        SwitchListTile(contentPadding: EdgeInsets.zero, title: Text('Sound effects', style: ts(16)), value: st.sfxOn, onChanged: (v) => st.setSettings(sfxOn: v)),
+        SwitchListTile(contentPadding: EdgeInsets.zero, title: Text('Music', style: ts(16)), value: st.musicOn, onChanged: (v) => st.setSettings(musicOn: v)),
         const SizedBox(height: 6),
         Text('Learning language', style: ts(15, color: C.inkSoft)),
         const SizedBox(height: 6),

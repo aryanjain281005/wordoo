@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
+import '../core/audio.dart';
 import '../core/config.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
@@ -79,6 +80,8 @@ class AppState extends ChangeNotifier {
   bool extraSpacing = false;
   bool voiceOn = true;
   bool highContrast = false;
+  bool sfxOn = true;
+  bool musicOn = true;
 
   LangPack get pack => LangRegistry.byCode(langCode);
   GameContentPack get content => GameContent.of(langCode);
@@ -108,6 +111,8 @@ class AppState extends ChangeNotifier {
     }
     if (!GameContent.enabledLanguages.contains(langCode)) langCode = 'en'; // v1 is English-only
     Speaker.instance.enabled = voiceOn;
+    AudioManager.instance.sfxOn = sfxOn;
+    AudioManager.instance.musicOn = musicOn;
     loaded = true;
     notifyListeners();
   }
@@ -160,6 +165,8 @@ class AppState extends ChangeNotifier {
         'extraSpacing': extraSpacing,
         'voiceOn': voiceOn,
         'highContrast': highContrast,
+        'sfxOn': sfxOn,
+        'musicOn': musicOn,
         'background': background.toJson(),
         'screenings': screenings.map((r) => r.toJson()).toList(),
       };
@@ -201,6 +208,8 @@ class AppState extends ChangeNotifier {
     extraSpacing = j['extraSpacing'] as bool;
     voiceOn = j['voiceOn'] as bool;
     highContrast = j['highContrast'] as bool? ?? false;
+    sfxOn = j['sfxOn'] as bool? ?? true;
+    musicOn = j['musicOn'] as bool? ?? true;
     if (j['background'] != null) background = scr.Background.fromJson(Map<String, dynamic>.from(j['background'] as Map));
     screenings = [for (final e in (j['screenings'] as List? ?? const [])) scr.ScreeningReport.fromJson(Map<String, dynamic>.from(e as Map))];
     if (screen == AppScreen.home && history.isEmpty) screen = AppScreen.landing;
@@ -268,7 +277,12 @@ class AppState extends ChangeNotifier {
     changed();
   }
 
-  void setSettings({int? textSize, bool? extraSpacing, bool? voiceOn, bool? highContrast}) {
+  void setSettings({int? textSize, bool? extraSpacing, bool? voiceOn, bool? highContrast, bool? sfxOn, bool? musicOn}) {
+    if (sfxOn != null) AudioManager.instance.sfxOn = this.sfxOn = sfxOn;
+    if (musicOn != null) {
+      AudioManager.instance.musicOn = this.musicOn = musicOn;
+      if (!musicOn) AudioManager.instance.stopMusic();
+    }
     if (textSize != null) this.textSize = textSize;
     if (extraSpacing != null) this.extraSpacing = extraSpacing;
     if (voiceOn != null) {
