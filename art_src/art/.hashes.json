@@ -110,5 +110,15 @@
  "char.koyal.happy": "b1525cebdfd878b956aab58c0876fa50e67d2585",
  "char.tinku.happy": "b455f3640711bc1d5baf0c0defc8ff87431b4a77",
  "bg.rocket.zone3": "d3cc60ffc9abd57450eec5f3e54cfa216df81c67",
- "bg.rocket.zone4": "4e835f9201833db817f30e94da09a8e0e034fb06"
+ "bg.rocket.zone4": "4e835f9201833db817f30e94da09a8e0e034fb06",
+ "prop.book.closed": "28cf675206b5c3668aa958b0197cc06c4f3c7094",
+ "prop.book.open": "2e2a148fc8c3f59c5c6ca9d4a64d782294df4461",
+ "prop.castle.tower_broken": "7530a9c06ec4547a17e7ee2461c30547686ba692",
+ "prop.castle.tower_restored": "9e11dc32512822eb0950b7d9b5f49f5b8a8b1410",
+ "prop.emotion.angry": "d53467c574edf9cccd1efde68d70a4859c3b5d5d",
+ "prop.emotion.happy": "2a5201e451f5e050e6a87d1ea022d30bda6c25be",
+ "prop.emotion.proud": "ed860d7aa16e351f6bebb65b4e0c685d9382ca36",
+ "prop.emotion.sad": "5b36eb59599cbd28d490ca8b330b08711006fb4f",
+ "prop.emotion.scared": "0d1b66daad4e0fa32b6e379506ce927474a8b2bc",
+ "prop.emotion.surprised": "4136f1a2d84a5b2ba9f47bb60970810bb6fb2244"
 }

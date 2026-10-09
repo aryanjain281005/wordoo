@@ -40,6 +40,7 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | `bg.detective.street`, all 9 suspects | ✅ In the app (9 Oct) | — |
 | Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | `char.pari.happy` remade by Claude (Pari alone) ✅ |
 | 14 story covers, 10 `bg.book.*`, `bg.archer.sky`, Arya talk, Ullu thinking, Chuchu | ✅ In the app (9 Oct) | `char.ullu.talk` must be redone (see §M) |
+| Band, Garud, 4 ocean zones, Story Quest props (batches 5–7) | ✅ In the app (9 Oct) | — |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
