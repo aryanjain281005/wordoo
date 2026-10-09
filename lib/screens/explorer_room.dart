@@ -129,13 +129,21 @@ class _ExplorerRoomScreenState extends State<ExplorerRoomScreen> with SingleTick
         ),
         child: Stack(children: [
           const Positioned(right: 10, top: 8, child: Text('🌙', style: TextStyle(fontSize: 22))),
-          Center(
-            child: Wrap(alignment: WrapAlignment.center, spacing: 4, runSpacing: 4, children: [
-              for (final l in lanterns) Text(l, style: const TextStyle(fontSize: 16)),
-              if (lanterns.isEmpty) Text('Light lanterns in Letter Archer', textAlign: TextAlign.center, style: ts(12, color: Colors.white60, w: FontWeight.w500)),
-            ]),
-          ),
           Center(child: Container(width: 5, color: const Color(0xFF8B5A2B))),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Wrap(alignment: WrapAlignment.center, spacing: 4, runSpacing: 4, children: [
+                for (final l in lanterns) Text(l, style: const TextStyle(fontSize: 16)),
+                if (lanterns.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    decoration: BoxDecoration(color: const Color(0xCC1B1F4B), borderRadius: BorderRadius.circular(8)),
+                    child: Text('🏮 Light lanterns in Letter Archer', textAlign: TextAlign.center, style: ts(12, color: Colors.white70, w: FontWeight.w500)),
+                  ),
+              ]),
+            ),
+          ),
         ]),
       );
 

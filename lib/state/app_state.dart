@@ -255,6 +255,7 @@ class AppState extends ChangeNotifier {
     seaLog = j['seaLog'] as int? ?? 0;
     bandStickers = j['bandStickers'] as int? ?? 0;
     playDays = Set<String>.from(j['playDays'] as List? ?? const []);
+    playDays.addAll(sessions.map((e) => e.date)); // days played before the streak existed count too
     gems = Set<String>.from(j['gems'] as List? ?? const []);
     gifts = List<String>.from(j['gifts'] as List? ?? const []);
     effort = j['effort'] as int? ?? 0;
