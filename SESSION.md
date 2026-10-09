@@ -33,12 +33,11 @@ team's Vivo V2130 (USB, adb). Everything is committed and pushed (HEAD `1c0755b`
 - Docs: `GAME_DESIGN_V3.md` (approved design), `ANIMATION_PROMPTS.md` (48 AI clips), `ART_PROMPTS.md` §O, `ELEVENLABS_PLAN.md`, `YOUR_TASKS.md`.
 
 ## 4. Unfinished / errors / blockers
-- **SECURITY:** ElevenLabs key was committed in `7749aed` (`.env`) and pushed. Now untracked + ignored, but still in git history. **User must rotate the key**; history rewrite not done.
+- **SECURITY:** ElevenLabs key was committed in `7749aed` (`.env`) and pushed. On 10 Oct a NEW key was placed in the gitignored `.env` (never committed/printed), but the **old leaked key still returned HTTP 200 → NOT revoked**. User must delete it in the ElevenLabs dashboard (Developers → API Keys); re-check with a status-only curl. History rewrite not done (moot once revoked). The new key was also pasted in chat — consider rotating it too.
 - **ElevenLabs generation not started:** the auto-mode classifier blocks reading `.env` ("Credential Materialization"). Needs a user permission rule. Free plan is non-commercial and too small (10k credits vs ~65k chars).
-- Storm Trial screen and trial_retry scene **not yet played on device**.
+- Storm Trial **played on device 10 Oct (Vivo V2130, dev panel auto-play 21 → finale, 20 → trial_retry + weakest skills, 12 → result card)**; real tap-through verified for the first 2 questions only. Real-mode save-after-restart (`completeTrial`) is covered by unit tests, **not yet seen on device**.
 - Island-start scene did not auto-play on first device open of Sound Forest (probably already marked seen on the phone); unconfirmed.
 - Art missing (placeholders work): `char.gumsum.villain/small_sad/redeemed`, `char.milo.injured`, `char.jailer.*`, `prop.cage.*`, `island.citadel`, `bg.citadel`, keys/badges; all 48 videos; talk frames for pip/bolt/coral/jugnu/kalam (uploaded ones were wrong characters, set aside in `art_src/unused/`).
-- Dev panel still lists "Star Observatory (mixed)" (7th island is now the Storm Trial).
 
 ## 5. Decisions and things that failed
 - v3 decisions (team): max keys (100%), Trial 30/pass 21, AI video for cinematics, softer Gumsum redemption.
@@ -49,7 +48,6 @@ team's Vivo V2130 (USB, adb). Everything is committed and pushed (HEAD `1c0755b`
 - `adb` tap coordinates: screenshots are scaled; use `uiautomator dump` bounds. Helper scripts lived in `$TMPDIR` (not in repo).
 
 ## 6. Exact next step
-1. Play the **Storm Trial on device**: in a test profile clear all six islands (or temporarily via dev panel), open the Storm Citadel, answer 30 questions, confirm pass at 21 → finale, and <21 → trial_retry + weakest skills.
-   Verify: `flutter test` stays green; on device the lightning meter fills, result saves after app restart.
-2. Then replace "Star Observatory (mixed)" in `lib/screens/dev_panel.dart` with a "Storm Trial" launcher (helps step 1).
-3. After the user rotates the key and grants permission: implement `ELEVENLABS_PLAN.md` steps 1–4 (start with auditions).
+1. User revokes the old ElevenLabs key; verify it returns 401 (status code only, never print keys).
+2. Dev panel now has a Storm Trial launcher (`StormTrialScreen(dev:true, devAutoScore:n)`, saves nothing). Trial card is now dark (item prompts are white) and the result button no longer clips.
+3. Implement `ELEVENLABS_PLAN.md` steps 1–4 (auditions first), then team decision of 10 Oct (late): Claude now owns ALL animation (prologue, ending, before/after every island), with two showpiece islands: Sound Forest and Word Village.

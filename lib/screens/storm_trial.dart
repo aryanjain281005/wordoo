@@ -16,8 +16,13 @@ import '../widgets/item_views.dart';
 
 /// Story v3 · the Storm Trial (7th island). 30 mixed questions, 5 per skill, each at the child's own level.
 /// One try per question (no hints). Every right answer drains Gumsum's storm; 21 right breaks it.
+///
+/// Developer mode (`dev`): nothing is saved. With `devAutoScore` the screen answers by itself (that many right, rest wrong)
+/// so the pass and retry paths can be checked on a device in seconds.
 class StormTrialScreen extends StatefulWidget {
-  const StormTrialScreen({super.key});
+  final bool dev;
+  final int? devAutoScore;
+  const StormTrialScreen({super.key, this.dev = false, this.devAutoScore});
   @override
   State<StormTrialScreen> createState() => _StormTrialScreenState();
 }
@@ -46,6 +51,16 @@ class _StormTrialScreenState extends State<StormTrialScreen> {
   void initState() {
     super.initState();
     AudioManager.instance.music('music.boss');
+    final auto = widget.devAutoScore;
+    if (auto != null) WidgetsBinding.instance.addPostFrameCallback((_) => _autoPlay(auto));
+  }
+
+  Future<void> _autoPlay(int target) async {
+    for (var k = 0; k < items.length && mounted && !finished; k++) {
+      await Future.delayed(const Duration(milliseconds: 120));
+      if (!mounted) return;
+      _onDone(ItemResult(itemId: items[k].id, skill: items[k].skill, level: st.model(items[k].skill).step, correct: k < target, ms: 1000));
+    }
   }
 
   @override
@@ -65,7 +80,7 @@ class _StormTrialScreenState extends State<StormTrialScreen> {
 
   Future<void> _finish() async {
     setState(() => finished = true);
-    final passed = st.completeTrial(items, results, clock.elapsed.inSeconds.toDouble());
+    final passed = widget.dev ? right >= trialPassMark : st.completeTrial(items, results, clock.elapsed.inSeconds.toDouble());
     await playScene(context, passed ? 'finale' : 'trial_retry');
     if (!mounted) return;
     if (passed) {
@@ -148,11 +163,11 @@ class _StormTrialScreenState extends State<StormTrialScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 6, 8, 10),
       child: Container(
-        decoration: BoxDecoration(color: Colors.white.withValues(alpha: .94), borderRadius: BorderRadius.circular(26)),
+        decoration: BoxDecoration(color: const Color(0xFF1E1A3D).withValues(alpha: .72), borderRadius: BorderRadius.circular(26)),
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text('${Skills.of(it.skill).emoji}  ${Skills.of(it.skill).region}', style: ts(14, color: C.inkSoft)),
+            child: Text('${Skills.of(it.skill).emoji}  ${Skills.of(it.skill).region}', style: ts(14, color: Colors.white70)),
           ),
           Expanded(
             child: ItemView(
@@ -176,13 +191,13 @@ class _StormTrialScreenState extends State<StormTrialScreen> {
       child: Panel(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('$right / $trialQuestions', style: ts(40, color: C.purpleDark)),
-          Text('You need $trialPassMark to break the storm, so close!', textAlign: TextAlign.center, style: ts(17, color: C.inkSoft)),
+          Text(right >= trialPassMark - 6 ? 'You need $trialPassMark to break the storm, so close!' : 'You need $trialPassMark to break the storm. Practise, then try again!', textAlign: TextAlign.center, style: ts(17, color: C.inkSoft)),
           const SizedBox(height: 12),
           Text('Practise with your Keepers, then try again:', style: ts(15, color: C.ink)),
           const SizedBox(height: 6),
           for (final s in weak) Text('${Skills.of(s).emoji}  ${Skills.of(s).region}', style: ts(18, color: C.ink)),
           const SizedBox(height: 14),
-          BigButton(label: 'Back to the map', style: BtnStyle.go, width: 240, onTap: () => Navigator.of(context).pop()),
+          BigButton(label: 'Back to the map', style: BtnStyle.go, width: 300, onTap: () => Navigator.of(context).pop()),
         ]),
       ),
     );

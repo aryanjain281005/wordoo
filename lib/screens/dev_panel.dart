@@ -9,6 +9,7 @@ import '../models/models.dart';
 import '../widgets/common.dart';
 import '../story/cutscene.dart';
 import 'game_screen.dart';
+import 'storm_trial.dart';
 
 /// Developer-only test bench (opened by long-pressing the Grown-up Dashboard title).
 /// Plays any game at any step WITHOUT changing the child's progress, levels or the retest gate.
@@ -41,6 +42,8 @@ class _DevPanelState extends State<DevPanel> {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q, devStep: levelStep(g, level))));
   }
 
+  void _trial(int? autoScore) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => StormTrialScreen(dev: true, devAutoScore: autoScore)));
+
   @override
   Widget build(BuildContext context) {
     final sfxCount = ['correct_1', 'miss_soft', 'power_up', 'reward_fanfare', 'tile_snap'].where((id) => ReadleAssets.instance.bundled('assets/sfx/$id.ogg')).length;
@@ -62,14 +65,21 @@ class _DevPanelState extends State<DevPanel> {
               onTap: () => _play(g, i, [s]),
             ),
           ),
+        Text('Storm Trial (7th island · nothing is saved)', style: ts(16, color: Colors.white, w: FontWeight.w600)),
         Card(
           child: ListTile(
-            leading: const Text('🔭', style: TextStyle(fontSize: 28)),
-            title: const Text('Star Observatory (mixed)'),
+            leading: const Text('⚡', style: TextStyle(fontSize: 28)),
+            title: const Text('Storm Trial (play for real)'),
+            subtitle: Text('$trialQuestions questions · pass $trialPassMark'),
             trailing: const Icon(Icons.play_arrow_rounded),
-            onTap: () => _play(GameId.starObservatory, IslandId.observatory, Skill.values.toList()),
+            onTap: () => _trial(null),
           ),
         ),
+        Wrap(spacing: 8, children: [
+          ActionChip(label: const Text('Auto-play: score 21 (pass)'), onPressed: () => _trial(trialPassMark)),
+          ActionChip(label: const Text('Auto-play: score 20 (retry)'), onPressed: () => _trial(trialPassMark - 1)),
+          ActionChip(label: const Text('Auto-play: score 12'), onPressed: () => _trial(12)),
+        ]),
         const SizedBox(height: 16),
         Text('Story scenes (does not mark them as seen)', style: ts(16, color: Colors.white, w: FontWeight.w600)),
         Wrap(spacing: 8, children: [
