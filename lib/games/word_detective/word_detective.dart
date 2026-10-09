@@ -143,12 +143,12 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
     await Future.delayed(const Duration(milliseconds: 900));
     for (var i = 0; i < n; i++) {
       if (_disposed || _signRects.length != n) return;
-      setState(() => _moveLens(_signRects[i].center));
+      setState(() => _moveLens(_signRects[i].center + const Offset(0, 70)));
       await Future.delayed(const Duration(milliseconds: 700));
     }
     if (_disposed) return;
     setState(() {
-      _moveLens(_signRects[it.correct].center);
+      _moveLens(_signRects[it.correct].center + const Offset(0, 70));
       _correctShown = it.correct;
       _newClue = true;
     });
@@ -158,7 +158,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
   void _moveLens(Offset p) {
     _lens = p;
     for (var i = 0; i < _signRects.length; i++) {
-      if ((_signRects[i].center - p).distance < _signRects[i].width * .55 + 30) _revealed.add(i);
+      if ((_signRects[i].center - p).distance < _signRects[i].width * .5 + 50) _revealed.add(i);
     }
   }
 
@@ -167,7 +167,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
     if (!_revealed.contains(i)) {
       // first tap on a foggy sign moves the magnifier there
       AudioManager.instance.sfx('whoosh', volume: .4);
-      setState(() => _moveLens(_signRects[i].center));
+      setState(() => _moveLens(_signRects[i].center + const Offset(0, 70))); // just below, so the word stays readable
       return;
     }
     _choose(i);
