@@ -18,7 +18,6 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] **Redo `char.ullu.talk`** as an edit of `char.ullu.happy` (the uploaded one is a different owl) (§M)
 
 ### Word Rocket
-- [ ] Deepest ocean zone `bg.rocket.zone4` (ART_PROMPTS §L1)
 - [ ] `prop.rocket.pearl`, `char.kachhua.talk` (§L2)
 
 ### Story Quest pictures
@@ -32,7 +31,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
-- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum, the band (Tinku, Koyal, Gajju), Garud, ocean zones 1–3. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
+- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum, the band (Tinku, Koyal, Gajju), Garud, all 4 ocean zones. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
 - 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`, `.dog`, `.owl` (all 9 suspects); Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
 - 10 music tracks (looping, in the app)
