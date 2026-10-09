@@ -11,7 +11,6 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 ## 🎨 Images
 
 ### Most visible first
-- [ ] Sound Orchestra band: `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (§I1)
 
 ### Phase 3: room & map (new)
 - [ ] Empty cosy bedroom `bg.room` (ART_PROMPTS §M1)
@@ -19,13 +18,8 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] **Redo `char.ullu.talk`** as an edit of `char.ullu.happy` (the uploaded one is a different owl) (§M)
 
 ### Word Rocket
-- [ ] 4 ocean zones `bg.rocket.zone1` … `bg.rocket.zone4` (ART_PROMPTS §L1)
+- [ ] Deepest ocean zone `bg.rocket.zone4` (ART_PROMPTS §L1)
 - [ ] `prop.rocket.pearl`, `char.kachhua.talk` (§L2)
-
-### Letter Archer
-- [ ] `char.garud.happy` (§K2)
-
-### Word Detective
 
 ### Story Quest pictures
 - [ ] Props: `prop.book.closed`, `prop.book.open`, `prop.castle.tower_broken`, `prop.castle.tower_restored`, 6 `prop.emotion.*` faces (§H4)
@@ -38,7 +32,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
-- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
+- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum, the band (Tinku, Koyal, Gajju), Garud, ocean zones 1–3. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
 - 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`, `.dog`, `.owl` (all 9 suspects); Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
 - 10 music tracks (looping, in the app)

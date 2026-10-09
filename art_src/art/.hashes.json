@@ -102,5 +102,12 @@
  "char.arya.cheer": "ef92cb1dbcfde34d9484dd71648c8c91c9418021",
  "char.arya.thinking": "e456560355072f7931eeebd9691cbc41a35c8015",
  "prop.orchestra.drum": "62b055026f77719067d3fd6ceb563741419f8adc",
- "prop.orchestra.stump": "dfad3b3484cef3b283b06b92baca8a115246865a"
+ "prop.orchestra.stump": "dfad3b3484cef3b283b06b92baca8a115246865a",
+ "bg.rocket.zone1": "34358af32b039c2abebdaa58a0004ddc1d54bad3",
+ "bg.rocket.zone2": "f55004f09812a19fa8a9ce738ea2d7a0636001c8",
+ "char.gajju.happy": "5dd7eec0c6ffa4364fe7f96ea0999c564e0400c0",
+ "char.garud.happy": "dc9d18973ae8645fc1c2827e8fed97661b2c1051",
+ "char.koyal.happy": "b1525cebdfd878b956aab58c0876fa50e67d2585",
+ "char.tinku.happy": "b455f3640711bc1d5baf0c0defc8ff87431b4a77",
+ "bg.rocket.zone3": "d3cc60ffc9abd57450eec5f3e54cfa216df81c67"
 }

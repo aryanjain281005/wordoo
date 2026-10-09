@@ -404,8 +404,13 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
           curve: Curves.easeOutBack,
           builder: (_, v, child) => Transform.scale(scale: v, child: child),
           child: Column(children: [
-            SizedBox(width: 120, height: 110, child: ArtImage('char.gajju.happy', fallback: const Center(child: Text('🐘', style: TextStyle(fontSize: 84))))),
-            SizedBox(width: 130, height: 110, child: ArtImage('prop.orchestra.drum', fallback: const Center(child: Text('🥁', style: TextStyle(fontSize: 92))))),
+            // painted Gajju already carries his dhol; otherwise elephant + drum
+            if (ReadleAssets.instance.art('char.gajju.happy') != null)
+              SizedBox(width: 210, height: 210, child: ArtImage('char.gajju.happy', fallback: const SizedBox.shrink()))
+            else ...[
+              const SizedBox(width: 120, height: 110, child: Center(child: Text('🐘', style: TextStyle(fontSize: 84)))),
+              SizedBox(width: 130, height: 110, child: ArtImage('prop.orchestra.drum', fallback: const Center(child: Text('🥁', style: TextStyle(fontSize: 92))))),
+            ],
           ]),
         ),
       ),

@@ -90,7 +90,7 @@ void main() {
     final out = <ItemResult>[];
     await pumpItem(tester, it, out: out);
     for (var i = 0; i < beats; i++) {
-      await tester.tap(find.text('🥁').first);
+      await tester.tap(find.byType(GestureDetector).at(1), warnIfMissed: false);
       await tester.pump(const Duration(milliseconds: 300));
     }
     await tester.tap(find.text('✓'));
