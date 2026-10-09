@@ -10,8 +10,6 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 
 ## 🎨 Images
 
-### Most visible first
-
 ### Phase 3: room & map (new)
 - [ ] Empty cosy bedroom `bg.room` (ART_PROMPTS §M1)
 - [ ] 7 map islands `island.forest` … `island.observatory` (§M2)
@@ -22,10 +20,10 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 
 ### Sharper characters (optional upgrade)
 - [ ] Remake as single 1024 px images (today's are cut out of sheets and are a bit small): Milo (`happy`, `talk`, `sad`, `surprised`, `thinking`, `cheer`) first, then the guardians (§A, §B)
-- [ ] Missing talk frames so mouths move: `char.<guardian>.talk` for bhalu, arya, kachhua, ullu, madhu, pari, kitabu, bolt (§B)
+- [ ] Missing talk frames so mouths move: `char.bhalu.talk`, `char.madhu.talk`, `char.bolt.talk` (edit of each `.happy`, only the mouth open) (§B). Kachhua and Ullu are listed above.
 
 ## 🎵 Music (Pixabay)
-- [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
+- [ ] Send the **Pixabay page links** of the 13 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
 - 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum, the band (Tinku, Koyal, Gajju), Garud, all 4 ocean zones, all Story Quest props (books, castle towers, 6 emotion faces). Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
