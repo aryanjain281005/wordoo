@@ -18,6 +18,20 @@ steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 ✅ All 10 tracks are in the app. Claude converted them to small looping OGG files (about 1–2 MB each instead of 2–8 MB).
 **Still needed from you:** the **Pixabay page link** for each of the 10 tracks you picked, so they can be listed in `assets/music/CREDITS.txt` (good practice, and proof of licence if a store ever asks).
 
+## Which track plays where (all games built so far)
+| Game / screen | Track |
+|---|---|
+| Map, menus | `music.aksharpur` ✅ |
+| Sound Orchestra (Sound Forest) | `music.forest` ✅, which gets louder as the band wakes up |
+| Letter Archer (Symbol Valley) | `music.valley` ✅ |
+| Word Detective (Word Village) | `music.village` ✅ |
+| Spelling Hive (Treasure Island) | `music.treasure` ✅ |
+| Story Quest (Story Castle) | `music.castle` ✅ (→ `music.library` while reading, once added) |
+| Star Observatory | `music.observatory` ✅ |
+| Check-in / dashboard | `music.bridge` ✅ / `music.calm` ✅ |
+
+No new music is needed for Letter Archer; the festive valley track already fits.
+
 ## Next tracks (Phase 2b and story scenes)
 
 | # | File name | Where it plays | Mood | Search on Pixabay | Pick if… |

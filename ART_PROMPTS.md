@@ -367,3 +367,28 @@ magnifier, collects 3 clues and names the culprit. Until these exist the app dra
 
 ### Priority for Phase 2d
 `bg.detective.street`, then the 9 `char.suspect.*`, then `char.ullu.talk`.
+
+---
+
+## K. Phase 2e — Letter Archer ("The Festival of Flying Lanterns")
+
+The game draws the lanterns, bow and arrows itself (so letters stay crisp and lanterns can light up).
+Only the sky behind them and Arya's poses come from images. Until then a purple night gradient is used.
+
+### K1. Festival sky (**portrait 1440 × 2560**, full scene)
+| File name | Prompt (after Style block) |
+|---|---|
+| `bg.archer.sky.png` | A magical Indian valley at night during a lantern festival, seen from a hilltop: deep indigo-to-violet sky with soft stars and a crescent moon, distant purple mountains, a winding river reflecting warm light, tiny village lights and marigold strings far below. **The upper two thirds is open sky with NO lanterns or objects** (the game places its own lanterns there); the bottom fifth is a dark grassy hilltop edge where the bow sits. Vertical 9:16. |
+
+### K2. Arya & Garud (1024 × 1024, plain white background, ONE pose)
+Use your `char.arya.happy` as the reference image.
+
+| File name | Prompt (after Style block + Arya block: *Arya the Archer, a confident kind Indian girl of about 12, long black braid, purple tunic with gold trim, soft brown boots, golden bow*) |
+|---|---|
+| `char.arya.talk.png` | **Edit of `char.arya.happy`:** identical, only the mouth open while speaking. |
+| `char.arya.cheer.png` | Arya jumping with her bow raised high in one hand, laughing, braid flying, small sparkles. |
+| `char.arya.thinking.png` | Arya holding an arrow thoughtfully at her chin, looking up at the sky. |
+| `char.garud.happy.png` | Garud, a friendly cheeky young eagle with brown and cream feathers, a small orange scarf, wings half open, cheeky grin (no Arya in this image). |
+
+### Priority for Phase 2e
+`bg.archer.sky`, then `char.arya.talk`.

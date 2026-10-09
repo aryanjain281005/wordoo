@@ -73,4 +73,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Phase 2c — Sound Orchestra (band on tree stumps, tap-to-hear + ✓ to choose, blend chorus, new Clap-the-Beat syllable rounds, band wakes up layer by layer with music volume + fireflies, sound-specific hints; syllable counter fixed)
 - [x] Device validation on the Vivo: fixed audio never playing on devices (assets/assets path), voice waiting/fallback, oversized hatch bee, Story Quest scroll + page fade, cutscene pan edge, Android back on grown-up screens, Journal art, Library tiles
 - [x] Phase 2d — Word Detective (6 voiced mini mysteries, fogged village signs + draggable magnifier, clue cards, suspect line-up and reveal, detective rank, look-alike hints)
-- [ ] Phase 2e — Letter Archer (Flame)
+- [x] Phase 2e — Letter Archer (Flame: lanterns with letters, slingshot bow + tap-to-auto-aim, drift by step, aiming guide, wrong lanterns dim, Golden Lantern fireworks with the child's name after 3 first-try hits, persistent lanterns in the valley sky; physics unit-tested)
+- [ ] Phase 2f — Word Rocket (Flame)

@@ -15,7 +15,11 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Sound Orchestra band: `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (§I1)
 - [ ] Story Quest helpers: `char.pari.talk`, `char.kitabu.talk`, `char.kitabu.thinking`, `char.pari.cheer` (§H1)
 
-### Word Detective (new)
+### Letter Archer (new)
+- [ ] Festival night sky `bg.archer.sky` (ART_PROMPTS §K1)
+- [ ] `char.arya.talk`, `char.arya.cheer`, `char.arya.thinking`, `char.garud.happy` (§K2)
+
+### Word Detective
 - [ ] Street scene `bg.detective.street` (ART_PROMPTS §J1)
 - [ ] 9 suspects `char.suspect.goat` … `char.suspect.owl` (§J2)
 - [ ] `char.ullu.talk`, `char.ullu.thinking`, `char.chuchu.happy` (§J3)

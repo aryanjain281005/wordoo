@@ -83,7 +83,8 @@ class AppState extends ChangeNotifier {
   int stars = 0;
   Set<String> libraryBooks = {}; // Story Quest: authored stories understood → re-readable Library + restored castle towers
   int hiveBees = 0;
-  int detectiveClues = 0; // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
+  int detectiveClues = 0;
+  int lanternsLit = 0; // Letter Archer: every right letter lights a lantern that stays in the valley sky // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
   // settings
@@ -173,6 +174,7 @@ class AppState extends ChangeNotifier {
         'stars': stars,
         'hiveBees': hiveBees,
         'detectiveClues': detectiveClues,
+        'lanternsLit': lanternsLit,
         'libraryBooks': libraryBooks.toList(),
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
@@ -220,6 +222,7 @@ class AppState extends ChangeNotifier {
     stars = j['stars'] as int;
     hiveBees = j['hiveBees'] as int? ?? 0;
     detectiveClues = j['detectiveClues'] as int? ?? 0;
+    lanternsLit = j['lanternsLit'] as int? ?? 0;
     libraryBooks = Set<String>.from(j['libraryBooks'] as List? ?? const []);
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
@@ -273,6 +276,7 @@ class AppState extends ChangeNotifier {
     stars = 0;
     hiveBees = 0;
     detectiveClues = 0;
+    lanternsLit = 0;
     libraryBooks = {};
     badges = {};
     seenScenes = {};
@@ -485,6 +489,7 @@ class AppState extends ChangeNotifier {
     m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
     if (item.skill == Skill.spelling && r.correct) hiveBees++;
     if (item.skill == Skill.wordRecognition && r.correct) detectiveClues++;
+    if (item.skill == Skill.gpc && r.correct) lanternsLit++;
     if (item.skill == Skill.comprehension && r.correct) {
       final id = storyIdOfItem(item.id);
       if (isAuthoredStory(id)) libraryBooks.add(id);

@@ -4,6 +4,7 @@ import '../models/models.dart';
 import '../widgets/item_views.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
+import 'letter_archer/letter_archer.dart';
 import 'sound_orchestra/sound_orchestra.dart';
 import 'spelling_hive/spelling_hive.dart';
 import 'story_quest/story_quest.dart';
@@ -29,6 +30,7 @@ class GameModules {
     GameId.spellingHive: (c, ctx, key) => SpellingHiveItem(key: key, ctx: ctx, hiveBees: _state(c)?.hiveBees ?? 0),
     GameId.soundOrchestra: (c, ctx, key) => SoundOrchestraItem(key: key, ctx: ctx),
     GameId.wordDetective: (c, ctx, key) => WordDetectiveItem(key: key, ctx: ctx, cluesEver: _state(c)?.detectiveClues ?? 0),
+    GameId.letterArcher: (c, ctx, key) => LetterArcherItem(key: key, ctx: ctx, lanternsLit: _state(c)?.lanternsLit ?? 0, explorerName: _state(c)?.explorerName ?? ''),
     GameId.storyQuest: (c, ctx, key) => StoryQuestItem(key: key, ctx: ctx, libraryBooks: _state(c)?.libraryBooks.length ?? 0),
   };
 
