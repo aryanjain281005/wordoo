@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../story/play_scene.dart';
+import '../core/assets.dart';
+import '../engine/meta.dart';
 import 'journal.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
@@ -213,7 +215,16 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                 Expanded(
                   child: Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
                     if (isNext) _PulseRing(size: size),
-                    Positioned.fill(child: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked))),
+                    // colour returns as the island is restored (Gumsum's grey fades); painted island art when available
+                    Positioned.fill(
+                      child: ColorFiltered(
+                        colorFilter: ColorFilter.matrix(_saturation(locked ? 1 : .35 + .65 * (restoration / 100).clamp(0.0, 1.0))),
+                        child: ArtImage('island.${island.name}', fallback: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked))),
+                      ),
+                    ),
+                    // the island grows a tier every season
+                    if (!locked && tier >= 2) Positioned(left: size * .06, top: size * .06, child: Text(const ['🌱', '🌳', '✨', '👑'][min(tier - 2, 3)], style: TextStyle(fontSize: size * .14))),
+                    if (!locked && st.gems.contains(gemId(st.campaign.season, island))) Positioned(left: size * .08, bottom: size * .3, child: Text(islandGem[island]!.$1, style: TextStyle(fontSize: size * .13))),
                     if (locked) Positioned(top: size * .2, child: Container(padding: const EdgeInsets.all(10), decoration: const BoxDecoration(color: Color(0xCC1E2753), shape: BoxShape.circle), child: Icon(Icons.lock_rounded, color: Colors.white, size: size * .16))),
                     if (band == Band.strong) Positioned(right: size * .04, top: size * .04, child: Text('✨', style: TextStyle(fontSize: size * .15))),
                     if (isNext) Positioned(top: -4, child: _Bounce(child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3), decoration: BoxDecoration(color: C.gold, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white, width: 2)), child: Text('Start here!', style: ts(12, color: C.ink))))),
@@ -521,4 +532,16 @@ class _TrailPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TrailPainter o) => false;
+}
+
+/// Colour matrix that blends between grey (0) and full colour (1).
+List<double> _saturation(double s) {
+  const r = .2126, g = .7152, b = .0722;
+  final i = 1 - s;
+  return [
+    i * r + s, i * g, i * b, 0, 0, //
+    i * r, i * g + s, i * b, 0, 0,
+    i * r, i * g, i * b + s, 0, 0,
+    0, 0, 0, 1, 0,
+  ];
 }

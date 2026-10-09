@@ -474,5 +474,41 @@
  "rocket_blend": {
   "who": "kachhua",
   "text": "Swipe up to blend the sounds together!"
+ },
+ "tease_forest": {
+  "who": "bhalu",
+  "text": "Next time, my band learns a brand new song. Will you conduct?"
+ },
+ "tease_valley": {
+  "who": "arya",
+  "text": "Next time, the festival lanterns float even higher. Bring your best arrows!"
+ },
+ "tease_ocean": {
+  "who": "kachhua",
+  "text": "Next time, we dive deeper. Strange glowing creatures are waiting!"
+ },
+ "tease_village": {
+  "who": "ullu",
+  "text": "Next time, Inspector Ullu has a NEW case. Someone switched more signs!"
+ },
+ "tease_treasure": {
+  "who": "madhu",
+  "text": "Next time, more baby bees are ready to hatch in the hive."
+ },
+ "tease_castle": {
+  "who": "pari",
+  "text": "Next time, Kitabu remembers another story. Let's find its ending!"
+ },
+ "tease_observatory": {
+  "who": "milo",
+  "text": "Next time, the stars draw a new map in the sky. Ready, explorer?"
+ },
+ "gift_found": {
+  "who": "milo",
+  "text": "Look what I found! You tried so hard, this is for you."
+ },
+ "gem_found": {
+  "who": "dadi",
+  "text": "A Story Gem! The whole island is shining because of you."
  }
 }

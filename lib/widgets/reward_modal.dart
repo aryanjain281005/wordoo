@@ -3,13 +3,28 @@ import 'package:flutter/material.dart';
 import 'props.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
+import '../core/audio.dart';
 import '../engine/campaign.dart';
+import '../engine/meta.dart';
+import '../story/story_lines.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import 'common.dart';
 
-Future<void> showRewardModal(BuildContext context, {required SessionOutcome outcome, required GameId game, required int companion, required int level, Quest? quest}) {
-  return showGeneralDialog(
+Future<void> showRewardModal(BuildContext context, {required SessionOutcome outcome, required GameId game, required int companion, required int level, Quest? quest}) async {
+  // voiced moments: Story Gem (Dadi), effort gift (Milo), then the next guardian's "next time…" teaser
+  var open = true;
+  Future<void> narrate() async {
+    await Future.delayed(const Duration(milliseconds: 1400));
+    for (final id in [if (outcome.gem != null) 'gem_found', if (outcome.gift != null) 'gift_found', ?outcome.teaser]) {
+      final l = StoryLines.instance[id];
+      if (!open || l == null) return;
+      await AudioManager.instance.voice(id, l.text, character: l.who);
+    }
+  }
+
+  narrate();
+  await showGeneralDialog(
     context: context,
     barrierDismissible: false,
     barrierColor: Colors.black54,
@@ -17,6 +32,8 @@ Future<void> showRewardModal(BuildContext context, {required SessionOutcome outc
     pageBuilder: (_, __, ___) => _RewardDialog(outcome: outcome, game: game, companion: companion, level: level, quest: quest),
     transitionBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: ScaleTransition(scale: CurvedAnimation(parent: a, curve: Curves.easeOutBack), child: child)),
   );
+  open = false;
+  AudioManager.instance.stopVoice();
 }
 
 class _RewardDialog extends StatelessWidget {
@@ -131,6 +148,29 @@ class _RewardDialog extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text('🏆 Chapter complete! The island is growing. +5 stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
                   ],
+                  if (outcome.gem != null) ...[
+                    const SizedBox(height: 12),
+                    _Moment(islandGem[outcome.gem]!.$1, 'Story Gem!', islandGem[outcome.gem]!.$2, const Color(0xFFEDE4FF)),
+                  ],
+                  if (outcome.gift != null) ...[
+                    const SizedBox(height: 10),
+                    _Moment(outcome.gift!.$1, 'Milo found a gift!', 'A ${outcome.gift!.$2}, for trying so hard', const Color(0xFFFFF1C2)),
+                  ],
+                  if (outcome.newItems.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Wrap(alignment: WrapAlignment.center, spacing: 8, runSpacing: 8, children: [
+                      for (final (c, i) in outcome.newItems.take(4))
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(color: const Color(0xFFE8F8EE), borderRadius: BorderRadius.circular(16)),
+                          child: Text('${i.emoji}  ${i.name} · ${c.name}', style: ts(14, color: C.greenDark)),
+                        ),
+                    ]),
+                  ],
+                  if (outcome.teaser != null && StoryLines.instance[outcome.teaser!] != null) ...[
+                    const SizedBox(height: 12),
+                    Text('“${StoryLines.instance[outcome.teaser!]!.text}”', textAlign: TextAlign.center, style: ts(15, color: C.inkSoft, w: FontWeight.w600)),
+                  ],
                   if (outcome.retestUnlocked) ...[
                     const SizedBox(height: 10),
                     Text('🌉 The Star Bridge has appeared! Gumsum is waiting on the map.', textAlign: TextAlign.center, style: ts(17, color: C.purple)),
@@ -145,6 +185,34 @@ class _RewardDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A highlighted reward moment (Story Gem, effort gift) with a pop-in.
+class _Moment extends StatelessWidget {
+  final String emoji, title, sub;
+  final Color bg;
+  const _Moment(this.emoji, this.title, this.sub, this.bg);
+  @override
+  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 900),
+        curve: Curves.elasticOut,
+        builder: (_, v, child) => Transform.scale(scale: .5 + .5 * v, child: child),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(emoji, style: const TextStyle(fontSize: 42)),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: ts(19, color: C.purpleDark)),
+                Text(sub, style: ts(15, color: C.inkSoft, w: FontWeight.w600)),
+              ]),
+            ),
+          ]),
+        ),
+      );
 }
 
 class _RewardCard extends StatelessWidget {

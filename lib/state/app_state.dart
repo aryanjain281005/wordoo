@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import '../story/book_text.dart';
+import '../engine/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
@@ -26,8 +27,12 @@ class SessionOutcome {
   final bool chapterComplete;
   final bool retestUnlocked;
   final double restorationBefore, restorationAfter;
+  final IslandId? gem; // Story Gem earned (chapter finished)
+  final (String, String)? gift; // effort gift from Milo
+  final List<(CollectionDef, CollectItem)> newItems; // collection items unlocked by this quest
+  final String? teaser; // "Next time…" line of the next quest's guardian
   SessionOutcome(this.stars, this.points, this.accuracy, this.adapt, this.newCollectibles, this.newBadges,
-      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0});
+      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0, this.gem, this.gift, this.newItems = const [], this.teaser});
 }
 
 /// One play session, kept only for reports (it never limits play).
@@ -85,7 +90,24 @@ class AppState extends ChangeNotifier {
   int hiveBees = 0;
   int detectiveClues = 0;
   int lanternsLit = 0;
-  int seaLog = 0; // Word Rocket: words blended right → sea creatures met in the Sea Log // Letter Archer: every right letter lights a lantern that stays in the valley sky // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
+  int seaLog = 0;
+  int bandStickers = 0; // Sound Orchestra: sounds heard right
+  Set<String> playDays = {}; // yyyy-mm-dd, for the cosy streak (only ever grows)
+  Set<String> gems = {}; // Story Gems: 's<season>:<island>'
+  List<String> gifts = []; // effort gifts, by name
+  int effort = 0; // effort points toward the next gift
+  Map<String, int>? _questStart; // collection counts when the current quest began
+
+  int collectionCount(String id) => switch (id) {
+        'band' => bandStickers,
+        'lanterns' => lanternsLit,
+        'sea' => seaLog,
+        'cases' => detectiveClues,
+        'hive' => hiveBees,
+        'library' => libraryBooks.length,
+        _ => 0,
+      };
+  CozyStreak get streak => CozyStreak.from(playDays); // Word Rocket: words blended right → sea creatures met in the Sea Log // Letter Archer: every right letter lights a lantern that stays in the valley sky // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
   // settings
@@ -177,6 +199,11 @@ class AppState extends ChangeNotifier {
         'detectiveClues': detectiveClues,
         'lanternsLit': lanternsLit,
         'seaLog': seaLog,
+        'bandStickers': bandStickers,
+        'playDays': playDays.toList(),
+        'gems': gems.toList(),
+        'gifts': gifts,
+        'effort': effort,
         'libraryBooks': libraryBooks.toList(),
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
@@ -226,6 +253,11 @@ class AppState extends ChangeNotifier {
     detectiveClues = j['detectiveClues'] as int? ?? 0;
     lanternsLit = j['lanternsLit'] as int? ?? 0;
     seaLog = j['seaLog'] as int? ?? 0;
+    bandStickers = j['bandStickers'] as int? ?? 0;
+    playDays = Set<String>.from(j['playDays'] as List? ?? const []);
+    gems = Set<String>.from(j['gems'] as List? ?? const []);
+    gifts = List<String>.from(j['gifts'] as List? ?? const []);
+    effort = j['effort'] as int? ?? 0;
     libraryBooks = Set<String>.from(j['libraryBooks'] as List? ?? const []);
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
@@ -281,6 +313,11 @@ class AppState extends ChangeNotifier {
     detectiveClues = 0;
     lanternsLit = 0;
     seaLog = 0;
+    bandStickers = 0;
+    playDays = {};
+    gems = {};
+    gifts = [];
+    effort = 0;
     libraryBooks = {};
     badges = {};
     seenScenes = {};
@@ -490,7 +527,9 @@ class AppState extends ChangeNotifier {
   void recordItem(Item item, ItemResult r) {
     final m = models[item.skill]!;
     final tag = r.tags.isEmpty ? null : r.tags.first;
+    _questStart ??= {for (final c in collections) c.id: collectionCount(c.id)};
     m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
+    if (item.skill == Skill.phonological && r.correct) bandStickers++;
     if (item.skill == Skill.spelling && r.correct) hiveBees++;
     if (item.skill == Skill.wordRecognition && r.correct) detectiveClues++;
     if (item.skill == Skill.gpc && r.correct) lanternsLit++;
@@ -548,9 +587,30 @@ class AppState extends ChangeNotifier {
     };
     final newB = [for (final id in badges.difference(prevBadges)) if (defs[id] != null) defs[id]!];
     final after = campaign.restoration(q.island, models);
+
+    // Phase 3 rewards: Story Gem, cosy streak day, effort gift, new collection items, "next time" teaser
+    IslandId? gem;
+    if (chapterComplete && gems.add(gemId(campaign.season, q.island))) gem = q.island;
+    playDays.add(today);
+    (String, String)? gift;
+    effort += results.where((r) => !r.correct).length;
+    if (effort >= giftEvery) {
+      effort -= giftEvery;
+      gift = effortGifts[gifts.length % effortGifts.length];
+      gifts.add(gift.$2);
+    }
+    final start = _questStart ?? const <String, int>{};
+    final newItems = <(CollectionDef, CollectItem)>[
+      for (final c in collections)
+        for (final i in c.items)
+          if ((start[c.id] ?? collectionCount(c.id)) < i.at && collectionCount(c.id) >= i.at) (c, i),
+    ];
+    _questStart = null;
+    final next = board;
+    final teaser = next.isEmpty ? null : teaserLineId(next.first.island);
     changed();
     return SessionOutcome(earned, earned * Cfg.pointsPerStar, acc, adapt, newC, newB,
-        chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after);
+        chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after, gem: gem, gift: gift, newItems: newItems, teaser: teaser);
   }
 
   void equipHat(int idx) {

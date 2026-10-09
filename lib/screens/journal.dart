@@ -9,7 +9,9 @@ import '../story/puppets.dart';
 import '../core/assets.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
+import '../engine/meta.dart';
 import 'collection.dart';
+import 'explorer_room.dart';
 import 'library.dart';
 
 /// Explorer's Journal: the story so far, island by island, and story scenes to watch again.
@@ -49,11 +51,17 @@ class JournalScreen extends StatelessWidget {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                       Panel(
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text('Season ${c.season}', style: ts(24)),
+                          Row(children: [
+                            Text('Season ${c.season}', style: ts(24)),
+                            const Spacer(),
+                            Text([for (final i in IslandId.values) if (st.gems.contains(gemId(c.season, i))) islandGem[i]!.$1].join(' '), style: const TextStyle(fontSize: 20)),
+                          ]),
                           const SizedBox(height: 4),
                           Text(st.gumsumLightness == 0 ? 'Gumsum is still a little grey cloud. Every season of reading makes him brighter.' : 'Gumsum the cloud is ${(st.gumsumLightness * 100).round()}% brighter than at the start.', style: ts(16, color: C.inkSoft, w: FontWeight.w500)),
                         ]),
                       ),
+                      const SizedBox(height: 8),
+                      Center(child: StreakChip(st.streak)),
                       const SizedBox(height: 12),
                       for (final i in IslandId.values) ...[
                         _island(st, i),
@@ -71,6 +79,8 @@ class JournalScreen extends StatelessWidget {
                       ]),
                       const SizedBox(height: 16),
                       BigButton(label: 'Story Library (${st.libraryBooks.length})', icon: Icons.local_library_rounded, style: BtnStyle.primary, height: 52, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LibraryScreen()))),
+                      const SizedBox(height: 10),
+                      BigButton(label: 'My room', icon: Icons.house_rounded, style: BtnStyle.soft, height: 52, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExplorerRoomScreen()))),
                       const SizedBox(height: 10),
                       BigButton(label: 'My treasures', icon: Icons.backpack_rounded, style: BtnStyle.go, height: 52, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen()))),
                     ]),
