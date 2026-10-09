@@ -253,8 +253,11 @@ class _WordBuilderItemState extends State<WordBuilderItem> with TickerProviderSt
           ),
       ]);
 
-  Widget _slotsRow() {
-    final w = min(70.0, (MediaQuery.sizeOf(context).width - 60) / answer.length - 8);
+  Widget _slotsRow() => LayoutBuilder(builder: (context, box) => _slotsRowFor(box.maxWidth));
+
+  /// Slot width comes from the real board width (not the screen), so long words always fit.
+  Widget _slotsRowFor(double maxW) {
+    final w = min(70.0, (maxW - 34) / answer.length - 8);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../core/tts.dart';
@@ -146,11 +147,22 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _onFeedback(String m, bool good) {
+    void apply() {
+      if (!mounted) return;
+      setState(() {
+        msg = m;
+        happy = good;
+      });
+    }
+
+    // A game may send a message while it is being built (e.g. "Here's a little help!" when it starts):
+    // that is not an answer, so no sound, and the update waits until the frame is finished.
+    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle && SchedulerBinding.instance.schedulerPhase != SchedulerPhase.postFrameCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => apply());
+      return;
+    }
     AudioManager.instance.sfxOneOf(good ? const ['correct_1', 'correct_2', 'correct_3'] : const ['miss_soft']);
-    setState(() {
-      msg = m;
-      happy = good;
-    });
+    apply();
   }
 
   GameId _moduleFor(Item it) => quest.mixed ? Skills.of(it.skill).demoGame : quest.game;

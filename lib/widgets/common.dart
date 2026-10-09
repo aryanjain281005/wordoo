@@ -130,7 +130,7 @@ class Panel extends StatelessWidget {
           border: Border.all(color: border ?? Colors.white, width: 3),
           boxShadow: [softShadow(const Color(0x33101840), 22, 10)],
         ),
-        child: child,
+        child: Material(type: MaterialType.transparency, child: child), // ripples of switches/tiles show on the panel
       );
 }
 
@@ -339,16 +339,24 @@ class RoundIconButton extends StatelessWidget {
         label: label,
         child: GestureDetector(
           onTap: onTap,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2.5),
-              boxShadow: [softShadow(const Color(0x33101840), 12, 5)],
+          behavior: HitTestBehavior.opaque,
+          // the touch area is never smaller than 48 dp (accessibility), even when the circle is drawn smaller
+          child: SizedBox(
+            width: max(size, 48),
+            height: max(size, 48),
+            child: Center(
+              child: Container(
+                width: size,
+                height: size,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2.5),
+                  boxShadow: [softShadow(const Color(0x33101840), 12, 5)],
+                ),
+                child: Icon(icon, color: C.purpleDark, size: size * .5),
+              ),
             ),
-            child: Icon(icon, color: C.purpleDark, size: size * .5),
           ),
         ),
       );

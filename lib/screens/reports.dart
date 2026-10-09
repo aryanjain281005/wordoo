@@ -150,7 +150,7 @@ class ParentDashboard extends StatelessWidget {
     final st = context.watch<AppState>();
     final has = st.history.length >= 2;
     final focus = Personalizer.focus(st.models);
-    return AdventureBackground(
+    return Scaffold(body: AdventureBackground(
       scene: Scene.night,
       calm: true,
       child: SafeArea(
@@ -160,7 +160,7 @@ class ParentDashboard extends StatelessWidget {
             child: Row(children: [
               RoundIconButton(icon: Icons.arrow_back_rounded, label: 'Back to adventure', onTap: () => st.go(AppScreen.home)),
               const SizedBox(width: 12),
-              Expanded(child: GestureDetector(onLongPress: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DevPanel())), child: Text('Grown-up Dashboard', style: ts(26, color: Colors.white)))),
+              Expanded(child: GestureDetector(onLongPress: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DevPanel())), child: ConstrainedBox(constraints: const BoxConstraints(minHeight: 48), child: Align(alignment: Alignment.centerLeft, child: Text('Grown-up Dashboard', style: ts(26, color: Colors.white)))))),
             ]),
           ),
           Expanded(
@@ -221,7 +221,7 @@ class ParentDashboard extends StatelessWidget {
           ),
         ]),
       ),
-    );
+    ));
   }
 
   Widget _profileRow(AppState st, Skill s) {

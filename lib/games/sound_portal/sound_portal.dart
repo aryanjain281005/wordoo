@@ -34,7 +34,8 @@ class _SoundPortalItemState extends State<SoundPortalItem> with TickerProviderSt
   final Set<int> _faded = {};
   final Map<int, int> _zap = {};
   Size _area = Size.zero; // the board, measured by LayoutBuilder
-  static const _portalSize = 96.0;
+  /// Portals shrink on short boards so all of them always fit.
+  double get _portalSize => _area == Size.zero ? 96.0 : min(96.0, (_area.height - 16) / n - 10);
   Offset? _beamEnd; // while dragging
   int? _near;
   int? _linked; // portal joined to the orb
@@ -305,8 +306,8 @@ class _SoundPortalItemState extends State<SoundPortalItem> with TickerProviderSt
                   builder: (_, _) => Transform.rotate(
                     angle: _spin.value * 2 * pi * (i.isEven ? 1 : -1),
                     child: Container(
-                      width: 96,
-                      height: 96,
+                      width: _portalSize,
+                      height: _portalSize,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: SweepGradient(
@@ -325,8 +326,8 @@ class _SoundPortalItemState extends State<SoundPortalItem> with TickerProviderSt
                   ),
                 ),
                 Container(
-                  width: 74,
-                  height: 74,
+                  width: _portalSize * .77,
+                  height: _portalSize * .77,
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF101A33)),
                   child: FittedBox(

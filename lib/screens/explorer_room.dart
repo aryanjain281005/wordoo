@@ -164,7 +164,7 @@ class _ExplorerRoomScreenState extends State<ExplorerRoomScreen> with SingleTick
           height: 46,
           child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
             for (final b in books.take(8)) Text(b, style: const TextStyle(fontSize: 22)),
-            if (books.isEmpty) Text('Story Library books go here', style: ts(11, color: Colors.white70, w: FontWeight.w500)),
+            if (books.isEmpty) Expanded(child: Text('Story Library books go here', maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(11, color: Colors.white70, w: FontWeight.w500))),
           ]),
         ),
         Container(height: 10, decoration: BoxDecoration(color: const Color(0xFF8B5A2B), borderRadius: BorderRadius.circular(4))),

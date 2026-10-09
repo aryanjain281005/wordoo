@@ -51,7 +51,8 @@ class AppShell extends StatelessWidget {
       child: AnimatedSwitcher(
       duration: const Duration(milliseconds: 450),
       switchInCurve: Curves.easeOut,
-      child: KeyedSubtree(key: ValueKey(st.screen), child: screen),
+      // a transparent Material under every screen: switches, list tiles and text fields always have one
+      child: KeyedSubtree(key: ValueKey(st.screen), child: Material(type: MaterialType.transparency, child: screen)),
       ),
     );
   }

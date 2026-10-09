@@ -10,6 +10,8 @@ import 'state/app_state.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // keep decoded pictures in check on low-cost phones (2 GB RAM): at most ~64 MB of images in memory
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 64 << 20;
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   AudioManager.instance.init();

@@ -17,7 +17,7 @@ steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 
 ## Status (9 Oct)
 
-✅ All 10 tracks are in the app. Claude converted them to small looping OGG files (about 1–2 MB each instead of 2–8 MB).
+✅ All 10 tracks are in the app. Claude converted them to small looping OGG files (48 kbps, about 0.4–1.6 MB each).
 **Still needed from you:** the **Pixabay page link** for each of the 13 tracks you picked, so they can be listed in `assets/music/CREDITS.txt` (good practice, and proof of licence if a store ever asks).
 
 ## Which track plays where (all games built so far)

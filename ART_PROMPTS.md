@@ -42,6 +42,7 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | 14 story covers, 10 `bg.book.*`, `bg.archer.sky`, Arya talk, Ullu thinking, Chuchu | ✅ In the app (9 Oct) | `char.ullu.talk` must be redone (see §M) |
 | Band, Garud, 4 ocean zones, Story Quest props (batches 5–7) | ✅ In the app (9 Oct) | — |
 | `bg.room` + 7 map islands (batch 8) | ✅ In the app (9 Oct) | — |
+| Phase 4 backgrounds, chests, Ullu pair (batch 9) | ✅ In the app (9 Oct) | talk frames for Pip, Bolt, Coral, Jugnu, Kalam were **different characters**: redo as edits of each `.happy` |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
@@ -476,6 +477,8 @@ Characters are 1024 × 1024, plain white background, ONE pose.
 | `char.coral.talk.png` | Word Builder | **Edit of `char.coral.happy`:** identical, only the mouth open. |
 | `char.jugnu.talk.png` | Word Flash | **Edit of `char.jugnu.happy`:** identical, only the mouth open. |
 | `char.kalam.talk.png` | Magic Writer | **Edit of `char.kalam.happy`:** identical, only the beak open. |
+
+**How to make a talk frame that matches:** upload the character's `.happy` picture into the image tool (as an edit, not a new image) and ask: *"Keep this exact image. Change ONLY the mouth so it is open, as if speaking. Same pose, same colours, same framing, same background."* If the tool redraws the whole character, the frame cannot be used.
 
 ### Priority for Phase 4
 The 5 backgrounds, then the two chests, then the talk frames.

@@ -11,12 +11,8 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 ## 🎨 Images
 
 ### Phase 4: the five new games (new)
-- [ ] 5 backgrounds `bg.ninja.dojo`, `bg.portal.workshop`, `bg.reef.city`, `bg.flash.bazaar`, `bg.writer.cove` (ART_PROMPTS §N)
-- [ ] Treasure chests `prop.writer.chest`, `prop.writer.chest_open` (§N)
-- [ ] Talk frames `char.pip.talk`, `char.bolt.talk`, `char.coral.talk`, `char.jugnu.talk`, `char.kalam.talk` (§N)
+- [ ] **Redo the talk frames** `char.pip.talk`, `char.bolt.talk`, `char.coral.talk`, `char.jugnu.talk`, `char.kalam.talk`. The uploaded ones are **different characters** (Pip became a puppy, Kalam a blue bird…). Each must be an **edit of that character's `.happy` picture**: upload the happy picture to the image tool and ask *"Same image, change ONLY the mouth to open"* (§N)
 
-### Fixes
-- [ ] **Redo `char.ullu.talk`** as an edit of `char.ullu.happy` (the uploaded one is a different owl) (§M)
 
 ### Word Rocket
 - [ ] `char.kachhua.talk` (§L2)
@@ -29,7 +25,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Send the **Pixabay page links** of the 13 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
-- 9 Oct (batch 8): `bg.room`, all 7 map islands, `prop.rocket.pearl`
+- 9 Oct (batch 8–9): `bg.room`, all 7 map islands, `prop.rocket.pearl`, the 5 Phase 4 backgrounds, both treasure chests, new `char.ullu.happy` + `char.ullu.talk` pair
 - 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum, the band (Tinku, Koyal, Gajju), Garud, all 4 ocean zones, all Story Quest props (books, castle towers, 6 emotion faces). Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
 - 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`, `.dog`, `.owl` (all 9 suspects); Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
