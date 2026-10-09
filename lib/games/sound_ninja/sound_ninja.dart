@@ -217,7 +217,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   }
 
   void _clapDone() {
-    if (_resolved || demo || _cuts.isEmpty) return;
+    if (_resolved || demo) return; // 0 cuts = 1 piece is a valid answer (one-beat words like "bat")
     final pieces = _cuts.length + 1;
     if (pieces == beats) {
       _choose(it.correct);
@@ -290,7 +290,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     RoundIconButton(icon: Icons.refresh_rounded, label: 'Start again', size: 46, onTap: () => setState(_cuts.clear)),
                     const SizedBox(width: 12),
-                    Opacity(opacity: _cuts.isEmpty ? .4 : 1, child: BigButton(label: '✓', style: BtnStyle.go, width: 90, height: 52, fontSize: 26, onTap: _clapDone)),
+                    Opacity(opacity: 1, child: BigButton(label: '✓', style: BtnStyle.go, width: 90, height: 52, fontSize: 26, onTap: _clapDone)),
                   ]),
                 ),
               if (!clap && !demo && !_resolved)

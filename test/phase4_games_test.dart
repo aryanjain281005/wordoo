@@ -186,6 +186,16 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
+  testWidgets('Sound Ninja: a one-beat word is answered with no cut (1 piece)', (t) async {
+    final it = make(Skill.phonological, 2, 3, (i) => i.id.startsWith('pc:') && i.options[i.correct].label == '1');
+    final out = <ItemResult>[];
+    await host(t, SoundNinjaItem(ctx: ctx(it, out)));
+    await t.tap(find.text('✓'));
+    await wait(t, 2000);
+    expect(out.single.correct, isTrue);
+    await t.pumpWidget(const SizedBox());
+  });
+
   testWidgets('Sound Ninja syllable round: cut the fruit into its beats', (t) async {
     final it = make(Skill.phonological, 2, 6, (i) => i.id.startsWith('pc:') && i.options[i.correct].label != '1');
     final beats = int.parse(it.options[it.correct].label);

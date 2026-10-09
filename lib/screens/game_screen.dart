@@ -309,40 +309,60 @@ class _GameScreenState extends State<GameScreen> {
     return Column(key: const ValueKey('intro'), children: [
       _topBar(),
       Expanded(
-        child: LayoutBuilder(builder: (_, c) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 640),
-                child: Column(children: [
-                  Text('${meta.emoji}  ${meta.name}', textAlign: TextAlign.center, style: ts(36, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 8)])),
-                  const SizedBox(height: 4),
-                  Text(meta.tagline, style: ts(20, color: Colors.white, w: FontWeight.w600)),
-                  const SizedBox(height: 12),
-                  _beatCard(),
-                  Container(
-                    height: 400,
-                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white54, width: 2)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
-                      child: GameModules.of(_moduleFor(demoItem!))(
-                          context, GameCtx(item: demoItem!, scaffold: false, pack: pack, demo: true, feedback: (_, __) {}, done: (_) {}), const ValueKey('demo')),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 640),
+              child: Column(children: [
+                Text('${meta.emoji}  ${meta.name}', textAlign: TextAlign.center, style: ts(32, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 8)])),
+                Text(meta.tagline, style: ts(18, color: Colors.white, w: FontWeight.w600)),
+                const SizedBox(height: 10),
+                _beatCard(),
+                // The demo only shows how to play. It never takes taps or scrolls (that used to trap children:
+                // they tapped the demo answers and swiped inside it, and could not reach the start button).
+                // Tapping it starts the real game instead.
+                GestureDetector(
+                  onTap: _start,
+                  child: Stack(children: [
+                    Container(
+                      height: 330,
+                      decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(30), border: Border.all(color: Colors.white54, width: 2)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(28),
+                        child: IgnorePointer(
+                          child: GameModules.of(_moduleFor(demoItem!))(
+                              context, GameCtx(item: demoItem!, scaffold: false, pack: pack, demo: true, feedback: (_, _) {}, done: (_) {}), const ValueKey('demo')),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Companion(type: st.avatar.companion, size: 90, message: '$msg  ${meta.how}', speakLocale: null),
-                  const SizedBox(height: 14),
-                  BigButton(label: Str.t(pack.code, 'letsGo'), icon: Icons.play_arrow_rounded, style: BtnStyle.go, width: 260, onTap: _start),
-                  const SizedBox(height: 16),
-                ]),
-              ),
+                    Positioned(
+                      bottom: 10,
+                      left: 0,
+                      right: 0,
+                      child: Center(child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                        decoration: BoxDecoration(color: const Color(0xE61E2753), borderRadius: BorderRadius.circular(14)),
+                        child: Text('👀  Watch how to play · tap to start', style: ts(14, color: Colors.white)),
+                      )),
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 10),
+                Companion(type: st.avatar.companion, size: 80, message: meta.how, speakLocale: null),
+              ]),
             ),
-          );
-        }),
+          ),
+        ),
+      ),
+      // the start button is always on screen, never hidden below the demo
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
+        child: BigButton(label: Str.t(pack.code, 'letsGo'), icon: Icons.play_arrow_rounded, style: BtnStyle.go, width: 280, onTap: _start),
       ),
     ]);
   }
+
 
   Widget _play() {
     return Column(key: const ValueKey('play'), children: [
