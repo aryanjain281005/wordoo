@@ -58,5 +58,14 @@
  "char.suspect.cow": "d1c447b79b3d4af7579b3892f57359a562c7359c",
  "char.suspect.monkey": "8b5208b2c7cb1c22cdcbe110f8eac1cf526184e1",
  "char.suspect.mouse": "59ac8e3845c60740368a86e3593c90a0d9ee86d3",
- "char.suspect.parrot": "9c7106658dcba059df9231ee737160b7ed2bb102"
+ "char.suspect.parrot": "9c7106658dcba059df9231ee737160b7ed2bb102",
+ "char.kitabu.cheer": "c3e3f9a8c9fed7fd18eccd88dadf92d69525eac7",
+ "char.kitabu.surprised": "cf67b6b55950dde28f5c0ccd67a4927fbe805508",
+ "char.kitabu.talk": "3a474f12665458c9fd65dd71688a8b8b9ca3aecf",
+ "char.kitabu.thinking": "269149986eb73686ac7b5bd387637e3b837e95b3",
+ "char.pari.cheer": "5143ffead5e51219201fc79d03bf6696ceb10eb1",
+ "char.pari.sad": "d44b8cb1466412635ff47dc6a355fe9c30051a4a",
+ "char.pari.talk": "1a29665b49dc56072475d99bd3fb1fbda76493bb",
+ "char.pari.thinking": "4f77135af30dad1b5ec45d36f16400646afe857e",
+ "char.suspect.pig": "348281405b8eb7ff137e1e141d39107fccc2846b"
 }

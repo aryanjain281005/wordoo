@@ -12,7 +12,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 
 ### Most visible first
 - [ ] Sound Orchestra band: `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (§I1)
-- [ ] Story Quest helpers: `char.pari.talk`, `char.kitabu.talk`, `char.kitabu.thinking`, `char.pari.cheer` (§H1)
+- [ ] **Redo `char.pari.happy` with Pari ALONE** (today's has Kitabu next to her, so he flickers when she talks). Use `char.pari.talk` as the reference: same pose, mouth closed, smiling (§H1)
 
 ### Word Rocket (new)
 - [ ] 4 ocean zones `bg.rocket.zone1` … `bg.rocket.zone4` (ART_PROMPTS §L1)
@@ -23,7 +23,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] `char.arya.talk`, `char.arya.cheer`, `char.arya.thinking`, `char.garud.happy` (§K2)
 
 ### Word Detective
-- [ ] 3 more suspects: `char.suspect.pig`, `char.suspect.dog`, `char.suspect.owl` (§J2)
+- [ ] 2 more suspects: `char.suspect.dog`, `char.suspect.owl` (§J2)
 - [ ] `char.ullu.talk`, `char.ullu.thinking`, `char.chuchu.happy` (§J3)
 
 ### Story Quest pictures
@@ -40,6 +40,6 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
-- 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`; music `music.story`, `music.library`, `music.boss`
+- 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`; Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
 - 10 music tracks (looping, in the app)

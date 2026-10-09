@@ -37,7 +37,8 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 |---|---|---|
 | `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
 | All 8 `bg.cut.*` | ✅ Remade as single scenes (9 Oct), in the app | — |
-| `bg.detective.street`, suspects goat, cat, cow, monkey, mouse, parrot | ✅ In the app (9 Oct) | pig, dog, owl still to do |
+| `bg.detective.street`, suspects goat, cat, cow, monkey, mouse, parrot | ✅ In the app (9 Oct) | dog, owl still to do |
+| Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | redo `char.pari.happy` with Pari alone (see §H1) |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
@@ -242,6 +243,7 @@ the cover, pages forming two little arms, a red bookmark ribbon, forgetful funny
 
 | File name | Prompt (after Style block + the character's block) |
 |---|---|
+| `char.pari.happy.png` (redo) | **Pari alone, no Kitabu.** Edit of `char.pari.talk`: identical pose and framing, mouth closed in a warm smile. |
 | `char.pari.talk.png` | **Edit of `char.pari.happy`:** identical, only the mouth open while speaking. |
 | `char.pari.cheer.png` | Pari jumping with joy, both arms up, eyes closed happily, crown glowing brightly, sparkles. |
 | `char.pari.thinking.png` | Pari with a finger on her chin, looking up thoughtfully, small smile. |
