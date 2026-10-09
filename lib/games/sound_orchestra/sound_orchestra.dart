@@ -359,9 +359,14 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
                       final bounce = _singing == i ? -10 * sin(_beat.value * pi).abs() : (awake ? -3 * sin(_beat.value * 2 * pi + i).abs() : 0.0);
                       return Transform.translate(offset: Offset(0, bounce), child: child);
                     },
-                    child: ColorFiltered(
-                      colorFilter: awake ? const ColorFilter.mode(Colors.transparent, BlendMode.dst) : const ColorFilter.matrix(_grey),
-                      child: SizedBox(width: 70, height: 70, child: ArtImage('char.${m.id}.happy', fallback: Center(child: Text(m.emoji, style: const TextStyle(fontSize: 52))))),
+                    // cached layer: the bouncing moves the picture, it never re-draws or re-filters it
+                    child: RepaintBoundary(
+                      child: awake
+                          ? SizedBox(width: 70, height: 70, child: ArtImage('char.${m.id}.happy', fallback: Center(child: Text(m.emoji, style: const TextStyle(fontSize: 52)))))
+                          : ColorFiltered(
+                              colorFilter: const ColorFilter.matrix(_grey),
+                              child: SizedBox(width: 70, height: 70, child: ArtImage('char.${m.id}.happy', fallback: Center(child: Text(m.emoji, style: const TextStyle(fontSize: 52))))),
+                            ),
                     ),
                   ),
                 ),

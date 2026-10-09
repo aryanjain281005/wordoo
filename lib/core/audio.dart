@@ -27,6 +27,7 @@ class AudioManager {
   final Map<String, AudioPool> _pools = {};
   AudioPlayer? _music;
   AudioPlayer? _voice;
+  AudioPlayer? _voicePlayer;
   String? _musicId;
   Map<String, String> _sayIndex = {}; // speech key → recorded clip id (assets/story/say_en.json)
   Map<String, List<int>> _envelopes = {}; // per voice line: loudness 0..9 every 50 ms
@@ -173,17 +174,15 @@ class AudioManager {
     final done = Completer<void>();
     _voiceDone = done;
     var played = false;
+    if (kDebugMode || const bool.fromEnvironment('VOICE_LOG')) debugPrint('VOICE ${DateTime.now().millisecondsSinceEpoch % 100000} $id');
     if (enabled && hasVoice(id)) {
       try {
-        final p = AudioPlayer();
+        // one reused player for every line (creating a player per line caused small stutters)
+        final p = _voicePlayer ??= (AudioPlayer()..onPlayerComplete.listen((_) {
+              final d = _voiceDone;
+              if (d != null && !d.isCompleted) d.complete();
+            }));
         _voice = p;
-        late final StreamSubscription<void> sub;
-        sub = p.onPlayerComplete.listen((_) {
-          if (!done.isCompleted) done.complete();
-          sub.cancel();
-        }, onDone: () {
-          if (!done.isCompleted) done.complete(); // player disposed (a newer line started)
-        });
         await p.play(AssetSource('assets/vo/en/$id.ogg'));
         played = true;
         final env = _envelopes[id];
@@ -226,8 +225,7 @@ class AudioManager {
     _voice = null;
     Speaker.instance.stop();
     try {
-      await p?.stop();
-      await p?.dispose();
+      await p?.stop(); // the shared player is kept for the next line
     } catch (_) {}
   }
 

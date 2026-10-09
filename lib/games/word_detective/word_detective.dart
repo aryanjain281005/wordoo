@@ -397,9 +397,14 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
                   boxShadow: [BoxShadow(color: right ? const Color(0xFF4CAF50).withValues(alpha: .6) : const Color(0x55000000), blurRadius: right ? 14 : 5, offset: const Offset(0, 3))],
                 ),
                 child: Stack(alignment: Alignment.center, children: [
-                  ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaX: clear ? 0 : 7, sigmaY: clear ? 0 : 7),
-                    child: FittedBox(fit: BoxFit.scaleDown, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(o.label, style: ts(26, color: C.ink)))),
+                  // the blur layer exists only while the sign is foggy (a blur on every frame costs smoothness)
+                  RepaintBoundary(
+                    child: clear
+                        ? FittedBox(fit: BoxFit.scaleDown, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(o.label, style: ts(26, color: C.ink))))
+                        : ImageFiltered(
+                            imageFilter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                            child: FittedBox(fit: BoxFit.scaleDown, child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(o.label, style: ts(26, color: C.ink)))),
+                          ),
                   ),
                   if (!clear) const Text('🌫️', style: TextStyle(fontSize: 26)),
                 ]),

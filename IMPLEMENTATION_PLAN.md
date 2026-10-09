@@ -80,11 +80,12 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Art batch 4 (story covers, book worlds, archer sky, character moods)
 - [x] Phase 4 — Five more games: Sound Ninja (slice fruits / cut syllables, combo), Sound Portal (energy beam to letter portals, critters), Word Builder (reef blocks → named creatures), Word Flash (firefly flash by step, bazaar stalls), Magic Writer (finger writing checked by an on-device $P-style recogniser built from the app font); islands alternate their two games
 - [x] Levels rework (team feedback): 4 levels per game with one concept and rising difficulty, level tiles on every island, second game unlocks after 2 levels of the main game, quests never switch game, level cleared at ≥ 50 % first-try, screening skips ≤ 2 known levels
+- [x] Team bug fixes (10 Oct): Sound Orchestra rhymes checked by sound + one-tap answers; Word Detective plain signs at levels 1–2; Story Castle first sentence; 5,217 phrases recorded in the narrator's voice
 - [ ] Phase 5 — Art pass (ongoing as assets arrive)
 - [x] Phase 7 — Quality (measured on the Vivo V2130):
   - Smoothness: map and all 11 games 55–60 fps (SurfaceFlinger frame times; ≤ 1 frame over 33 ms)
-  - Size: phone download 55 MB (arm64 split / Play app bundle), was 94 MB universal; music re-encoded 17 → 10.5 MB
-  - Startup 0.6 s cold; ~200 MB memory; image cache capped at 64 MB for 2 GB phones
+  - Size cuts reversed on request (10 Oct): full-resolution art (WebP q94–96), music 128 kbps, voices 64 kbps; phone download ~144 MB
+  - Startup 0.6 s cold; image cache 512 MB (no re-decoding); pictures pre-decoded per game; all sound effects preloaded; one reused voice player
   - Layout check test: every screen and game at 360×640 and 412×915, text 1.0× and 1.3× (fixed: map top bar off-screen, room shelf text, Sound Portal portals, Word Builder long words)
   - Accessibility test: 48 dp tap targets and labels (fixed: round buttons keep 48 dp touch area, dashboard title)
   - Crash hunt test: all 11 games × 4 levels with random taps/swipes (fixed: setState during build when a game starts with extra help)
