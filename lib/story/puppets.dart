@@ -27,7 +27,84 @@ const storyCast = <String, StoryCharacter>{
   'pari': StoryCharacter('pari', 'Princess Pari', '👑', Color(0xFFE0568A)),
   'kitabu': StoryCharacter('kitabu', 'Kitabu', '📖', Color(0xFF6C4DF0)),
   'bolt': StoryCharacter('bolt', 'Bolt', '🤖', Color(0xFF5A72D8)),
+  'pip': StoryCharacter('pip', 'Pip', '🥷', Color(0xFFD9542B)),
+  'coral': StoryCharacter('coral', 'Coral', '🐙', Color(0xFFE0568A)),
+  'jugnu': StoryCharacter('jugnu', 'Jugnu', '✨', Color(0xFFB8C21B)),
+  'kalam': StoryCharacter('kalam', 'Captain Kalam', '🦜', Color(0xFF2FA866)),
+  'chuchu': StoryCharacter('chuchu', 'Chuchu', '🐭', Color(0xFF8A8FA3)),
+  // Story v3: Gumsum's six Hush Clouds (jailers). Drawn from Gumsum's own art, recoloured (no new pictures needed).
+  'jailer_forest': StoryCharacter('jailer_forest', 'Drizzle', '🌧️', Color(0xFF5E8C4A)),
+  'jailer_valley': StoryCharacter('jailer_valley', 'Gust', '🌪️', Color(0xFF7A55B8)),
+  'jailer_ocean': StoryCharacter('jailer_ocean', 'Murk', '🌊', Color(0xFF2F7F86)),
+  'jailer_village': StoryCharacter('jailer_village', 'Smudge', '🌫️', Color(0xFFA0623A)),
+  'jailer_treasure': StoryCharacter('jailer_treasure', 'Sulk', '⛈️', Color(0xFFB8952A)),
+  'jailer_castle': StoryCharacter('jailer_castle', 'Hush', '☁️', Color(0xFF9C7F8F)),
 };
+
+/// Colour matrix that tints a grey picture with [c] (keeps light and shade, replaces the hue).
+List<double> tintMatrix(Color c) {
+  final r = c.r, g = c.g, b = c.b;
+  return [
+    .30 * r * 1.6, .59 * r * 1.6, .11 * r * 1.6, 0, 18, //
+    .30 * g * 1.6, .59 * g * 1.6, .11 * g * 1.6, 0, 18,
+    .30 * b * 1.6, .59 * b * 1.6, .11 * b * 1.6, 0, 18,
+    0, 0, 0, 1, 0,
+  ];
+}
+
+/// A fluffy cloud cage with a golden lock, drawn around a caged Story Keeper (v3).
+class CloudCage extends StatelessWidget {
+  final Widget child;
+  final double size;
+  final double open; // 0 closed … 1 burst open
+  const CloudCage({super.key, required this.child, required this.size, this.open = 0});
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: size,
+        height: size,
+        child: Stack(alignment: Alignment.center, clipBehavior: Clip.none, children: [
+          Padding(padding: EdgeInsets.all(size * .12), child: child),
+          IgnorePointer(child: CustomPaint(size: Size.square(size), painter: _CagePainter(open))),
+          if (open < .5)
+            Positioned(
+              bottom: size * .02,
+              child: Opacity(
+                opacity: (1 - open * 2).clamp(0.0, 1.0),
+                child: SizedBox(width: size * .22, height: size * .22, child: ArtImage('prop.lock.gold', fallback: Center(child: Text('🔒', style: TextStyle(fontSize: size * .16))))),
+              ),
+            ),
+        ]),
+      );
+}
+
+class _CagePainter extends CustomPainter {
+  final double open;
+  _CagePainter(this.open);
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = size.center(Offset.zero);
+    final r = size.width * .48;
+    final puff = Paint()..color = const Color(0xFFB9C0D3).withValues(alpha: (1 - open) * .95);
+    final bar = Paint()
+      ..color = const Color(0xFF9AA3BB).withValues(alpha: (1 - open) * .9)
+      ..strokeWidth = size.width * .035
+      ..strokeCap = StrokeCap.round;
+    // soft cloud bars
+    for (var k = -2; k <= 2; k++) {
+      final x = c.dx + k * r * .38 + (k.sign * open * r * .8);
+      canvas.drawLine(Offset(x, c.dy - r * .78), Offset(x, c.dy + r * .72), bar);
+    }
+    // puffy rim of cloud bubbles around the cage
+    for (var k = 0; k < 14; k++) {
+      final a = k / 14 * 2 * pi;
+      final d = r * (1 + open * .9);
+      canvas.drawCircle(c + Offset(cos(a) * d, sin(a) * d * .92), r * (.2 + .05 * sin(k * 1.7)), puff);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CagePainter o) => o.open != open;
+}
 
 /// An animated character: breathes, blinks, and moves its mouth with the voice line it is speaking.
 class Puppet extends StatefulWidget {
@@ -75,6 +152,37 @@ class _PuppetState extends State<Puppet> with SingleTickerProviderStateMixin {
         final bob = sin(_c.value * pi) * (talking ? -6 : -3);
         final squash = 1 + (talking ? mouth * .03 : sin(_c.value * pi) * .012);
         Widget body;
+        if (widget.id.startsWith('jailer_')) {
+          // Hush Cloud: its own picture if made, otherwise Gumsum's picture recoloured
+          final island = widget.id.substring(7);
+          final col = storyCast[widget.id]?.color ?? const Color(0xFF8E9BB8);
+          final gum = ArtImage('char.gumsum.${widget.mood == 'sad' ? 'sad' : (widget.mood == 'surprised' ? 'surprised' : 'happy')}',
+              fallback: CustomPaint(painter: CloudPainter(mouth: mouth, blink: _blink, mood: widget.mood, lightness: 0, t: _c.value)));
+          return Transform.translate(
+            offset: Offset(0, bob * 1.6),
+            child: SizedBox(
+              width: widget.size,
+              height: widget.size,
+              child: ArtImage('char.jailer.$island.${widget.mood}',
+                  fallback: ArtImage('char.jailer.$island', fallback: ColorFiltered(colorFilter: ColorFilter.matrix(tintMatrix(col)), child: gum))),
+            ),
+          );
+        }
+        // v3 moods with their own pictures when made: Milo injured, Gumsum villain / small_sad / redeemed
+        final special = {'milo:injured': 'char.milo.injured', 'gumsum:villain': 'char.gumsum.villain', 'gumsum:small_sad': 'char.gumsum.small_sad', 'gumsum:redeemed': 'char.gumsum.redeemed'}['${widget.id}:${widget.mood}'];
+        if (special != null) {
+          final fb = switch (widget.mood) { 'injured' => 'sad', 'small_sad' => 'sad', 'redeemed' => 'light', _ => 'happy' };
+          return Transform.translate(
+            offset: Offset(0, bob),
+            child: SizedBox(
+              width: widget.size,
+              height: widget.size,
+              child: (talking && mouth > .35 && ReadleAssets.instance.art('$special.talk') != null)
+                  ? ArtImage('$special.talk', fallback: const SizedBox.shrink())
+                  : ArtImage(special, fallback: ArtImage('char.${widget.id}.$fb', fallback: ArtImage('char.${widget.id}.happy', fallback: const SizedBox.shrink()))),
+            ),
+          );
+        }
         switch (widget.id) {
           case 'milo':
             body = CustomPaint(painter: CreaturePainter(widget.companionType, wag: _c.value * 2 - 1, blink: _blink, mouth: mouth, mood: widget.mood, happy: widget.mood != 'sad'));

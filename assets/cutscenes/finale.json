@@ -1,0 +1,159 @@
+{
+ "title": "The Storm Breaks",
+ "shots": [
+  {
+   "bg": "art:island.citadel",
+   "fx": "light",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4500,
+   "cast": [],
+   "line": "v3_fin_1",
+   "video": "video.finale.01",
+   "sfx": "magic"
+  },
+  {
+   "bg": "night",
+   "fx": "rain",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4500,
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "mood": "small_sad",
+     "size": 0.34,
+     "y": 0.3
+    }
+   ],
+   "line": "v3_fin_2",
+   "video": "video.finale.02"
+  },
+  {
+   "bg": "night",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.25,
+     "size": 0.32
+    },
+    {
+     "id": "gumsum",
+     "x": 0.72,
+     "mood": "small_sad",
+     "size": 0.3,
+     "y": 0.3
+    }
+   ],
+   "line": "v3_fin_3",
+   "video": "video.finale.03"
+  },
+  {
+   "bg": "tree",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4500,
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "mood": "redeemed",
+     "size": 0.4,
+     "y": 0.55,
+     "enter": "float"
+    }
+   ],
+   "line": "v3_fin_4",
+   "video": "video.finale.04"
+  },
+  {
+   "bg": "tree",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3600,
+   "cast": [
+    {
+     "id": "dadi",
+     "x": 0.5,
+     "size": 0.42,
+     "enter": "float",
+     "y": 0.35
+    }
+   ],
+   "line": "v3_fin_5"
+  },
+  {
+   "bg": "aksharpur",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4500,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.42,
+     "burst": true
+    }
+   ],
+   "line": "v3_fin_6",
+   "video": "video.finale.05",
+   "sfx": "reward_fanfare"
+  }
+ ]
+}

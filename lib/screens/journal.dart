@@ -63,6 +63,8 @@ class JournalScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Center(child: StreakChip(st.streak)),
                       const SizedBox(height: 12),
+                      _keepers(st),
+                      const SizedBox(height: 12),
                       for (final i in IslandId.values) ...[
                         _island(st, i),
                         const SizedBox(height: 8),
@@ -93,6 +95,38 @@ class JournalScreen extends StatelessWidget {
       ),
     );
   }
+
+  /// v3: the seven Story Keepers — rescued ones in colour, caged ones grey with their island.
+  Widget _keepers(AppState st) {
+    final c = st.campaign;
+    return Panel(
+      padding: const EdgeInsets.all(12),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('The Story Keepers  ·  ${c.keepersFreed + 1} of 7 free', style: ts(19)),
+        const SizedBox(height: 8),
+        Wrap(spacing: 8, runSpacing: 8, children: [
+          _keeper('milo', 'With you!', true),
+          for (final i in islandSkill.keys) _keeper(islandGuardian[i]!, c.chapterDone(i) ? 'Free!' : '🔑 ${c.islandKeys(i)}/${c.maxIslandKeys(i)}', c.chapterDone(i)),
+        ]),
+      ]),
+    );
+  }
+
+  Widget _keeper(String id, String label, bool free) => SizedBox(
+        width: 78,
+        child: Column(children: [
+          SizedBox(
+            width: 64,
+            height: 64,
+            child: ColorFiltered(
+              colorFilter: free ? const ColorFilter.mode(Colors.transparent, BlendMode.dst) : const ColorFilter.matrix(<double>[.33, .33, .33, 0, 0, .33, .33, .33, 0, 0, .33, .33, .33, 0, 0, 0, 0, 0, .7, 0]),
+              child: ArtImage('prop.badge.$id', fallback: ArtImage('char.$id.happy', fallback: Center(child: Text(storyCast[id]?.emoji ?? '⭐', style: const TextStyle(fontSize: 40))))),
+            ),
+          ),
+          Text(storyCast[id]?.name.split(' ').last ?? id, style: ts(12, color: C.ink), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(label, style: ts(11, color: free ? C.greenDark : C.inkSoft, w: FontWeight.w600)),
+        ]),
+      );
 
   Widget _island(AppState st, IslandId i) {
     final c = st.campaign;

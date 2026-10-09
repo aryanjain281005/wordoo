@@ -11,9 +11,9 @@
   "reverb": true
  },
  "gumsum": {
-  "voice": "af_sky",
-  "speed": 0.95,
-  "pitch": 1.18,
+  "voice": "am_onyx",
+  "speed": 0.92,
+  "pitch": 0.9,
   "echo": true
  },
  "bhalu": {
@@ -85,5 +85,47 @@
  "say": {
   "voice": "hf_beta",
   "speed": 0.88
+ },
+ "gumsum_small": {
+  "voice": "af_sky",
+  "speed": 0.95,
+  "pitch": 1.18,
+  "echo": true
+ },
+ "jailer_forest": {
+  "voice": "am_echo",
+  "speed": 1.0,
+  "pitch": 1.22,
+  "echo": true
+ },
+ "jailer_valley": {
+  "voice": "af_nicole",
+  "speed": 1.0,
+  "pitch": 1.15,
+  "echo": true
+ },
+ "jailer_ocean": {
+  "voice": "bm_george",
+  "speed": 1.0,
+  "pitch": 1.18,
+  "echo": true
+ },
+ "jailer_village": {
+  "voice": "am_adam",
+  "speed": 1.0,
+  "pitch": 1.25,
+  "echo": true
+ },
+ "jailer_treasure": {
+  "voice": "bf_emma",
+  "speed": 1.0,
+  "pitch": 1.2,
+  "echo": true
+ },
+ "jailer_castle": {
+  "voice": "af_sky",
+  "speed": 1.0,
+  "pitch": 1.25,
+  "echo": true
  }
 }

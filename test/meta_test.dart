@@ -42,9 +42,9 @@ void main() {
     final st = AppState()..loadDemoProfile(0);
     final rng = Random(5);
     var gemsSeen = 0, giftsSeen = 0, itemsSeen = 0, teasers = 0;
-    for (var k = 0; k < 120 && IslandId.values.where(st.campaign.chapterDone).length < 3; k++) {
+    for (var k = 0; k < 400 && IslandId.values.where(st.campaign.chapterDone).length < 3; k++) {
       final q = st.board.first;
-      final o = playQuest(st, q, rng, p: .65);
+      final o = playQuest(st, q, rng, p: k.isEven ? 1 : .6); // v3: perfect plays win every key; others make mistakes (effort gifts)
       if (o.gem != null) {
         gemsSeen++;
         expect(o.chapterComplete, isTrue);

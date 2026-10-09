@@ -41,3 +41,24 @@ const gameLevels = <GameId, GameLevels>{
 
 GameLevels levelsOf(GameId g) => gameLevels[g]!;
 int levelStep(GameId g, int level, {int bump = 0}) => (levelsOf(g).steps[(level - 1).clamp(0, 3)] + bump).clamp(1, 10);
+
+// ---------------- Story v3: keys ----------------
+
+/// Keys a level can give: normal levels up to 3, the boss level (level 4) up to 5.
+int maxKeysFor(int level) => level >= levelsPerGame ? 5 : 3;
+
+/// Keys for one play of a level, from first-try right answers (GAME_DESIGN_V3 §3.1).
+/// Normal: 100 % → 3, ≥ 80 % → 2, ≥ 50 % → 1. Boss: 100 % → 5, ≥ 75 % → 3, ≥ 50 % → 1. Less than half → 0.
+int keysFor(int level, int right, int total) {
+  if (total <= 0) return 0;
+  final a = right / total;
+  if (a < levelPassAccuracy) return 0;
+  if (level >= levelsPerGame) return a >= 1 ? 5 : (a >= .75 ? 3 : 1);
+  return a >= 1 ? 3 : (a >= .8 ? 2 : 1);
+}
+
+/// All keys one game can give (3 + 3 + 3 + 5).
+const keysPerGame = 14;
+
+/// The Storm Trial (7th island): 30 mixed questions, 5 per skill; pass with 21.
+const trialQuestions = 30, trialPerSkill = 5, trialPassMark = 21;

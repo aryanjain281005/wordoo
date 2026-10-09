@@ -36,8 +36,12 @@ class SessionOutcome {
   final bool levelPassed; // enough right answers to clear the level
   final bool levelNew; // the level was cleared for the first time
   final GameId? unlockedGame; // the island's second game just unlocked
+  final int keysWon, keysBest, keysMax; // v3 keys of this level: won now, best ever, maximum
+  final int islandKeys, islandKeysMax; // v3 island key meter after this play
+  final IslandId? rescued; // v3: this play freed the island's Story Keeper
+  final bool trialUnlocked; // v3: all six Keepers free → the Storm Trial opens
   SessionOutcome(this.stars, this.points, this.accuracy, this.adapt, this.newCollectibles, this.newBadges,
-      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0, this.gem, this.gift, this.newItems = const [], this.teaser, this.level = 1, this.levelPassed = true, this.levelNew = false, this.unlockedGame});
+      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0, this.gem, this.gift, this.newItems = const [], this.teaser, this.level = 1, this.levelPassed = true, this.levelNew = false, this.unlockedGame, this.keysWon = 0, this.keysBest = 0, this.keysMax = 3, this.islandKeys = 0, this.islandKeysMax = 0, this.rescued, this.trialUnlocked = false});
 }
 
 /// One play session, kept only for reports (it never limits play).
@@ -565,7 +569,24 @@ class AppState extends ChangeNotifier {
     _sync();
   }
 
-  SessionOutcome completeQuest(Quest q, List<ItemResult> results, double seconds, Map<Skill, int> startSteps) {
+  /// Story v3: a finished Storm Trial. Every answer still teaches the learner model. Returns true if passed.
+  bool completeTrial(List<Item> items, List<ItemResult> results, double seconds) {
+    for (var k = 0; k < results.length && k < items.length; k++) {
+      recordItem(items[k], results[k]);
+    }
+    final passed = campaign.recordTrial(results.where((r) => r.correct).length);
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    if (sessions.isEmpty || sessions.last.date != today) sessions.add(SessionEntry(today, 0, 0));
+    sessions.last.minutes += seconds / 60;
+    sessions.last.rounds++;
+    playDays.add(today);
+    if (passed) badges.add('trial-s${campaign.season}');
+    _questStart = null;
+    changed();
+    return passed;
+  }
+
+    SessionOutcome completeQuest(Quest q, List<ItemResult> results, double seconds, Map<Skill, int> startSteps) {
     final before = campaign.restoration(q.island, models);
     final wasReady = retestReady;
     for (final s in q.skills.toSet()) {
@@ -581,7 +602,16 @@ class AppState extends ChangeNotifier {
     final second = islandGame2[q.island];
     final secondWasLocked = second != null && !campaign.gameUnlocked(q.island, second);
     final passed = acc >= levelPassAccuracy;
+    // Story v3: keys for this play (best per level counts); a Keeper is freed when the island has every key
+    final wasRescued = q.island != IslandId.observatory && campaign.chapterDone(q.island);
+    final keysBefore = campaign.islands[q.island]!.keysOf(q.game, q.level);
+    final keysWon = q.island == IslandId.observatory ? 0 : campaign.recordKeys(q, results.where((r) => r.correct).length, results.length);
     final newlyCleared = passed && campaign.clearLevel(q);
+    IslandId? rescuedNow;
+    if (!wasRescued && q.island != IslandId.observatory && campaign.chapterDone(q.island)) {
+      campaign.islands[q.island]!.rescued = true;
+      rescuedNow = q.island;
+    }
     final chapterComplete = !hadChapter && campaign.chapterDone(q.island);
     final unlockedGame = secondWasLocked && campaign.gameUnlocked(q.island, second) ? second : null;
 
@@ -636,7 +666,10 @@ class AppState extends ChangeNotifier {
     changed();
     return SessionOutcome(earned, earned * Cfg.pointsPerStar, acc, adapt, newC, newB,
         chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after, gem: gem, gift: gift, newItems: newItems, teaser: teaser,
-        level: q.level, levelPassed: passed, levelNew: newlyCleared, unlockedGame: unlockedGame);
+        level: q.level, levelPassed: passed, levelNew: newlyCleared, unlockedGame: unlockedGame,
+        keysWon: keysWon, keysBest: max(keysBefore, keysWon), keysMax: maxKeysFor(q.level),
+        islandKeys: campaign.islandKeys(q.island), islandKeysMax: q.island == IslandId.observatory ? 0 : campaign.maxIslandKeys(q.island), rescued: rescuedNow,
+        trialUnlocked: rescuedNow != null && campaign.observatoryUnlocked);
   }
 
   void equipHat(int idx) {

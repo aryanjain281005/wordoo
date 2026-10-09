@@ -73,7 +73,7 @@ class _DevPanelState extends State<DevPanel> {
         const SizedBox(height: 16),
         Text('Story scenes (does not mark them as seen)', style: ts(16, color: Colors.white, w: FontWeight.w600)),
         Wrap(spacing: 8, children: [
-          for (final id in const ['prologue', 'star_bridge', 'season_opener'])
+          for (final id in const ['prologue', 'island_start_forest', 'rescue_forest', 'trial_warning', 'trial_retry', 'finale', 'star_bridge', 'season_opener'])
             ActionChip(label: Text(id), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CutsceneScreen(sceneId: id, canSkip: true)))),
         ]),
         const SizedBox(height: 16),

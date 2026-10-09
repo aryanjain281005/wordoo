@@ -1,0 +1,93 @@
+{
+ "title": "Story Castle: the Keeper is free!",
+ "shots": [
+  {
+   "bg": "art:bg.island.castle~storm",
+   "fx": "keys",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "pari",
+     "x": 0.38,
+     "size": 0.5,
+     "cage": "open"
+    },
+    {
+     "id": "jailer_castle",
+     "x": 0.8,
+     "size": 0.18,
+     "mood": "surprised",
+     "y": 0.3
+    }
+   ],
+   "line": "v3_rescue_castle_1",
+   "video": "video.rescue.castle.01",
+   "sfx": "chest_open"
+  },
+  {
+   "bg": "art:bg.island.castle",
+   "fx": "colour",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "pari",
+     "x": 0.5,
+     "size": 0.55,
+     "burst": true,
+     "enter": "pop"
+    }
+   ],
+   "line": "v3_rescue_castle_2",
+   "video": "video.rescue.castle.02",
+   "sfx": "island_restore"
+  },
+  {
+   "bg": "art:bg.island.castle",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3600,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.3,
+     "size": 0.34
+    },
+    {
+     "id": "pari",
+     "x": 0.7,
+     "size": 0.4
+    }
+   ],
+   "line": "v3_rescue_castle_3"
+  }
+ ]
+}

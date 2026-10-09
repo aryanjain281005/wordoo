@@ -215,6 +215,28 @@ class _LevelResult extends StatelessWidget {
           style: ts(19, color: ok ? C.greenDark : C.orangeDark),
         ),
         if (!ok) Text('Get at least half right the first time.', textAlign: TextAlign.center, style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+        if (outcome.islandKeysMax > 0) ...[
+          const SizedBox(height: 6),
+          // v3 keys: this play, best ever, and what is still to win
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            for (var k = 0; k < outcome.keysMax; k++)
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: 1),
+                duration: Duration(milliseconds: 400 + k * 180),
+                curve: Curves.elasticOut,
+                builder: (_, v, child) => Transform.scale(scale: k < outcome.keysWon ? v : 1, child: child),
+                child: Opacity(opacity: k < outcome.keysBest ? 1 : .2, child: const Text('🔑', style: TextStyle(fontSize: 30))),
+              ),
+          ]),
+          Text(
+            outcome.keysBest >= outcome.keysMax
+                ? 'All ${outcome.keysMax} keys on this level!'
+                : '${outcome.keysWon} ${outcome.keysWon == 1 ? 'key' : 'keys'} · get every answer right for all ${outcome.keysMax}',
+            textAlign: TextAlign.center,
+            style: ts(14, color: C.inkSoft, w: FontWeight.w600),
+          ),
+          Text('Island: 🔑 ${outcome.islandKeys} / ${outcome.islandKeysMax}', style: ts(15, color: const Color(0xFF8A6100))),
+        ],
         if (ok && outcome.levelNew && l < levelsPerGame) Text('Level ${l + 1} is open!', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
         const SizedBox(height: 6),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [

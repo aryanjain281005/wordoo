@@ -1,0 +1,91 @@
+{
+ "title": "Treasure Island: the storm island",
+ "shots": [
+  {
+   "bg": "art:bg.island.treasure~storm",
+   "fx": "rain",
+   "camera": {
+    "zoom": [
+     1.2,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3600,
+   "cast": [
+    {
+     "id": "jailer_treasure",
+     "x": 0.5,
+     "size": 0.42,
+     "enter": "pop",
+     "y": 0.25
+    }
+   ],
+   "line": "v3_start_treasure_1",
+   "video": "video.start.treasure.01",
+   "sfx": "cloud_whoosh"
+  },
+  {
+   "bg": "art:bg.island.treasure~storm",
+   "fx": "rain",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "madhu",
+     "x": 0.38,
+     "size": 0.5,
+     "cage": "closed",
+     "mood": "sad"
+    },
+    {
+     "id": "jailer_treasure",
+     "x": 0.8,
+     "size": 0.26,
+     "enter": "right",
+     "y": 0.3
+    }
+   ],
+   "line": "v3_start_treasure_2",
+   "video": "video.start.treasure.02"
+  },
+  {
+   "bg": "art:bg.island.treasure~storm",
+   "fx": "none",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3600,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "mood": "injured",
+     "size": 0.42,
+     "enter": "left"
+    }
+   ],
+   "line": "v3_start_treasure_3",
+   "video": "video.key.reveal"
+  }
+ ]
+}

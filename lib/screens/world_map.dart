@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../story/play_scene.dart';
+import '../story/puppets.dart';
+import '../story/beats.dart';
 import '../core/assets.dart';
 import '../engine/meta.dart';
 import '../engine/levels.dart';
 import 'journal.dart';
+import 'storm_trial.dart';
 
 import 'package:provider/provider.dart';
 
@@ -41,7 +44,7 @@ const _regions = <_Region>[
   _Region('village', Skill.wordRecognition, 'Word Village', 'Familiar words', '🏘️🔍', Color(0xFFFFB866), Color(0xFFE08A2B), Offset(.62, .42), Offset(.73, .41)),
   _Region('treasure', Skill.spelling, 'Treasure Island', 'Spelling', '🏝️💰', Color(0xFFFFD35C), Color(0xFFE0A41A), Offset(.44, .77), Offset(.27, .53)),
   _Region('castle', Skill.comprehension, 'Story Castle', 'Comprehension', '🏰📖', Color(0xFFFF8FB8), Color(0xFFD9578A), Offset(.83, .72), Offset(.73, .66)),
-  _Region('sky', null, 'Star Observatory', 'All skills', '🛰️🚀', Color(0xFF9AA8FF), Color(0xFF6A78E0), Offset(.86, .20), Offset(.27, .88)),
+  _Region('sky', null, 'Storm Citadel', 'The Storm Trial', '🛰️🚀', Color(0xFF9AA8FF), Color(0xFF6A78E0), Offset(.86, .20), Offset(.27, .88)),
 ];
 
 const _regionIsland = {
@@ -88,14 +91,34 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
   }
 
   Future<void> _play(Quest q) async {
+    if (q.island == IslandId.observatory) return _openTrial();
     await Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q)));
+  }
+
+  /// Story v3: the Storm Trial on the 7th island (warning scene the first time, then the test).
+  Future<void> _openTrial() async {
+    final st = context.read<AppState>();
+    if (!st.seenScenes.contains('trial_warning')) await playScene(context, 'trial_warning');
+    if (!mounted) return;
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const StormTrialScreen()));
   }
 
   void _openRegion(_Region r) {
     final st = context.read<AppState>();
     final island = _regionIsland[r.id]!;
-    if (island == IslandId.observatory && !st.campaign.observatoryUnlocked) {
-      _toast('Finish the chapter on all six islands to open the Star Observatory!');
+    if (island == IslandId.observatory) {
+      if (!st.campaign.observatoryUnlocked) {
+        _toast('Free all six Story Keepers to reach Gumsum’s Storm Citadel! (${st.campaign.keepersFreed}/6 free)');
+      } else {
+        _openTrial();
+      }
+      return;
+    }
+    // first visit: the island's story (the jailer, the Keeper in the cage, Milo's plan)
+    if (!st.seenScenes.contains('island_start_${island.name}')) {
+      playScene(context, 'island_start_${island.name}').then((_) {
+        if (mounted) _openRegion(r);
+      });
       return;
     }
     showModalBottomSheet(
@@ -208,7 +231,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                     color: const Color(0xFFFFF9E8),
                     padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
                     child: Text(
-                      '🔭 New island unlocked: the Star Observatory!',
+                      '⚡ All six Keepers are free! Gumsum’s Storm Citadel has appeared!',
                       textAlign: TextAlign.center,
                       style: ts(22, color: C.purple),
                     ),
@@ -268,7 +291,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                           child: RepaintBoundary(child: ColorFiltered(
                             colorFilter: ColorFilter.matrix(_saturation(locked ? 1 : .35 + .65 * (restoration / 100).clamp(0.0, 1.0))),
                             child: ArtImage(
-                              'island.${island.name}',
+                              // v3: the 7th island is Gumsum's Storm Citadel until the Trial is won
+                              island == IslandId.observatory && !st.campaign.trialPassed && ReadleAssets.instance.art('island.citadel') != null ? 'island.citadel' : 'island.${island.name}',
                               fallback: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked)),
                             ),
                           )),
@@ -333,7 +357,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                                   const SizedBox(width: 4),
                                   Text('${restoration.round()}%', style: ts(11, color: C.greenDark)),
                                   const SizedBox(width: 6),
-                                  Text('${st.campaign.islands[island]!.nodes}/${st.campaign.nodesNeeded(island)} ⭐', style: ts(11, color: C.purple)),
+                                  Text(island == IslandId.observatory ? (st.campaign.trialPassed ? '⚡ won' : '⚡ trial') : '${st.campaign.chapterDone(island) ? '🎉' : '🔒'} ${st.campaign.islandKeys(island)}/${st.campaign.maxIslandKeys(island)}🔑', style: ts(11, color: C.purple)),
                                 ],
                               ),
                             ),
@@ -643,7 +667,10 @@ class _RegionSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text('$emoji  ${Campaign.islandName(island)}', style: ts(28)),
-                Text('${tierName(ist.tier)} · ${ist.nodes.clamp(0, need)} of $need levels cleared', style: ts(15, color: C.inkSoft)),
+                if (island == IslandId.observatory)
+                  Text('${tierName(ist.tier)} · ${ist.nodes.clamp(0, need)} of $need levels cleared', style: ts(15, color: C.inkSoft))
+                else
+                  _KeeperCage(island: island),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -680,7 +707,6 @@ class _GameLevels extends StatelessWidget {
     final lv = levelsOf(game);
     final ist = camp.islands[island]!;
     final unlocked = camp.gameUnlocked(island, game);
-    final done = ist.done(game);
     final next = camp.nextLevel(island, game);
     final main = islandGame[island]!;
     final mainDone = ist.count(main);
@@ -715,7 +741,7 @@ class _GameLevels extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(color: unlocked ? meta.color.withValues(alpha: .14) : Colors.black.withValues(alpha: .05), borderRadius: BorderRadius.circular(14)),
-                  child: Text('${done.length}/$levelsPerGame ⭐', style: ts(15, color: unlocked ? meta.color : C.inkSoft)),
+                  child: Text('${ist.gameKeys(game)}/$keysPerGame 🔑', style: ts(15, color: unlocked ? meta.color : C.inkSoft)),
                 ),
               ],
             ),
@@ -736,7 +762,15 @@ class _GameLevels extends StatelessWidget {
                 children: [
                   for (var l = 1; l <= levelsPerGame; l++)
                     Expanded(
-                      child: _LevelTile(level: l, name: lv.names[l - 1], state: _state(camp, ist, l, next), color: meta.color, onTap: () => _tap(context, camp, st, l, next)),
+                      child: _LevelTile(
+                        level: l,
+                        name: lv.names[l - 1],
+                        state: _state(camp, ist, l, next),
+                        color: meta.color,
+                        keys: ist.keysOf(game, l),
+                        maxKeys: maxKeysFor(l),
+                        onTap: () => _tap(context, camp, st, l, next),
+                      ),
                     ),
                 ],
               ),
@@ -769,20 +803,21 @@ class _LevelTile extends StatelessWidget {
   final String name;
   final _LevelState state;
   final Color color;
+  final int keys, maxKeys;
   final VoidCallback onTap;
-  const _LevelTile({required this.level, required this.name, required this.state, required this.color, required this.onTap});
+  const _LevelTile({required this.level, required this.name, required this.state, required this.color, required this.onTap, this.keys = 0, this.maxKeys = 3});
 
   @override
   Widget build(BuildContext context) {
     final (bg, border, badge, label) = switch (state) {
-      _LevelState.cleared => (const Color(0xFFE3F6E5), C.green, '✓', 'Cleared'),
-      _LevelState.skipped => (const Color(0xFFE8F1FF), const Color(0xFF6A9BE0), '⏩', 'You know it'),
+      _LevelState.cleared => keys >= maxKeys ? (const Color(0xFFE3F6E5), C.green, '✓', 'All keys!') : (const Color(0xFFFFF7E0), C.gold, '↻', 'Replay'),
+      _LevelState.skipped => (const Color(0xFFE8F1FF), const Color(0xFF6A9BE0), '⏩', 'Play for keys'),
       _LevelState.next => (const Color(0xFFFFF1C2), C.orange, '▶', 'Play'),
       _LevelState.locked => (const Color(0xFFEDEBF5), Colors.black12, '🔒', 'Locked'),
     };
     return Semantics(
       button: true,
-      label: 'Level $level, $name, $label',
+      label: 'Level $level, $name, $label, $keys of $maxKeys keys',
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -813,6 +848,12 @@ class _LevelTile extends StatelessWidget {
                 ),
               ),
               Text(label, style: ts(11, color: state == _LevelState.next ? C.orangeDark : C.inkSoft)),
+              const SizedBox(height: 3),
+              // key slots: won keys in gold, keys still to win as grey outlines
+              Wrap(alignment: WrapAlignment.center, spacing: 0, children: [
+                for (var k = 0; k < maxKeys; k++)
+                  Opacity(opacity: k < keys ? 1 : .22, child: Text('🔑', style: TextStyle(fontSize: maxKeys > 3 ? 9.5 : 12))),
+              ]),
             ],
           ),
         ),
@@ -880,3 +921,50 @@ List<double> _saturation(double s) {
     0, 0, 0, 1, 0,
   ];
 }
+
+/// v3: the island's Story Keeper in Gumsum's cloud cage, with the island key meter (or "Freed!").
+class _KeeperCage extends StatelessWidget {
+  final IslandId island;
+  const _KeeperCage({required this.island});
+  @override
+  Widget build(BuildContext context) {
+    final st = context.watch<AppState>();
+    final camp = st.campaign;
+    final keeper = islandGuardian[island]!;
+    final name = storyCast[keeper]?.name ?? keeper;
+    final have = camp.islandKeys(island), max = camp.maxIslandKeys(island);
+    final free = camp.chapterDone(island);
+    return Container(
+      margin: const EdgeInsets.only(top: 6),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: free ? const Color(0xFFE3F6E5) : const Color(0xFFEDEFF7),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: free ? C.green : const Color(0xFFB9C0D3), width: 2.5),
+      ),
+      child: Row(children: [
+        SizedBox(
+          width: 86,
+          height: 86,
+          child: free
+              ? Puppet(id: keeper, size: 86)
+              : CloudCage(size: 86, child: Puppet(id: keeper, size: 60, mood: 'sad')),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(free ? '$name is free! 🎉' : 'Free $name!', style: ts(18, color: free ? C.greenDark : C.ink)),
+            Text(free ? 'Every key won on this island.' : 'Win every key on this island to open the cage.', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Row(children: [
+              Expanded(child: GameProgressBar(value: max == 0 ? 0 : have / max, color: C.gold, height: 14)),
+              const SizedBox(width: 8),
+              Text('🔑 $have / $max', style: ts(15, color: const Color(0xFF8A6100))),
+            ]),
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+

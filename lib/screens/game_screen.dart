@@ -20,6 +20,7 @@ import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/reward_modal.dart';
 import '../story/beats.dart';
+import '../story/play_scene.dart';
 import '../story/puppets.dart';
 import '../story/story_lines.dart';
 
@@ -238,6 +239,8 @@ class _GameScreenState extends State<GameScreen> {
     final out = st.completeQuest(quest, results, seconds, startSteps);
     final band = model(quest.skills.first).band;
     await showRewardModal(context, outcome: out, game: quest.game, companion: st.avatar.companion, level: band, quest: quest);
+    // Story v3: every key won → the Keeper's cage opens (rescue scene); after the sixth, the Storm Trial is announced
+    if (mounted && out.rescued != null) await playScene(context, 'rescue_${out.rescued!.name}');
     if (mounted) Navigator.of(context).pop();
   }
 

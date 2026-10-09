@@ -1,0 +1,140 @@
+{
+ "title": "The Storm Trial",
+ "shots": [
+  {
+   "bg": "tree",
+   "fx": "sparkle",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "bhalu",
+     "x": 0.12,
+     "size": 0.2,
+     "y": 0.2
+    },
+    {
+     "id": "arya",
+     "x": 0.27,
+     "size": 0.2,
+     "y": 0.0
+    },
+    {
+     "id": "kachhua",
+     "x": 0.42,
+     "size": 0.2,
+     "y": 0.2
+    },
+    {
+     "id": "ullu",
+     "x": 0.58,
+     "size": 0.2,
+     "y": 0.0
+    },
+    {
+     "id": "madhu",
+     "x": 0.73,
+     "size": 0.2,
+     "y": 0.2
+    },
+    {
+     "id": "pari",
+     "x": 0.88,
+     "size": 0.2,
+     "y": 0.0
+    }
+   ],
+   "line": "v3_trial_1",
+   "video": "video.trial.01"
+  },
+  {
+   "bg": "art:island.citadel",
+   "fx": "lightning",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4200,
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "mood": "villain",
+     "size": 0.6,
+     "y": 0.4,
+     "enter": "float"
+    }
+   ],
+   "line": "v3_trial_2",
+   "video": "video.trial.02",
+   "sfx": "thud_soft"
+  },
+  {
+   "bg": "art:island.citadel",
+   "fx": "lightning",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 4500,
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "mood": "villain",
+     "size": 0.5,
+     "y": 0.5
+    }
+   ],
+   "line": "v3_trial_3",
+   "video": "video.trial.03",
+   "card": "\u26a1 Storm Trial\n30 questions\nScore 21 to break the storm"
+  },
+  {
+   "bg": "night",
+   "fx": "none",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3600,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.46,
+     "burst": true
+    }
+   ],
+   "line": "v3_trial_4",
+   "card": "\u26a1 Score 21 of 30"
+  }
+ ]
+}

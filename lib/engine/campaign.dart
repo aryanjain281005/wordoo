@@ -87,10 +87,16 @@ class IslandState {
   int tier;
   double tierStartTheta;
   final Map<GameId, Set<int>> cleared; // levels (1–4) cleared this season, per game
-  final Map<GameId, Set<int>> skipped; // levels the screening showed the child already knows (count as cleared)
-  IslandState({this.tier = 1, this.tierStartTheta = 0, Map<GameId, Set<int>>? cleared, Map<GameId, Set<int>>? skipped})
+  final Map<GameId, Set<int>> skipped; // levels the screening showed the child already knows (open them early; keys still to win)
+  final Map<GameId, Map<int, int>> keys; // v3: best keys won per level (only ever grows)
+  bool rescued; // v3: this island's Story Keeper has been freed (all keys)
+  IslandState({this.tier = 1, this.tierStartTheta = 0, Map<GameId, Set<int>>? cleared, Map<GameId, Set<int>>? skipped, Map<GameId, Map<int, int>>? keys, this.rescued = false})
       : cleared = cleared ?? {},
-        skipped = skipped ?? {};
+        skipped = skipped ?? {},
+        keys = keys ?? {};
+
+  int keysOf(GameId g, int level) => keys[g]?[level] ?? 0;
+  int gameKeys(GameId g) => keys[g]?.values.fold<int>(0, (a, b) => a + b) ?? 0;
 
   Set<int> done(GameId g) => {...?cleared[g], ...?skipped[g]};
   int count(GameId g) => done(g).length;
@@ -98,6 +104,8 @@ class IslandState {
   void reset() {
     cleared.clear();
     skipped.clear();
+    keys.clear();
+    rescued = false;
   }
 
   static Map<String, dynamic> _enc(Map<GameId, Set<int>> m) => {for (final e in m.entries) e.key.name: e.value.toList()};
@@ -105,9 +113,30 @@ class IslandState {
         for (final e in (j as Map? ?? const {}).entries)
           if (GameId.values.any((g) => g.name == e.key)) GameId.values.byName(e.key as String): Set<int>.from(e.value as List),
       };
-  Map<String, dynamic> toJson() => {'tier': tier, 'start': tierStartTheta, 'cleared': _enc(cleared), 'skipped': _enc(skipped)};
-  factory IslandState.fromJson(Map<String, dynamic> j) =>
-      IslandState(tier: j['tier'] as int, tierStartTheta: (j['start'] as num).toDouble(), cleared: _dec(j['cleared']), skipped: _dec(j['skipped']));
+  Map<String, dynamic> toJson() => {
+        'tier': tier,
+        'start': tierStartTheta,
+        'cleared': _enc(cleared),
+        'skipped': _enc(skipped),
+        'keys': {for (final e in keys.entries) e.key.name: {for (final k in e.value.entries) '${k.key}': k.value}},
+        'rescued': rescued,
+      };
+  factory IslandState.fromJson(Map<String, dynamic> j) {
+    final st = IslandState(tier: j['tier'] as int, tierStartTheta: (j['start'] as num).toDouble(), cleared: _dec(j['cleared']), skipped: _dec(j['skipped']), rescued: j['rescued'] as bool? ?? false);
+    final k = j['keys'] as Map?;
+    if (k == null) {
+      // saves from before keys: every cleared level starts with 1 key (replays win more)
+      for (final e in st.cleared.entries) {
+        st.keys[e.key] = {for (final l in e.value) l: 1};
+      }
+    } else {
+      for (final e in k.entries) {
+        if (!GameId.values.any((g) => g.name == e.key)) continue;
+        st.keys[GameId.values.byName(e.key as String)] = {for (final l in (e.value as Map).entries) int.parse(l.key as String): l.value as int};
+      }
+    }
+    return st;
+  }
 }
 
 class RetestStatus {
@@ -125,7 +154,25 @@ class Campaign {
 
   int nodesNeeded(IslandId i) => islandGames(i).length * levelsPerGame;
   bool gameDone(IslandId i, GameId g) => islands[i]!.count(g) >= levelsPerGame;
-  bool chapterDone(IslandId i) => islandGames(i).every((g) => gameDone(i, g));
+  /// v3: an island is done when its Story Keeper is free (every key won); the 7th island when the Storm Trial is passed.
+  bool chapterDone(IslandId i) => i == IslandId.observatory ? trialPassed : islandKeys(i) >= maxIslandKeys(i);
+  int islandKeys(IslandId i) => islandGames(i).fold(0, (a, g) => a + islands[i]!.gameKeys(g));
+  int maxIslandKeys(IslandId i) => islandGames(i).length * keysPerGame;
+  int get keepersFreed => islandSkill.keys.where(chapterDone).length;
+
+  // ---- Storm Trial (7th island) ----
+  int trialBest = 0;
+  int trialTries = 0;
+  bool trialPassed = false;
+
+  /// Records a finished Storm Trial; returns true when this attempt passed.
+  bool recordTrial(int right) {
+    trialTries++;
+    trialBest = right > trialBest ? right : trialBest;
+    final pass = right >= trialPassMark;
+    if (pass) trialPassed = true;
+    return pass;
+  }
   bool get skillChaptersDone => islandSkill.keys.every(chapterDone);
   bool get observatoryUnlocked => skillChaptersDone;
   bool get observatoryDone => chapterDone(IslandId.observatory);
@@ -152,8 +199,8 @@ class Campaign {
   /// Island restoration for the map: 70 % levels cleared + 30 % real skill growth this tier.
   double restoration(IslandId i, Map<Skill, SkillModel> m) {
     final st = islands[i]!;
-    final chapter = (st.nodes / nodesNeeded(i)).clamp(0.0, 1.0);
-    if (i == IslandId.observatory) return chapter * 100;
+    if (i == IslandId.observatory) return trialPassed ? 100 : (trialBest / trialQuestions * 100).roundToDouble();
+    final chapter = (islandKeys(i) / maxIslandKeys(i)).clamp(0.0, 1.0);
     final growth = ((m[islandSkill[i]!]!.theta - st.tierStartTheta) / 1.5).clamp(0.0, 1.0);
     return (chapter * 70 + growth * 30).roundToDouble();
   }
@@ -162,9 +209,9 @@ class Campaign {
   RetestStatus retest(Map<Skill, SkillModel> m) {
     final missing = <String>[];
     for (final i in islandSkill.keys) {
-      if (!chapterDone(i)) missing.add('${_islandName[i]}: ${islands[i]!.nodes}/${nodesNeeded(i)} levels');
+      if (!chapterDone(i)) missing.add('${_islandName[i]}: ${islandKeys(i)}/${maxIslandKeys(i)} keys');
     }
-    if (!observatoryDone) missing.add('Star Observatory: ${islands[IslandId.observatory]!.nodes}/${nodesNeeded(IslandId.observatory)} star maps');
+    if (!observatoryDone) missing.add('Storm Trial: not passed yet (best ${trialBest}/$trialQuestions, needs $trialPassMark)');
     for (final s in Skill.values) {
       final mm = m[s]!;
       if (mm.cycleItems < Cfg.retestMinItemsPerSkill) missing.add('${_skillName[s]}: ${mm.cycleItems}/${Cfg.retestMinItemsPerSkill} answers');
@@ -196,6 +243,9 @@ class Campaign {
   /// After a retest: next season, every island grows a tier, all levels restart a little harder.
   void nextSeason(Map<Skill, SkillModel> m) {
     season++;
+    trialBest = 0;
+    trialTries = 0;
+    trialPassed = false;
     for (final st in islands.values) {
       st.tier++;
       st.reset();
@@ -205,9 +255,31 @@ class Campaign {
 
   /// Clears every level on an island (tests and the developer panel).
   void clearIsland(IslandId i) {
+    if (i == IslandId.observatory) {
+      trialPassed = true;
+      trialBest = trialQuestions;
+      return;
+    }
     for (final g in islandGames(i)) {
       islands[i]!.cleared[g] = {for (var l = 1; l <= levelsPerGame; l++) l};
+      islands[i]!.keys[g] = {for (var l = 1; l <= levelsPerGame; l++) l: maxKeysFor(l)};
     }
+  }
+
+  /// Saves the keys of one play (the best result per level counts). Returns the keys this play won.
+  int recordKeys(Quest q, int right, int total) {
+    final won = keysFor(q.level, right, total);
+    final m = islands[q.island]!.keys.putIfAbsent(q.game, () => {});
+    if (won > (m[q.level] ?? 0)) m[q.level] = won;
+    return won;
+  }
+
+  /// v3: the lowest open level of [g] that still has keys to win (null when every key is won).
+  int? keyLevel(IslandId i, GameId g) {
+    for (var l = 1; l <= levelsPerGame; l++) {
+      if (levelOpen(i, g, l) && islands[i]!.keysOf(g, l) < maxKeysFor(l)) return l;
+    }
+    return null;
   }
 
   /// Marks the quest's level cleared. Returns true if this cleared a level that was not cleared before.
@@ -271,7 +343,7 @@ class Campaign {
     Quest? nextOn(IslandId i, {bool second = false}) {
       final games = islandGames(i);
       for (final g in second ? games.skip(1) : games.take(1)) {
-        final lv = nextLevel(i, g);
+        final lv = nextLevel(i, g) ?? keyLevel(i, g); // a new level first, then a level with keys still to win
         if (lv != null && levelOpen(i, g, lv)) return questFor(i, m, game: g, level: lv);
       }
       return null;
@@ -305,14 +377,28 @@ class Campaign {
     return out.take(Cfg.boardSize).toList();
   }
 
-  Map<String, dynamic> toJson() => {'season': season, 'islands': islands.map((k, v) => MapEntry(k.name, v.toJson()))};
-  factory Campaign.fromJson(Map<String, dynamic> j) => Campaign(
+  Map<String, dynamic> toJson() => {
+        'season': season,
+        'islands': islands.map((k, v) => MapEntry(k.name, v.toJson())),
+        'trial': {'best': trialBest, 'tries': trialTries, 'passed': trialPassed},
+      };
+  factory Campaign.fromJson(Map<String, dynamic> j) => _withTrial(j, Campaign(
         season: j['season'] as int,
         islands: {
           for (final i in IslandId.values)
             i: (j['islands'] as Map)[i.name] == null ? IslandState() : IslandState.fromJson(Map<String, dynamic>.from((j['islands'] as Map)[i.name] as Map)),
         },
-      );
+      ));
+
+  static Campaign _withTrial(Map<String, dynamic> j, Campaign c) {
+    final t = j['trial'] as Map?;
+    if (t != null) {
+      c.trialBest = t['best'] as int? ?? 0;
+      c.trialTries = t['tries'] as int? ?? 0;
+      c.trialPassed = t['passed'] as bool? ?? false;
+    }
+    return c;
+  }
 
   static const _islandName = {
     IslandId.forest: 'Sound Forest',
@@ -321,7 +407,7 @@ class Campaign {
     IslandId.village: 'Word Village',
     IslandId.treasure: 'Treasure Island',
     IslandId.castle: 'Story Castle',
-    IslandId.observatory: 'Star Observatory',
+    IslandId.observatory: 'Storm Citadel',
   };
   static String islandName(IslandId i) => _islandName[i]!;
   static const _skillName = {

@@ -58,7 +58,7 @@ mine_env, mine_hash = {}, {}
 for idx, (lid, ln) in enumerate(lines.items()):
     if idx % SHARDS != SHARD:
         continue
-    c = cast.get(ln["who"], cast["milo"])
+    c = cast.get(ln.get("cast", ln["who"]), cast["milo"])  # "cast" picks a different voice for the same speaker
     key = hashlib.md5(json.dumps([ln, c], sort_keys=True).encode()).hexdigest()
     dst = os.path.join(OUT, f"{lid}.ogg")
     if hashes.get(lid) == key and os.path.exists(dst):

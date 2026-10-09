@@ -92,10 +92,18 @@ void main() {
     final rng = Random(7);
     var guard = 0;
     var observatorySeen = false;
-    while (!st.retestReady && guard++ < 400) {
+    while (!st.retestReady && guard++ < 3000) {
       final q = st.board.first;
-      if (q.island == IslandId.observatory) observatorySeen = true;
-      playQuest(st, q, rng);
+      if (q.island == IslandId.observatory) {
+        // v3: the Storm Trial — a well-practised child passes it
+        observatorySeen = true;
+        final gen = ItemGen(st.content, rng: rng, seen: st.itemSeen);
+        final items = [for (final s in Skill.values) for (var k = 0; k < 5; k++) gen.make(s, st.model(s).step)];
+        final res = [for (final it in items) ItemResult(itemId: it.id, skill: it.skill, level: it.level, correct: rng.nextDouble() < .9, ms: 2500)];
+        st.completeTrial(items, res, 600);
+        continue;
+      }
+      playQuest(st, q, rng, p: .97); // v3 needs every key: a near-perfect child, replaying levels until all keys are won
     }
     expect(st.retestReady, isTrue, reason: st.retest.missing.join('; '));
     expect(observatorySeen, isTrue);

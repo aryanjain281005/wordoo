@@ -1,0 +1,55 @@
+{
+ "title": "The storm holds\u2026 for now",
+ "shots": [
+  {
+   "bg": "art:island.citadel",
+   "fx": "lightning",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3200,
+   "cast": [
+    {
+     "id": "gumsum",
+     "x": 0.5,
+     "mood": "villain",
+     "size": 0.5,
+     "y": 0.4
+    }
+   ],
+   "line": "v3_retry_1",
+   "video": "video.trial.retry"
+  },
+  {
+   "bg": "night",
+   "fx": "none",
+   "camera": {
+    "zoom": [
+     1,
+     1.08
+    ],
+    "pan": [
+     0,
+     0
+    ]
+   },
+   "ms": 3200,
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.46,
+     "burst": true
+    }
+   ],
+   "line": "v3_retry_2"
+  }
+ ]
+}

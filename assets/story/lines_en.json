@@ -554,5 +554,243 @@
  "writer_again": {
   "who": "kalam",
   "text": "Steady, matey. Follow the glowing line once more."
+ },
+ "v3_pro_1": {
+  "who": "dadi",
+  "text": "Long, long ago, high above the clouds, there was a realm called Aksharpur."
+ },
+ "v3_pro_2": {
+  "who": "dadi",
+  "text": "Animals, flowers and even little clouds lived there happily, because every evening they listened to stories."
+ },
+ "v3_pro_3": {
+  "who": "dadi",
+  "text": "The stories came from me, the Great Story Tree. But only seven Story Keepers could hear my voice and carry the stories to everyone."
+ },
+ "v3_pro_4": {
+  "who": "gumsum",
+  "text": "Stories, stories, STORIES! Every night, laughing and listening! I am sick of stories!"
+ },
+ "v3_pro_5": {
+  "who": "dadi",
+  "text": "One stormy night, Gumsum the storm cloud swept six Story Keepers away, to six storm islands."
+ },
+ "v3_pro_6": {
+  "who": "milo",
+  "text": "They're gone! And my tail is hurt. I can't fly to the islands alone."
+ },
+ "v3_pro_7": {
+  "who": "dadi",
+  "text": "Without its Keepers, the Tree went silent, and Aksharpur turned grey."
+ },
+ "v3_pro_8": {
+  "who": "dadi",
+  "text": "With the very last of my light, I called for help. And you came, Explorer."
+ },
+ "v3_pro_9": {
+  "who": "milo",
+  "text": "You came! Will you help me rescue the Story Keepers? Together, we can do it!"
+ },
+ "v3_pro_10": {
+  "who": "milo",
+  "text": "Each Keeper is locked in a cloud cage. Win every key on an island, and the cage will open!"
+ },
+ "v3_start_forest_1": {
+  "who": "jailer_forest",
+  "text": "No music! No stories! I'm Drizzle, and this forest stays quiet!"
+ },
+ "v3_start_forest_2": {
+  "who": "bhalu",
+  "text": "Explorer! Over here! Win every key and this cage will open. My band needs me!"
+ },
+ "v3_start_forest_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_forest_1": {
+  "who": "jailer_forest",
+  "text": "No, no, no! My quiet! It's popping!"
+ },
+ "v3_rescue_forest_2": {
+  "who": "bhalu",
+  "text": "I'm free! Thank you, Explorer! Band, play from the top!"
+ },
+ "v3_rescue_forest_3": {
+  "who": "milo",
+  "text": "Sound Forest is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_start_valley_1": {
+  "who": "jailer_valley",
+  "text": "I'm Gust! I tangled every kite string. No letters fly on MY watch!"
+ },
+ "v3_start_valley_2": {
+  "who": "arya",
+  "text": "Explorer! I'm stuck in this cloud! Win every key and set me free, so the lanterns can fly again!"
+ },
+ "v3_start_valley_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_valley_1": {
+  "who": "jailer_valley",
+  "text": "My knots! They're untangling!"
+ },
+ "v3_rescue_valley_2": {
+  "who": "arya",
+  "text": "I'm free! Thank you! Look, every lantern is flying again!"
+ },
+ "v3_rescue_valley_3": {
+  "who": "milo",
+  "text": "Symbol Valley is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_start_ocean_1": {
+  "who": "jailer_ocean",
+  "text": "Murk is the name. The lagoon stays grey and the rocket stays stuck!"
+ },
+ "v3_start_ocean_2": {
+  "who": "kachhua",
+  "text": "Bubbles and barnacles! Explorer, win every key on this island and open my cage!"
+ },
+ "v3_start_ocean_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_ocean_1": {
+  "who": "jailer_ocean",
+  "text": "My anchor! It's floating away!"
+ },
+ "v3_rescue_ocean_2": {
+  "who": "kachhua",
+  "text": "Free as a fish! Thank you, Explorer! Full speed ahead!"
+ },
+ "v3_rescue_ocean_3": {
+  "who": "milo",
+  "text": "Word Ocean is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_start_village_1": {
+  "who": "jailer_village",
+  "text": "Smudge here! I smudged every sign in this village. Nobody can read a thing!"
+ },
+ "v3_start_village_2": {
+  "who": "ullu",
+  "text": "A rescue! Excellent. Explorer, every key opens one more lock. Find them all!"
+ },
+ "v3_start_village_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_village_1": {
+  "who": "jailer_village",
+  "text": "My smudges! They're washing off!"
+ },
+ "v3_rescue_village_2": {
+  "who": "ullu",
+  "text": "Case closed! You freed me, Explorer. Splendid detective work!"
+ },
+ "v3_rescue_village_3": {
+  "who": "milo",
+  "text": "Word Village is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_start_treasure_1": {
+  "who": "jailer_treasure",
+  "text": "I'm Sulk. The honey jar is locked and the bees can't spell a single word!"
+ },
+ "v3_start_treasure_2": {
+  "who": "madhu",
+  "text": "Hmm, little one, every key you win brings me closer to my hive. Win them all!"
+ },
+ "v3_start_treasure_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_treasure_1": {
+  "who": "jailer_treasure",
+  "text": "The jar! It's opening!"
+ },
+ "v3_rescue_treasure_2": {
+  "who": "madhu",
+  "text": "I'm free! Thank you, little one. Hear the hive hum again!"
+ },
+ "v3_rescue_treasure_3": {
+  "who": "milo",
+  "text": "Treasure Island is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_start_castle_1": {
+  "who": "jailer_castle",
+  "text": "Shhh! I'm Hush. Every book in this castle is closed forever!"
+ },
+ "v3_start_castle_2": {
+  "who": "pari",
+  "text": "Explorer! Kitabu and I are stuck. Win every key, and the books will open again!"
+ },
+ "v3_start_castle_3": {
+  "who": "milo",
+  "text": "Two games on this island, four levels each. Get every answer right to win all the keys!"
+ },
+ "v3_rescue_castle_1": {
+  "who": "jailer_castle",
+  "text": "Too loud! Too many stories!"
+ },
+ "v3_rescue_castle_2": {
+  "who": "pari",
+  "text": "We're free! Thank you, Explorer! Kitabu, open your pages!"
+ },
+ "v3_rescue_castle_3": {
+  "who": "milo",
+  "text": "Story Castle is full of stories again! One more light for the Story Tree!"
+ },
+ "v3_trial_1": {
+  "who": "dadi",
+  "text": "Six Story Keepers are free! But Gumsum still holds the seventh island, the Storm Citadel."
+ },
+ "v3_trial_2": {
+  "who": "gumsum",
+  "text": "So, you freed my prisoners? Then face my STORM TRIAL!"
+ },
+ "v3_trial_3": {
+  "who": "gumsum",
+  "text": "Thirty questions. Answer twenty-one right, and my storm breaks. Fail, and it stays!"
+ },
+ "v3_trial_4": {
+  "who": "milo",
+  "text": "We can do this together, Explorer! Everything you learned will help you now."
+ },
+ "v3_retry_1": {
+  "who": "gumsum",
+  "text": "Ha! My storm holds... for now!"
+ },
+ "v3_retry_2": {
+  "who": "milo",
+  "text": "So close! Let us practise with our friends and try again."
+ },
+ "v3_fin_1": {
+  "who": "dadi",
+  "text": "Every story you read became light, and the light shone through all seven Keepers."
+ },
+ "v3_fin_2": {
+  "who": "gumsum",
+  "text": "Nobody... ever told me a story. Everyone else had stories. I only had thunder.",
+  "cast": "gumsum_small"
+ },
+ "v3_fin_3": {
+  "who": "milo",
+  "text": "Then here is your very first story, Gumsum."
+ },
+ "v3_fin_4": {
+  "who": "gumsum",
+  "text": "May I stay, and water the Story Tree, and listen every evening?",
+  "cast": "gumsum_small"
+ },
+ "v3_fin_5": {
+  "who": "dadi",
+  "text": "Of course. Everyone deserves a story."
+ },
+ "v3_fin_6": {
+  "who": "milo",
+  "text": "You did it, Explorer! Aksharpur is full of stories again!"
+ },
+ "v3_key_1": {
+  "who": "milo",
+  "text": "Keys! Every key brings us closer to the cage."
  }
 }
