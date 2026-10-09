@@ -48,3 +48,8 @@ app.*.map.json
 .widget_preview/
 runtheflutter.txt
 *.docx
+
+# secrets (API keys) — never commit
+.env
+.env.*
+*.env
