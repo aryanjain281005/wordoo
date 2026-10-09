@@ -173,7 +173,6 @@ class AudioManager {
     final done = Completer<void>();
     _voiceDone = done;
     var played = false;
-    debugPrint('VOICE ${DateTime.now().millisecondsSinceEpoch % 100000} id=$id clip=${hasVoice(id)} "${text.length > 40 ? text.substring(0, 40) : text}"');
     if (enabled && hasVoice(id)) {
       try {
         final p = AudioPlayer();

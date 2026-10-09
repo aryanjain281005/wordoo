@@ -3479,21 +3479,9 @@
   "who": "say",
   "text": "Which one rhymes with ant?"
  },
- "say/which_one_rhymes_with_apple_d1262c87": {
-  "who": "say",
-  "text": "Which one rhymes with apple?"
- },
  "say/which_one_rhymes_with_balloon_8c44f04a": {
   "who": "say",
   "text": "Which one rhymes with balloon?"
- },
- "say/which_one_rhymes_with_banana_23222dc4": {
-  "who": "say",
-  "text": "Which one rhymes with banana?"
- },
- "say/which_one_rhymes_with_basket_d5329199": {
-  "who": "say",
-  "text": "Which one rhymes with basket?"
  },
  "say/which_one_rhymes_with_bear_b8e5bac1": {
   "who": "say",
@@ -3502,10 +3490,6 @@
  "say/which_one_rhymes_with_bee_f05a37af": {
   "who": "say",
   "text": "Which one rhymes with bee?"
- },
- "say/which_one_rhymes_with_beetle_3cbb952e": {
-  "who": "say",
-  "text": "Which one rhymes with beetle?"
  },
  "say/which_one_rhymes_with_bell_f3070edc": {
   "who": "say",
@@ -3519,45 +3503,13 @@
   "who": "say",
   "text": "Which one rhymes with bone?"
  },
- "say/which_one_rhymes_with_boot_026d0ba7": {
+ "say/which_one_rhymes_with_bread_d7ba054d": {
   "who": "say",
-  "text": "Which one rhymes with boot?"
- },
- "say/which_one_rhymes_with_bottle_192e84b3": {
-  "who": "say",
-  "text": "Which one rhymes with bottle?"
- },
- "say/which_one_rhymes_with_bowl_1b9ac417": {
-  "who": "say",
-  "text": "Which one rhymes with bowl?"
- },
- "say/which_one_rhymes_with_bucket_c762cfcd": {
-  "who": "say",
-  "text": "Which one rhymes with bucket?"
- },
- "say/which_one_rhymes_with_butter_f13aa935": {
-  "who": "say",
-  "text": "Which one rhymes with butter?"
- },
- "say/which_one_rhymes_with_button_3139cdfb": {
-  "who": "say",
-  "text": "Which one rhymes with button?"
+  "text": "Which one rhymes with bread?"
  },
  "say/which_one_rhymes_with_cake_6cbff857": {
   "who": "say",
   "text": "Which one rhymes with cake?"
- },
- "say/which_one_rhymes_with_camel_e32b9df1": {
-  "who": "say",
-  "text": "Which one rhymes with camel?"
- },
- "say/which_one_rhymes_with_candle_b812b67c": {
-  "who": "say",
-  "text": "Which one rhymes with candle?"
- },
- "say/which_one_rhymes_with_candy_957e3554": {
-  "who": "say",
-  "text": "Which one rhymes with candy?"
  },
  "say/which_one_rhymes_with_car_841fa6a5": {
   "who": "say",
@@ -3567,13 +3519,9 @@
   "who": "say",
   "text": "Which one rhymes with carrot?"
  },
- "say/which_one_rhymes_with_castle_a868bd27": {
+ "say/which_one_rhymes_with_chair_6fe3e828": {
   "who": "say",
-  "text": "Which one rhymes with castle?"
- },
- "say/which_one_rhymes_with_cheese_525e7ff4": {
-  "who": "say",
-  "text": "Which one rhymes with cheese?"
+  "text": "Which one rhymes with chair?"
  },
  "say/which_one_rhymes_with_clock_ecc668c5": {
   "who": "say",
@@ -3583,41 +3531,29 @@
   "who": "say",
   "text": "Which one rhymes with coat?"
  },
+ "say/which_one_rhymes_with_coconut_43422a4e": {
+  "who": "say",
+  "text": "Which one rhymes with coconut?"
+ },
  "say/which_one_rhymes_with_corn_1bf4a8e5": {
   "who": "say",
   "text": "Which one rhymes with corn?"
  },
- "say/which_one_rhymes_with_cow_8f98620e": {
+ "say/which_one_rhymes_with_deer_69358177": {
   "who": "say",
-  "text": "Which one rhymes with cow?"
- },
- "say/which_one_rhymes_with_crayon_9ef21e09": {
-  "who": "say",
-  "text": "Which one rhymes with crayon?"
+  "text": "Which one rhymes with deer?"
  },
  "say/which_one_rhymes_with_dice_9ca421b6": {
   "who": "say",
   "text": "Which one rhymes with dice?"
  },
- "say/which_one_rhymes_with_dolphin_91c57693": {
-  "who": "say",
-  "text": "Which one rhymes with dolphin?"
- },
  "say/which_one_rhymes_with_donut_ca68c6d3": {
   "who": "say",
   "text": "Which one rhymes with donut?"
  },
- "say/which_one_rhymes_with_dragon_04e65a42": {
-  "who": "say",
-  "text": "Which one rhymes with dragon?"
- },
  "say/which_one_rhymes_with_duck_bf7d6e30": {
   "who": "say",
   "text": "Which one rhymes with duck?"
- },
- "say/which_one_rhymes_with_eagle_255354f7": {
-  "who": "say",
-  "text": "Which one rhymes with eagle?"
  },
  "say/which_one_rhymes_with_ear_c9ccecc3": {
   "who": "say",
@@ -3627,105 +3563,25 @@
   "who": "say",
   "text": "Which one rhymes with flag?"
  },
- "say/which_one_rhymes_with_foot_da0cf91b": {
-  "who": "say",
-  "text": "Which one rhymes with foot?"
- },
  "say/which_one_rhymes_with_frog_ef8038b1": {
   "who": "say",
   "text": "Which one rhymes with frog?"
- },
- "say/which_one_rhymes_with_garden_0a5bfadc": {
-  "who": "say",
-  "text": "Which one rhymes with garden?"
- },
- "say/which_one_rhymes_with_giraffe_7342650b": {
-  "who": "say",
-  "text": "Which one rhymes with giraffe?"
- },
- "say/which_one_rhymes_with_gloves_47818071": {
-  "who": "say",
-  "text": "Which one rhymes with gloves?"
  },
  "say/which_one_rhymes_with_goat_3b8dbb1a": {
   "who": "say",
   "text": "Which one rhymes with goat?"
  },
- "say/which_one_rhymes_with_grapes_ebb4f0b7": {
-  "who": "say",
-  "text": "Which one rhymes with grapes?"
- },
  "say/which_one_rhymes_with_guitar_784893f5": {
   "who": "say",
   "text": "Which one rhymes with guitar?"
- },
- "say/which_one_rhymes_with_hammer_c3ff0045": {
-  "who": "say",
-  "text": "Which one rhymes with hammer?"
- },
- "say/which_one_rhymes_with_hamster_0f4f1aed": {
-  "who": "say",
-  "text": "Which one rhymes with hamster?"
- },
- "say/which_one_rhymes_with_hand_4192fcfc": {
-  "who": "say",
-  "text": "Which one rhymes with hand?"
- },
- "say/which_one_rhymes_with_honey_be2a802a": {
-  "who": "say",
-  "text": "Which one rhymes with honey?"
- },
- "say/which_one_rhymes_with_horse_a6b62b7c": {
-  "who": "say",
-  "text": "Which one rhymes with horse?"
  },
  "say/which_one_rhymes_with_house_df3eb22b": {
   "who": "say",
   "text": "Which one rhymes with house?"
  },
- "say/which_one_rhymes_with_island_9f6c6d44": {
+ "say/which_one_rhymes_with_ladybug_9e3a88e1": {
   "who": "say",
-  "text": "Which one rhymes with island?"
- },
- "say/which_one_rhymes_with_juice_7348f75b": {
-  "who": "say",
-  "text": "Which one rhymes with juice?"
- },
- "say/which_one_rhymes_with_koala_8eb26ee9": {
-  "who": "say",
-  "text": "Which one rhymes with koala?"
- },
- "say/which_one_rhymes_with_ladder_9dc5c303": {
-  "who": "say",
-  "text": "Which one rhymes with ladder?"
- },
- "say/which_one_rhymes_with_lemon_c5df34d6": {
-  "who": "say",
-  "text": "Which one rhymes with lemon?"
- },
- "say/which_one_rhymes_with_lion_802afccd": {
-  "who": "say",
-  "text": "Which one rhymes with lion?"
- },
- "say/which_one_rhymes_with_llama_98a8275c": {
-  "who": "say",
-  "text": "Which one rhymes with llama?"
- },
- "say/which_one_rhymes_with_lobster_631fb2dc": {
-  "who": "say",
-  "text": "Which one rhymes with lobster?"
- },
- "say/which_one_rhymes_with_magnet_cca0f8d5": {
-  "who": "say",
-  "text": "Which one rhymes with magnet?"
- },
- "say/which_one_rhymes_with_melon_8fe67992": {
-  "who": "say",
-  "text": "Which one rhymes with melon?"
- },
- "say/which_one_rhymes_with_monkey_6be0543c": {
-  "who": "say",
-  "text": "Which one rhymes with monkey?"
+  "text": "Which one rhymes with ladybug?"
  },
  "say/which_one_rhymes_with_moon_a94a29a4": {
   "who": "say",
@@ -3735,53 +3591,29 @@
   "who": "say",
   "text": "Which one rhymes with mouse?"
  },
- "say/which_one_rhymes_with_noodles_d23fa423": {
-  "who": "say",
-  "text": "Which one rhymes with noodles?"
- },
  "say/which_one_rhymes_with_nose_ee3c36be": {
   "who": "say",
   "text": "Which one rhymes with nose?"
  },
- "say/which_one_rhymes_with_onion_9f1caf6c": {
+ "say/which_one_rhymes_with_pancake_a5a6e3a2": {
   "who": "say",
-  "text": "Which one rhymes with onion?"
- },
- "say/which_one_rhymes_with_owl_4daf93d5": {
-  "who": "say",
-  "text": "Which one rhymes with owl?"
- },
- "say/which_one_rhymes_with_panda_1db0af1b": {
-  "who": "say",
-  "text": "Which one rhymes with panda?"
+  "text": "Which one rhymes with pancake?"
  },
  "say/which_one_rhymes_with_parrot_7e188127": {
   "who": "say",
   "text": "Which one rhymes with parrot?"
  },
+ "say/which_one_rhymes_with_peacock_5efc2a09": {
+  "who": "say",
+  "text": "Which one rhymes with peacock?"
+ },
  "say/which_one_rhymes_with_pear_b6b8ce3f": {
   "who": "say",
   "text": "Which one rhymes with pear?"
  },
- "say/which_one_rhymes_with_penguin_32bb0083": {
-  "who": "say",
-  "text": "Which one rhymes with penguin?"
- },
  "say/which_one_rhymes_with_phone_d806ff4b": {
   "who": "say",
   "text": "Which one rhymes with phone?"
- },
- "say/which_one_rhymes_with_pie_dbf343b9": {
-  "who": "say",
-  "text": "Which one rhymes with pie?"
- },
- "say/which_one_rhymes_with_pizza_e779179d": {
-  "who": "say",
-  "text": "Which one rhymes with pizza?"
- },
- "say/which_one_rhymes_with_planet_ca8a7a21": {
-  "who": "say",
-  "text": "Which one rhymes with planet?"
  },
  "say/which_one_rhymes_with_plant_668f2a2c": {
   "who": "say",
@@ -3791,18 +3623,6 @@
   "who": "say",
   "text": "Which one rhymes with popcorn?"
  },
- "say/which_one_rhymes_with_potato_5a6f323a": {
-  "who": "say",
-  "text": "Which one rhymes with potato?"
- },
- "say/which_one_rhymes_with_pretzel_9c2c6d0d": {
-  "who": "say",
-  "text": "Which one rhymes with pretzel?"
- },
- "say/which_one_rhymes_with_puzzle_e91b578f": {
-  "who": "say",
-  "text": "Which one rhymes with puzzle?"
- },
  "say/which_one_rhymes_with_rain_bae15009": {
   "who": "say",
   "text": "Which one rhymes with rain?"
@@ -3811,45 +3631,29 @@
   "who": "say",
   "text": "Which one rhymes with rice?"
  },
- "say/which_one_rhymes_with_robot_005afa2f": {
-  "who": "say",
-  "text": "Which one rhymes with robot?"
- },
  "say/which_one_rhymes_with_rock_5baf07f0": {
   "who": "say",
   "text": "Which one rhymes with rock?"
- },
- "say/which_one_rhymes_with_rocket_0c7af7d3": {
-  "who": "say",
-  "text": "Which one rhymes with rocket?"
  },
  "say/which_one_rhymes_with_rose_2b66494a": {
   "who": "say",
   "text": "Which one rhymes with rose?"
  },
- "say/which_one_rhymes_with_ruler_7758f66b": {
-  "who": "say",
-  "text": "Which one rhymes with ruler?"
- },
  "say/which_one_rhymes_with_shell_563499e5": {
   "who": "say",
   "text": "Which one rhymes with shell?"
- },
- "say/which_one_rhymes_with_shoe_7100313a": {
-  "who": "say",
-  "text": "Which one rhymes with shoe?"
  },
  "say/which_one_rhymes_with_sled_f4d2b6bd": {
   "who": "say",
   "text": "Which one rhymes with sled?"
  },
+ "say/which_one_rhymes_with_snail_91534664": {
+  "who": "say",
+  "text": "Which one rhymes with snail?"
+ },
  "say/which_one_rhymes_with_snake_b5bb92db": {
   "who": "say",
   "text": "Which one rhymes with snake?"
- },
- "say/which_one_rhymes_with_snow_c592b7f2": {
-  "who": "say",
-  "text": "Which one rhymes with snow?"
  },
  "say/which_one_rhymes_with_sock_fff2e56b": {
   "who": "say",
@@ -3863,25 +3667,9 @@
   "who": "say",
   "text": "Which one rhymes with star?"
  },
- "say/which_one_rhymes_with_swan_8c6a3780": {
+ "say/which_one_rhymes_with_tea_9d7e6065": {
   "who": "say",
-  "text": "Which one rhymes with swan?"
- },
- "say/which_one_rhymes_with_teddy_88ed999d": {
-  "who": "say",
-  "text": "Which one rhymes with teddy?"
- },
- "say/which_one_rhymes_with_ticket_ceaf6287": {
-  "who": "say",
-  "text": "Which one rhymes with ticket?"
- },
- "say/which_one_rhymes_with_tiger_cfe4ba22": {
-  "who": "say",
-  "text": "Which one rhymes with tiger?"
- },
- "say/which_one_rhymes_with_tomato_3e9bf335": {
-  "who": "say",
-  "text": "Which one rhymes with tomato?"
+  "text": "Which one rhymes with tea?"
  },
  "say/which_one_rhymes_with_train_a8fdc999": {
   "who": "say",
@@ -3895,29 +3683,9 @@
   "who": "say",
   "text": "Which one rhymes with truck?"
  },
- "say/which_one_rhymes_with_trumpet_930611a8": {
+ "say/which_one_rhymes_with_whale_0a90e6f4": {
   "who": "say",
-  "text": "Which one rhymes with trumpet?"
- },
- "say/which_one_rhymes_with_turtle_c4a36f41": {
-  "who": "say",
-  "text": "Which one rhymes with turtle?"
- },
- "say/which_one_rhymes_with_violin_2bd5e3f0": {
-  "who": "say",
-  "text": "Which one rhymes with violin?"
- },
- "say/which_one_rhymes_with_waffle_6bbeef96": {
-  "who": "say",
-  "text": "Which one rhymes with waffle?"
- },
- "say/which_one_rhymes_with_window_4f7e55df": {
-  "who": "say",
-  "text": "Which one rhymes with window?"
- },
- "say/which_one_rhymes_with_zebra_3f5988ab": {
-  "who": "say",
-  "text": "Which one rhymes with zebra?"
+  "text": "Which one rhymes with whale?"
  },
  "say/which_one_starts_like_ant_4c3b7678": {
   "who": "say",
@@ -21098,21 +20866,5 @@
  "say/zzz_a7b0389d": {
   "who": "say",
   "text": "zzz"
- },
- "say/x_2f47f685": {
-  "who": "say",
-  "text": "• • •"
- },
- "say/x_f98af627": {
-  "who": "say",
-  "text": "• • • •"
- },
- "say/x_ab7ed465": {
-  "who": "say",
-  "text": "• • • • •"
- },
- "say/x_cc85c187": {
-  "who": "say",
-  "text": "• • • • • •"
  }
 }

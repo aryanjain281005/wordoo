@@ -63,7 +63,11 @@ for idx, (lid, ln) in enumerate(lines.items()):
     dst = os.path.join(OUT, f"{lid}.ogg")
     if hashes.get(lid) == key and os.path.exists(dst):
         continue
-    samples, sr = kokoro.create(ln["text"], voice=c["voice"], speed=c.get("speed", 1.0), lang="en-us")
+    try:
+        samples, sr = kokoro.create(ln["text"], voice=c["voice"], speed=c.get("speed", 1.0), lang="en-us")
+    except ValueError as e:  # nothing speakable: skip the line, keep going
+        print(f"  skip {lid}: {e}")
+        continue
     with tempfile.TemporaryDirectory() as td:
         raw = os.path.join(td, "raw.wav")
         proc = os.path.join(td, "proc.wav")

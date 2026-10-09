@@ -19,7 +19,7 @@ void main() {
   void add(String? t) {
     if (t == null) return;
     final s = t.trim();
-    if (s.isEmpty || s == '•' || RegExp(r'^[\d\s]+$').hasMatch(s)) return;
+    if (s.isEmpty || !RegExp(r'[A-Za-z]').hasMatch(s)) return; // nothing speakable (dots, digits)
     if (splitSentences(s).length > 1) return; // whole stories: read sentence by sentence instead
     if (s.contains(',  ')) return; // "c,  a,  t" sound sequences: played as one clip per sound
     texts.add(s);
