@@ -1,93 +1,232 @@
 {
- "title": "Treasure Island: the Keeper is free!",
+ "title": "Treasure Island: freed",
  "shots": [
   {
    "bg": "art:bg.island.treasure~storm",
-   "fx": "keys",
+   "fx": "keys+rain",
+   "ms": 4200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.05,
+     1.18
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "madhu",
-     "x": 0.38,
+     "x": 0.4,
      "size": 0.5,
+     "mood": "sad",
      "cage": "open"
     },
     {
      "id": "jailer_treasure",
      "x": 0.8,
-     "size": 0.18,
+     "size": 0.3,
      "mood": "surprised",
-     "y": 0.3
+     "y": 0.3,
+     "act": "shake"
     }
    ],
    "line": "v3_rescue_treasure_1",
-   "video": "video.rescue.treasure.01",
-   "sfx": "chest_open"
+   "sfx": [
+    {
+     "id": "key_turn",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "key_turn",
+     "at": 700,
+     "vol": 0.6
+    },
+    {
+     "id": "key_turn",
+     "at": 1400,
+     "vol": 0.6
+    },
+    {
+     "id": "cage_burst",
+     "at": 2400,
+     "vol": 0.8
+    },
+    {
+     "id": "fruit_pop",
+     "at": 3200,
+     "vol": 0.6
+    }
+   ],
+   "shake": 0.5
   },
   {
-   "bg": "art:bg.island.treasure",
-   "fx": "colour",
+   "bg": "art:bg.island.treasure~storm",
+   "fx": "sparkle+rays",
+   "ms": 4000,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.2,
+     1.0
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "madhu",
      "x": 0.5,
-     "size": 0.55,
+     "size": 0.5,
+     "mood": "happy",
+     "cage": "open",
      "burst": true,
-     "enter": "pop"
+     "act": "hop"
     }
    ],
-   "line": "v3_rescue_treasure_2",
-   "video": "video.rescue.treasure.02",
-   "sfx": "island_restore"
+   "line": "v3_gen_r2",
+   "sfx": [
+    {
+     "id": "cage_burst",
+     "at": 0,
+     "vol": 0.7
+    }
+   ],
+   "bars": true
   },
   {
    "bg": "art:bg.island.treasure",
-   "fx": "sparkle",
+   "fx": "colour+sparkle+embers",
+   "ms": 4600,
    "camera": {
     "zoom": [
      1,
-     1.08
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3600,
+   "cast": [
+    {
+     "id": "madhu",
+     "x": 0.5,
+     "size": 0.5,
+     "mood": "happy",
+     "act": "wave"
+    }
+   ],
+   "line": "v3_rescue_treasure_2",
+   "sfx": [
+    {
+     "id": "colour_wave",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "firefly_chime",
+     "at": 2000,
+     "vol": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.treasure",
+   "fx": "embers+dust+rays",
+   "ms": 4600,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
    "cast": [
     {
      "id": "milo",
-     "x": 0.3,
-     "size": 0.34
+     "x": 0.26,
+     "size": 0.38,
+     "mood": "cheer",
+     "act": "hop"
     },
     {
      "id": "madhu",
-     "x": 0.7,
-     "size": 0.4
+     "x": 0.6,
+     "size": 0.44,
+     "act": "wave"
     }
    ],
-   "line": "v3_rescue_treasure_3"
+   "line": "v3_rescue_treasure_3",
+   "sfx": [
+    {
+     "id": "island_restore",
+     "at": 0,
+     "vol": 0.7
+    }
+   ],
+   "bars": true
+  },
+  {
+   "bg": "tree",
+   "fx": "sparkle+rays",
+   "ms": 4800,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.15
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_gen_r5",
+   "sfx": [
+    {
+     "id": "story_swell",
+     "at": 0,
+     "vol": 0.5
+    },
+    {
+     "id": "magic",
+     "at": 800,
+     "vol": 0.5
+    },
+    {
+     "id": "bell",
+     "at": 1400,
+     "vol": 0.5
+    }
+   ]
   }
- ]
+ ],
+ "music": "music.treasure"
 }

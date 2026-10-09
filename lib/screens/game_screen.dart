@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -95,6 +97,7 @@ class _GameScreenState extends State<GameScreen> {
     startedAt = DateTime.now();
     beatId = beatLineFor(quest, st.campaign);
     guardian = islandGuardian[quest.island]!;
+    _startAmbience();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _tellBeat();
       ReadleAssets.instance.precache(context, ['bg.island.${quest.island.name}', 'char.milo.', 'char.${guardian}.', ..._gameArt[quest.game] ?? const []]);
@@ -136,8 +139,29 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  Timer? _ambience;
+
+  /// Little sounds of the island now and then (birds and rustling leaves in Sound Forest, bells and paper in Word Village).
+  void _startAmbience() {
+    final sounds = switch (quest.island) {
+      IslandId.forest => const ['bird_1', 'bird_2', 'leaves_rustle', 'owl_hoot', 'wind_soft'],
+      IslandId.village => const ['market_bell', 'paper_rustle', 'sign_creak', 'door_creak'],
+      _ => null,
+    };
+    if (sounds == null) return;
+    AudioManager.instance.preloadSfx(sounds);
+    final rng = Random();
+    void next() => _ambience = Timer(Duration(seconds: 7 + rng.nextInt(9)), () {
+          if (!mounted) return;
+          AudioManager.instance.sfx(sounds[rng.nextInt(sounds.length)], volume: .16);
+          next();
+        });
+    next();
+  }
+
   @override
   void dispose() {
+    _ambience?.cancel();
     Speaker.instance.stop();
     AudioManager.instance.stopVoice();
     AudioManager.instance.setMusicLevel(1);
@@ -247,17 +271,18 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AdventureBackground(
-        scene: quest.mixed ? Scene.night : sceneFor(quest.skills.first),
-        artId: 'bg.island.${quest.island.name}',
-        calm: true,
-        child: SafeArea(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            child: phase == _Phase.intro ? _intro() : _play(),
+      body: Stack(fit: StackFit.expand, children: [
+        AdventureBackground(
+          scene: quest.mixed ? Scene.night : sceneFor(quest.skills.first),
+          artId: 'bg.island.${quest.island.name}',
+          calm: true,
+          child: SafeArea(
+            child: phase == _Phase.intro ? _intro() : _play(), // a straight cut: a cross-fade re-draws two full screens with transparency
           ),
         ),
-      ),
+        // textures of everything this game shows are prepared while the intro is on screen
+        Positioned(left: 0, top: 0, child: ArtWarmUp(['char.milo.', 'char.$guardian.', 'char.gumsum.', ..._gameArt[quest.game] ?? const []])),
+      ]),
     );
   }
 

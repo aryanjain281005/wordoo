@@ -48,6 +48,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
+    AudioManager.instance.preloadSfx(const ['flash_swoosh', 'paper_rustle', 'clue_found', 'miss_soft']);
     if (widget.ctx.scaffold && it.options.length > 2) {
       _faded.add([for (var i = 0; i < it.options.length; i++) if (i != it.correct) i].first);
       widget.ctx.feedback(Str.t(lang, 'hint'), true);
@@ -66,13 +67,13 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
     if (_disposed || _showing) return;
     await Future.delayed(const Duration(milliseconds: 700));
     if (_disposed) return;
-    AudioManager.instance.sfx('sparkle', volume: .5);
+    AudioManager.instance.sfx('flash_swoosh', volume: .5);
     setState(() {
       _showing = true;
     });
     await Future.delayed(Duration(milliseconds: _ms));
     if (_disposed) return;
-    AudioManager.instance.sfx('whoosh', volume: .35);
+    AudioManager.instance.sfx('paper_rustle', volume: .3);
     setState(() {
       _showing = false;
       _flashedOnce = true;
@@ -96,7 +97,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
         _correctShown = i;
       });
       AudioManager.instance.say(word, ttsLocale: widget.ctx.pack.tts);
-      AudioManager.instance.sfx('bell', volume: .6);
+      AudioManager.instance.sfx('clue_found', volume: .6);
       widget.ctx.feedback(first ? Str.good(lang) : Str.t(lang, 'good3'), true);
       _finish(ItemResult(itemId: it.id, skill: it.skill, level: it.level, correct: first, ms: ms, tags: tags), 1500);
       return;
@@ -143,7 +144,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
             child: Stack(fit: StackFit.expand, children: [
               ArtImage('bg.flash.bazaar', fit: BoxFit.cover, fallback: const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF0E1236), Color(0xFF2B1F55), Color(0xFF4A2A55)])))),
               Positioned(left: 0, right: 0, top: 6, child: _stalls(lit)),
-              Positioned.fill(child: AnimatedBuilder(animation: _swarm, builder: (_, _) => CustomPaint(painter: _SwarmPainter(_swarm.value, _showing)))),
+              Positioned.fill(child: RepaintBoundary(child: AnimatedBuilder(animation: _swarm, builder: (_, _) => CustomPaint(painter: _SwarmPainter(_swarm.value, _showing))))),
               Center(
                 child: AnimatedOpacity(
                   opacity: _showing ? 1 : 0,
@@ -241,20 +242,31 @@ class _SwarmPainter extends CustomPainter {
   final double t;
   final bool gathered;
   _SwarmPainter(this.t, this.gathered);
+
+  // the 46 fireflies' fixed random numbers are made once, not on every frame
+  static final List<List<double>> _seed = [
+    for (var i = 0; i < 46; i++) () {
+      final r = Random(i * 7 + 1);
+      return [r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble()];
+    }()
+  ];
+  static final Paint _p = Paint();
+
   @override
   void paint(Canvas canvas, Size size) {
-    for (var i = 0; i < 46; i++) {
-      final r = Random(i * 7 + 1);
-      final home = Offset(r.nextDouble() * size.width, size.height * (.15 + r.nextDouble() * .55));
-      final wander = Offset(sin((t + r.nextDouble()) * 2 * pi) * 26, cos((t * 1.3 + r.nextDouble()) * 2 * pi) * 18);
-      final band = Offset(size.width * (.1 + r.nextDouble() * .8), size.height * .45 + (r.nextDouble() - .5) * 70);
+    for (final r in _seed) {
+      final home = Offset(r[0] * size.width, size.height * (.15 + r[1] * .55));
+      final wander = Offset(sin((t + r[2]) * 2 * pi) * 26, cos((t * 1.3 + r[3]) * 2 * pi) * 18);
+      final band = Offset(size.width * (.1 + r[4] * .8), size.height * .45 + (r[5] - .5) * 70);
       final p = gathered ? band + wander * .2 : home + wander;
-      final a = .4 + .5 * sin((t * 3 + r.nextDouble()) * pi).abs();
-      canvas.drawCircle(p, 8, Paint()..color = const Color(0xFFDFFF7A).withValues(alpha: a * .3)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
-      canvas.drawCircle(p, 2.4, Paint()..color = const Color(0xFFFFFDE0).withValues(alpha: a));
+      final a = .4 + .5 * sin((t * 3 + r[6]) * pi).abs();
+      // soft glow from stacked translucent discs: a blur filter on 46 dots every frame is what made this scene heavy
+      canvas.drawCircle(p, 11, _p..color = const Color(0xFFDFFF7A).withValues(alpha: a * .10));
+      canvas.drawCircle(p, 6.5, _p..color = const Color(0xFFDFFF7A).withValues(alpha: a * .18));
+      canvas.drawCircle(p, 2.4, _p..color = const Color(0xFFFFFDE0).withValues(alpha: a));
     }
   }
 
   @override
-  bool shouldRepaint(_SwarmPainter o) => true;
+  bool shouldRepaint(_SwarmPainter o) => o.t != t || o.gathered != gathered;
 }

@@ -792,5 +792,109 @@
  "v3_key_1": {
   "who": "milo",
   "text": "Keys! Every key brings us closer to the cage."
+ },
+ "v3_pro_2b": {
+  "who": "dadi",
+  "text": "Seven friends carried my stories: Milo the fox, Maestro Bhalu, Arya, Captain Kachhua, Inspector Ullu, Queen Madhu and Princess Pari."
+ },
+ "v3_fin_7": {
+  "who": "dadi",
+  "text": "And so the storm became rain, the rain became flowers, and Aksharpur sang until morning. The end... or perhaps, a new beginning."
+ },
+ "v3_gen_r2": {
+  "who": "dadi",
+  "text": "Click, click, click! The last key turns, and the cloud cage bursts into soft, fluffy puffs!"
+ },
+ "v3_gen_r5": {
+  "who": "dadi",
+  "text": "A new light glows in my branches. I can feel the stories coming home."
+ },
+ "v3_sf_s1": {
+  "who": "dadi",
+  "text": "High in the clouds floats Sound Forest, where every tree hums and every leaf has a song."
+ },
+ "v3_sf_s2": {
+  "who": "milo",
+  "text": "But listen... it is so quiet. Where is the music?"
+ },
+ "v3_sf_s5": {
+  "who": "dadi",
+  "text": "The little band has gone silent. Tinku, Koyal and Gajju are waiting for their Maestro."
+ },
+ "v3_sf_s7": {
+  "who": "dadi",
+  "text": "Win the keys, wake the band, and the whole forest will sing again."
+ },
+ "v3_sf_r2": {
+  "who": "dadi",
+  "text": "The cage bursts open, and out hops Maestro Bhalu, ready to conduct!"
+ },
+ "v3_sf_r5": {
+  "who": "bhalu",
+  "text": "One, two, three, and a-ONE! Tinku, Koyal, Gajju, wake up, my friends!"
+ },
+ "v3_sf_r7": {
+  "who": "dadi",
+  "text": "Hear that? The whole forest is singing, and the first light of the Story Tree is glowing."
+ },
+ "v3_wv_s1": {
+  "who": "dadi",
+  "text": "Word Village is where every word has a home: on signs, on shop fronts, on little wooden doors."
+ },
+ "v3_wv_s2": {
+  "who": "milo",
+  "text": "But look! Every sign is a blotchy smudge. Nobody can read a thing."
+ },
+ "v3_wv_s5": {
+  "who": "dadi",
+  "text": "Even the letters are lost, wandering around like puzzled little ducklings."
+ },
+ "v3_wv_s7": {
+  "who": "ullu",
+  "text": "Find the clues, solve the cases, and every word will shine again! Hoo-hoo!"
+ },
+ "v3_wv_r2": {
+  "who": "dadi",
+  "text": "Click! The last key turns, and Inspector Ullu's cage melts away like morning mist."
+ },
+ "v3_wv_r4": {
+  "who": "dadi",
+  "text": "One by one the signs shine clear: BAKERY, LIBRARY, SCHOOL. Every word is home again."
+ },
+ "v3_wv_r5": {
+  "who": "ullu",
+  "text": "Case closed! Splendid work, young detective. Hoo-hoo!"
+ },
+ "v3_gen_s1_valley": {
+  "who": "dadi",
+  "text": "Symbol Valley is the home of every letter, from sleepy A to zippy Z."
+ },
+ "v3_gen_s5_valley": {
+  "who": "arya",
+  "text": "Together we will make every letter shine again!"
+ },
+ "v3_gen_s1_ocean": {
+  "who": "dadi",
+  "text": "Word Ocean is where little sounds swim together and blend into words."
+ },
+ "v3_gen_s5_ocean": {
+  "who": "kachhua",
+  "text": "Ahoy, Explorer! Full sail to the next key!"
+ },
+ "v3_gen_s1_treasure": {
+  "who": "dadi",
+  "text": "On Treasure Island every word is a treasure, and every treasure is spelled just so."
+ },
+ "v3_gen_s5_treasure": {
+  "who": "madhu",
+  "text": "Bzzz! Sweet success is only a few keys away!"
+ },
+ "v3_gen_s1_castle": {
+  "who": "dadi",
+  "text": "Story Castle is where stories live, with a tower for every tale."
+ },
+ "v3_gen_s5_castle": {
+  "who": "pari",
+  "text": "Every story is waiting. Let us open them all!"
  }
 }

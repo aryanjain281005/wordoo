@@ -67,6 +67,18 @@ class AudioManager {
     return p;
   }
 
+  /// Create the sound pools ahead of time (the first play of a sound otherwise loads the file in the middle of a game).
+  Future<void> preloadSfx(List<String> ids) async {
+    if (!enabled) return;
+    for (final id in ids) {
+      try {
+        await _pool(id);
+      } catch (e) {
+        debugPrint('preload $id: $e');
+      }
+    }
+  }
+
   /// Play a short sound effect.
   Future<void> sfx(String id, {double volume = .8}) async {
     if (!enabled || !sfxOn) return;

@@ -3,7 +3,49 @@
  "shots": [
   {
    "bg": "art:bg.island.valley~storm",
-   "fx": "rain",
+   "fx": "rain+mist",
+   "ms": 4800,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.2
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_gen_s1_valley",
+   "sfx": [
+    {
+     "id": "page_whoosh",
+     "at": 0,
+     "vol": 0.45
+    },
+    {
+     "id": "thunder_soft",
+     "at": 800,
+     "vol": 0.5
+    },
+    {
+     "id": "wind_soft",
+     "at": 2800,
+     "vol": 0.4
+    }
+   ],
+   "title": "Symbol Valley",
+   "bars": true,
+   "shake": 0.3
+  },
+  {
+   "bg": "art:bg.island.valley~storm",
+   "fx": "rain+lightning",
+   "ms": 4000,
    "camera": {
     "zoom": [
      1.2,
@@ -12,80 +54,170 @@
     "pan": [
      0,
      0
-    ]
-   },
-   "ms": 3600,
-   "cast": [
-    {
-     "id": "jailer_valley",
-     "x": 0.5,
-     "size": 0.42,
-     "enter": "pop",
-     "y": 0.25
-    }
-   ],
-   "line": "v3_start_valley_1",
-   "video": "video.start.valley.01",
-   "sfx": "cloud_whoosh"
-  },
-  {
-   "bg": "art:bg.island.valley~storm",
-   "fx": "rain",
-   "camera": {
-    "zoom": [
-     1,
-     1.08
     ],
-    "pan": [
+    "panx": [
      0,
      0
     ]
    },
-   "ms": 4200,
+   "cast": [
+    {
+     "id": "jailer_valley",
+     "x": 0.5,
+     "size": 0.5,
+     "y": 0.25,
+     "enter": "pop",
+     "act": "float"
+    }
+   ],
+   "line": "v3_start_valley_1",
+   "sfx": [
+    {
+     "id": "thunder_soft",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "cloud_whoosh",
+     "at": 100,
+     "vol": 0.6
+    }
+   ],
+   "shake": 1
+  },
+  {
+   "bg": "art:bg.island.valley~storm",
+   "fx": "rain+mist",
+   "ms": 4600,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0.05,
+     -0.05
+    ]
+   },
    "cast": [
     {
      "id": "arya",
-     "x": 0.38,
-     "size": 0.5,
+     "x": 0.36,
+     "size": 0.52,
+     "mood": "sad",
      "cage": "closed",
-     "mood": "sad"
+     "act": "sway"
     },
     {
      "id": "jailer_valley",
      "x": 0.8,
      "size": 0.26,
+     "y": 0.3,
      "enter": "right",
-     "y": 0.3
+     "act": "float",
+     "delay": 500
     }
    ],
    "line": "v3_start_valley_2",
-   "video": "video.start.valley.02"
+   "sfx": [
+    {
+     "id": "cage_creak",
+     "at": 600,
+     "vol": 0.5
+    }
+   ]
   },
   {
    "bg": "art:bg.island.valley~storm",
-   "fx": "none",
+   "fx": "sparkle",
+   "ms": 4200,
    "camera": {
     "zoom": [
      1,
-     1.08
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3600,
    "cast": [
     {
      "id": "milo",
      "x": 0.5,
+     "size": 0.44,
      "mood": "injured",
-     "size": 0.42,
-     "enter": "left"
+     "enter": "left",
+     "act": "bounce"
     }
    ],
    "line": "v3_start_valley_3",
-   "video": "video.key.reveal"
+   "sfx": [
+    {
+     "id": "key_turn",
+     "at": 1200,
+     "vol": 0.6
+    },
+    {
+     "id": "sparkle",
+     "at": 1500,
+     "vol": 0.5
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.valley",
+   "fx": "letters+petals+rays",
+   "ms": 4400,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     -0.04,
+     0.04
+    ]
+   },
+   "cast": [
+    {
+     "id": "arya",
+     "x": 0.72,
+     "size": 0.42,
+     "mood": "happy",
+     "cage": "closed",
+     "act": "sway"
+    },
+    {
+     "id": "milo",
+     "x": 0.26,
+     "size": 0.34,
+     "mood": "happy",
+     "act": "hop"
+    }
+   ],
+   "line": "v3_gen_s5_valley",
+   "sfx": [
+    {
+     "id": "firefly_chime",
+     "at": 400,
+     "vol": 0.4
+    }
+   ],
+   "bars": true
   }
- ]
+ ],
+ "music": "music.valley"
 }

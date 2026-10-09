@@ -3,138 +3,230 @@
  "shots": [
   {
    "bg": "tree",
-   "fx": "sparkle",
+   "fx": "sparkle+rays",
+   "ms": 4600,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "bhalu",
-     "x": 0.12,
-     "size": 0.2,
-     "y": 0.2
+     "x": 0.1,
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 0,
+     "y": 0
     },
     {
      "id": "arya",
-     "x": 0.27,
-     "size": 0.2,
-     "y": 0.0
+     "x": 0.26,
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 350,
+     "y": 0
     },
     {
      "id": "kachhua",
-     "x": 0.42,
-     "size": 0.2,
-     "y": 0.2
+     "x": 0.42000000000000004,
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 700,
+     "y": 0
     },
     {
      "id": "ullu",
      "x": 0.58,
-     "size": 0.2,
-     "y": 0.0
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 1050,
+     "y": 0
     },
     {
      "id": "madhu",
-     "x": 0.73,
-     "size": 0.2,
-     "y": 0.2
+     "x": 0.74,
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 1400,
+     "y": 0
     },
     {
      "id": "pari",
-     "x": 0.88,
-     "size": 0.2,
-     "y": 0.0
+     "x": 0.9,
+     "size": 0.22,
+     "act": "bounce",
+     "delay": 1750,
+     "y": 0
     }
    ],
    "line": "v3_trial_1",
-   "video": "video.trial.01"
+   "sfx": [
+    {
+     "id": "pop",
+     "at": 300,
+     "vol": 0.4
+    },
+    {
+     "id": "pop",
+     "at": 650,
+     "vol": 0.4
+    },
+    {
+     "id": "pop",
+     "at": 1000,
+     "vol": 0.4
+    },
+    {
+     "id": "pop",
+     "at": 1350,
+     "vol": 0.4
+    },
+    {
+     "id": "pop",
+     "at": 1700,
+     "vol": 0.4
+    },
+    {
+     "id": "pop",
+     "at": 2050,
+     "vol": 0.4
+    }
+   ],
+   "bars": true
   },
   {
    "bg": "art:island.citadel",
-   "fx": "lightning",
+   "fx": "lightning+rain+mist",
+   "ms": 4600,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.25,
+     1.0
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "gumsum",
      "x": 0.5,
-     "mood": "villain",
      "size": 0.6,
-     "y": 0.4,
-     "enter": "float"
+     "mood": "villain",
+     "act": "float",
+     "y": 0.15
     }
    ],
    "line": "v3_trial_2",
-   "video": "video.trial.02",
-   "sfx": "thud_soft"
+   "sfx": [
+    {
+     "id": "thunder_soft",
+     "at": 0,
+     "vol": 0.9
+    },
+    {
+     "id": "gong",
+     "at": 200,
+     "vol": 0.5
+    }
+   ],
+   "shake": 1.2
   },
   {
    "bg": "art:island.citadel",
-   "fx": "lightning",
+   "fx": "lightning+rain",
+   "ms": 5000,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4500,
    "cast": [
     {
      "id": "gumsum",
      "x": 0.5,
-     "mood": "villain",
      "size": 0.5,
-     "y": 0.5
+     "mood": "villain",
+     "act": "float",
+     "y": 0.2
     }
    ],
    "line": "v3_trial_3",
-   "video": "video.trial.03",
-   "card": "\u26a1 Storm Trial\n30 questions\nScore 21 to break the storm"
+   "sfx": [
+    {
+     "id": "zap",
+     "at": 300,
+     "vol": 0.5
+    },
+    {
+     "id": "stamp_thud",
+     "at": 700,
+     "vol": 0.6
+    }
+   ],
+   "card": "⚡ Storm Trial\n30 questions\nScore 21 to break the storm"
   },
   {
    "bg": "night",
-   "fx": "none",
+   "fx": "sparkle",
+   "ms": 4000,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3600,
    "cast": [
     {
      "id": "milo",
      "x": 0.5,
-     "size": 0.46,
-     "burst": true
+     "size": 0.36,
+     "act": "hop",
+     "y": -0.05
     }
    ],
    "line": "v3_trial_4",
-   "card": "\u26a1 Score 21 of 30"
+   "sfx": [
+    {
+     "id": "power_up",
+     "at": 300,
+     "vol": 0.5
+    }
+   ],
+   "card": "⚡ Score 21 of 30"
   }
- ]
+ ],
+ "music": "music.boss"
 }

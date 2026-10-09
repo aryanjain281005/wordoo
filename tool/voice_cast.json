@@ -2,85 +2,233 @@
  "milo": {
   "voice": "am_puck",
   "speed": 1.05,
-  "pitch": 1.12
+  "pitch": 1.12,
+  "eleven": {
+   "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+   "similarity": 0.75,
+   "stability": 0.4,
+   "style": 0.45,
+   "fx": {
+    "pitch": 1.06
+   }
+  }
  },
  "dadi": {
   "voice": "hf_alpha",
   "speed": 0.9,
   "pitch": 1.0,
-  "reverb": true
+  "reverb": true,
+  "eleven": {
+   "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+   "similarity": 0.75,
+   "stability": 0.55,
+   "style": 0.3,
+   "speed": 0.92,
+   "fx": {
+    "reverb": true
+   }
+  }
  },
  "gumsum": {
   "voice": "am_onyx",
   "speed": 0.92,
   "pitch": 0.9,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "N2lVS1w4EtoT3dr4eOWO",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.6,
+   "fx": {
+    "pitch": 0.86,
+    "echo": true
+   }
+  }
  },
  "bhalu": {
   "voice": "am_onyx",
   "speed": 0.95,
-  "pitch": 0.88
+  "pitch": 0.88,
+  "eleven": {
+   "voice_id": "nPczCjzI2devNBz1zQrb",
+   "similarity": 0.75,
+   "stability": 0.5,
+   "style": 0.35,
+   "fx": {
+    "pitch": 0.92
+   }
+  }
  },
  "arya": {
   "voice": "hf_beta",
   "speed": 1.0,
-  "pitch": 1.04
+  "pitch": 1.04,
+  "eleven": {
+   "voice_id": "cgSgspJ2msm6clMCkdW9",
+   "similarity": 0.75,
+   "stability": 0.45,
+   "style": 0.4,
+   "fx": {}
+  }
  },
  "kachhua": {
   "voice": "bm_george",
   "speed": 0.9,
-  "pitch": 0.9
+  "pitch": 0.9,
+  "eleven": {
+   "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+   "similarity": 0.75,
+   "stability": 0.55,
+   "style": 0.3,
+   "speed": 0.92,
+   "fx": {
+    "pitch": 0.92
+   }
+  }
  },
  "ullu": {
   "voice": "bm_daniel",
   "speed": 0.95,
-  "pitch": 0.95
+  "pitch": 0.95,
+  "eleven": {
+   "voice_id": "onwK4e9ZLuTAKqWW03F9",
+   "similarity": 0.75,
+   "stability": 0.55,
+   "style": 0.3,
+   "fx": {
+    "pitch": 0.97
+   }
+  }
  },
  "madhu": {
   "voice": "bf_emma",
   "speed": 0.97,
-  "pitch": 1.06
+  "pitch": 1.06,
+  "eleven": {
+   "voice_id": "XrExE9yKIg1WjnnlVkGX",
+   "similarity": 0.75,
+   "stability": 0.5,
+   "style": 0.35,
+   "fx": {
+    "pitch": 1.04
+   }
+  }
  },
  "pari": {
   "voice": "af_kore",
   "speed": 1.0,
-  "pitch": 1.08
+  "pitch": 1.08,
+  "eleven": {
+   "voice_id": "EXAVITQu4vr4xnSDxMaL",
+   "similarity": 0.75,
+   "stability": 0.45,
+   "style": 0.4,
+   "fx": {
+    "pitch": 1.08
+   }
+  }
  },
  "kitabu": {
   "voice": "bm_lewis",
   "speed": 0.95,
-  "pitch": 1.0
+  "pitch": 1.0,
+  "eleven": {
+   "voice_id": "pqHfZKP75CvOlQylNhV4",
+   "similarity": 0.75,
+   "stability": 0.55,
+   "style": 0.3,
+   "speed": 0.95,
+   "fx": {}
+  }
  },
  "bolt": {
   "voice": "am_adam",
   "speed": 1.0,
   "pitch": 1.0,
-  "robot": true
+  "robot": true,
+  "eleven": {
+   "voice_id": "SOYHLrjzK2X1ezoPC6cr",
+   "similarity": 0.75,
+   "stability": 0.5,
+   "style": 0.3,
+   "fx": {
+    "robot": true
+   }
+  }
  },
  "pip": {
   "voice": "am_echo",
   "speed": 1.12,
-  "pitch": 1.1
+  "pitch": 1.1,
+  "eleven": {
+   "voice_id": "bIHbv24MWmeRgasZH58o",
+   "similarity": 0.75,
+   "stability": 0.4,
+   "style": 0.45,
+   "speed": 1.08,
+   "fx": {
+    "pitch": 1.1
+   }
+  }
  },
  "coral": {
   "voice": "af_jessica",
   "speed": 1.1,
-  "pitch": 1.05
+  "pitch": 1.05,
+  "eleven": {
+   "voice_id": "hpp4J3VqNfWAUOO0d1Us",
+   "similarity": 0.75,
+   "stability": 0.4,
+   "style": 0.4,
+   "speed": 1.08,
+   "fx": {
+    "pitch": 1.08
+   }
+  }
  },
  "jugnu": {
   "voice": "af_nicole",
   "speed": 1.12,
-  "pitch": 1.3
+  "pitch": 1.3,
+  "eleven": {
+   "voice_id": "FGY2WhTYpPnrIDTdsKH5",
+   "similarity": 0.75,
+   "stability": 0.4,
+   "style": 0.5,
+   "speed": 1.1,
+   "fx": {
+    "pitch": 1.25
+   }
+  }
  },
  "kalam": {
   "voice": "bm_fable",
   "speed": 1.05,
-  "pitch": 1.18
+  "pitch": 1.18,
+  "eleven": {
+   "voice_id": "cjVigY5qzO86Huf0OWal",
+   "similarity": 0.75,
+   "stability": 0.5,
+   "style": 0.35,
+   "fx": {
+    "pitch": 1.12
+   }
+  }
  },
  "chuchu": {
   "voice": "af_nicole",
   "speed": 1.15,
-  "pitch": 1.35
+  "pitch": 1.35,
+  "eleven": {
+   "voice_id": "FGY2WhTYpPnrIDTdsKH5",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.6,
+   "speed": 1.12,
+   "fx": {
+    "pitch": 1.4
+   }
+  }
  },
  "say": {
   "voice": "hf_beta",
@@ -90,42 +238,113 @@
   "voice": "af_sky",
   "speed": 0.95,
   "pitch": 1.18,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "bIHbv24MWmeRgasZH58o",
+   "similarity": 0.75,
+   "stability": 0.4,
+   "style": 0.5,
+   "speed": 0.95,
+   "fx": {
+    "pitch": 1.3,
+    "echo": true
+   }
+  }
  },
  "jailer_forest": {
   "voice": "am_echo",
   "speed": 1.0,
   "pitch": 1.22,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "IKne3meq5aSn9XLyUdCD",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.2,
+    "echo": true
+   }
+  }
  },
  "jailer_valley": {
   "voice": "af_nicole",
   "speed": 1.0,
   "pitch": 1.15,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "iP95p4xoKVk53GoZ742B",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.25,
+    "echo": true
+   }
+  }
  },
  "jailer_ocean": {
   "voice": "bm_george",
   "speed": 1.0,
   "pitch": 1.18,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "pNInz6obpgDQGcFmaJgB",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.15,
+    "echo": true
+   }
+  }
  },
  "jailer_village": {
   "voice": "am_adam",
   "speed": 1.0,
   "pitch": 1.25,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.25,
+    "echo": true
+   }
+  }
  },
  "jailer_treasure": {
   "voice": "bf_emma",
   "speed": 1.0,
   "pitch": 1.2,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.2,
+    "echo": true
+   }
+  }
  },
  "jailer_castle": {
   "voice": "af_sky",
   "speed": 1.0,
   "pitch": 1.25,
-  "echo": true
+  "echo": true,
+  "eleven": {
+   "voice_id": "SAz9YHcvj6GT2YYXdXww",
+   "similarity": 0.75,
+   "stability": 0.35,
+   "style": 0.55,
+   "fx": {
+    "pitch": 1.25,
+    "echo": true
+   }
+  }
  }
 }

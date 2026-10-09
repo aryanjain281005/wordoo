@@ -1,6 +1,15 @@
 # ElevenLabs voices for Readle: design blueprint
 
-Status: **plan only, not implemented.** Written after reviewing the current audio pipeline
+Status: **implemented 10 Oct (steps 1-3 and batch 1).** Where it lives:
+* `tool/gen_voices.py` — `ENGINE=eleven` (dialogue only: `assets/story/lines_en.json`; the 5,000-word `say` bank and story-book narration stay on Kokoro). `DRY=1` prints the credit estimate. Stops cleanly on `quota`/402/401, retries 429/5xx, resumes by content hash.
+* `tool/voice_cast.json` — per-character `"eleven": {voice_id, stability, style, speed, fx}`. **Premade voices only** (the free plan cannot use Voice Library voices over the API; swap `voice_id` after upgrading, e.g. the Indian-English "Mitali / Anika / Sonal" voices).
+* `.env` (git-ignored, `ELEVENLABS_API_KEY=`) — never committed; `test/cutscene_content_test.dart` fails if a key-like string appears in `lib/`, `assets/story`, `assets/cutscenes` or `tool/`.
+* Output: `assets/vo/en/<line id>.ogg` (same names as the Kokoro files, so the app needed no change) + lip-sync envelopes.
+* Model: `eleven_flash_v2_5` (half the credits). 224 lines / ≈ 13,300 characters voiced on 10 Oct. Free plan = non-commercial: upgrade to Starter before publishing.
+
+(The text below is the original design.)
+
+Original status line: **plan only.** Written after reviewing the current audio pipeline
 (`tool/gen_voices.py`, `tool/voice_cast.json`, `lib/core/audio.dart`, `lib/story/cutscene.dart`, `lib/story/story_book.dart`).
 
 ## 0. The key finding: we don't need ElevenLabs at runtime

@@ -1,55 +1,79 @@
 {
- "title": "The storm holds\u2026 for now",
+ "title": "Not yet",
  "shots": [
   {
    "bg": "art:island.citadel",
-   "fx": "lightning",
+   "fx": "lightning+rain",
+   "ms": 3600,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.1,
+     1.0
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3200,
    "cast": [
     {
      "id": "gumsum",
      "x": 0.5,
+     "size": 0.55,
      "mood": "villain",
-     "size": 0.5,
-     "y": 0.4
+     "act": "float",
+     "y": 0.2
     }
    ],
    "line": "v3_retry_1",
-   "video": "video.trial.retry"
+   "sfx": [
+    {
+     "id": "thunder_soft",
+     "at": 0,
+     "vol": 0.6
+    }
+   ],
+   "shake": 0.8
   },
   {
    "bg": "night",
-   "fx": "none",
+   "fx": "sparkle",
+   "ms": 3600,
    "camera": {
     "zoom": [
-     1,
+     1.0,
      1.08
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3200,
    "cast": [
     {
      "id": "milo",
      "x": 0.5,
-     "size": 0.46,
-     "burst": true
+     "size": 0.42,
+     "act": "bounce"
     }
    ],
-   "line": "v3_retry_2"
+   "line": "v3_retry_2",
+   "sfx": [
+    {
+     "id": "hint",
+     "at": 400,
+     "vol": 0.5
+    }
+   ]
   }
- ]
+ ],
+ "music": "music.story"
 }

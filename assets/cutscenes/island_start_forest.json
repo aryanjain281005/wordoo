@@ -3,7 +3,87 @@
  "shots": [
   {
    "bg": "art:bg.island.forest~storm",
-   "fx": "rain",
+   "fx": "rain+mist",
+   "ms": 5200,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.22
+    ],
+    "pan": [
+     0.0,
+     -0.03
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_sf_s1",
+   "sfx": [
+    {
+     "id": "wind_soft",
+     "at": 0,
+     "vol": 0.5
+    },
+    {
+     "id": "thunder_soft",
+     "at": 900,
+     "vol": 0.5
+    },
+    {
+     "id": "leaves_rustle",
+     "at": 2800,
+     "vol": 0.35
+    }
+   ],
+   "title": "Sound Forest",
+   "bars": true,
+   "shake": 0.3
+  },
+  {
+   "bg": "art:bg.island.forest~storm",
+   "fx": "mist+dust",
+   "ms": 4000,
+   "camera": {
+    "zoom": [
+     1.12,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0.04,
+     -0.04
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.42,
+     "mood": "injured",
+     "enter": "left",
+     "act": "sway"
+    }
+   ],
+   "line": "v3_sf_s2",
+   "sfx": [
+    {
+     "id": "owl_hoot",
+     "at": 800,
+     "vol": 0.35
+    }
+   ],
+   "bars": true
+  },
+  {
+   "bg": "art:bg.island.forest~storm",
+   "fx": "rain+lightning",
+   "ms": 4200,
    "camera": {
     "zoom": [
      1.2,
@@ -12,80 +92,243 @@
     "pan": [
      0,
      0
-    ]
-   },
-   "ms": 3600,
-   "cast": [
-    {
-     "id": "jailer_forest",
-     "x": 0.5,
-     "size": 0.42,
-     "enter": "pop",
-     "y": 0.25
-    }
-   ],
-   "line": "v3_start_forest_1",
-   "video": "video.start.forest.01",
-   "sfx": "cloud_whoosh"
-  },
-  {
-   "bg": "art:bg.island.forest~storm",
-   "fx": "rain",
-   "camera": {
-    "zoom": [
-     1,
-     1.08
     ],
-    "pan": [
+    "panx": [
      0,
      0
     ]
    },
-   "ms": 4200,
+   "cast": [
+    {
+     "id": "jailer_forest",
+     "x": 0.5,
+     "size": 0.5,
+     "y": 0.25,
+     "enter": "pop",
+     "act": "float"
+    }
+   ],
+   "line": "v3_start_forest_1",
+   "sfx": [
+    {
+     "id": "thunder_soft",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "cloud_whoosh",
+     "at": 100,
+     "vol": 0.6
+    },
+    {
+     "id": "drum_low",
+     "at": 1600,
+     "vol": 0.5
+    }
+   ],
+   "shake": 1
+  },
+  {
+   "bg": "art:bg.island.forest~storm",
+   "fx": "rain+mist",
+   "ms": 4600,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0.05,
+     -0.05
+    ]
+   },
    "cast": [
     {
      "id": "bhalu",
-     "x": 0.38,
-     "size": 0.5,
+     "x": 0.36,
+     "size": 0.52,
+     "mood": "sad",
      "cage": "closed",
-     "mood": "sad"
+     "act": "sway"
     },
     {
      "id": "jailer_forest",
      "x": 0.8,
      "size": 0.26,
+     "y": 0.3,
      "enter": "right",
-     "y": 0.3
+     "act": "float",
+     "delay": 500
     }
    ],
    "line": "v3_start_forest_2",
-   "video": "video.start.forest.02"
+   "sfx": [
+    {
+     "id": "cage_creak",
+     "at": 600,
+     "vol": 0.5
+    }
+   ]
   },
   {
    "bg": "art:bg.island.forest~storm",
-   "fx": "none",
+   "fx": "mist+dust",
+   "ms": 4800,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.05,
+     1.12
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     -0.03,
+     0.03
     ]
    },
-   "ms": 3600,
+   "cast": [
+    {
+     "id": "tinku",
+     "x": 0.22,
+     "size": 0.3,
+     "mood": "sad",
+     "act": "sway",
+     "y": 0.12
+    },
+    {
+     "id": "koyal",
+     "x": 0.5,
+     "size": 0.3,
+     "mood": "sad",
+     "act": "sway",
+     "delay": 500,
+     "y": 0.18
+    },
+    {
+     "id": "gajju",
+     "x": 0.78,
+     "size": 0.34,
+     "mood": "sad",
+     "act": "sway",
+     "delay": 1000,
+     "y": 0.12
+    }
+   ],
+   "line": "v3_sf_s5"
+  },
+  {
+   "bg": "art:bg.island.forest~storm",
+   "fx": "sparkle",
+   "ms": 4200,
+   "camera": {
+    "zoom": [
+     1,
+     1.1
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
    "cast": [
     {
      "id": "milo",
      "x": 0.5,
+     "size": 0.44,
      "mood": "injured",
-     "size": 0.42,
-     "enter": "left"
+     "enter": "left",
+     "act": "bounce"
     }
    ],
    "line": "v3_start_forest_3",
-   "video": "video.key.reveal"
+   "sfx": [
+    {
+     "id": "key_turn",
+     "at": 1200,
+     "vol": 0.6
+    },
+    {
+     "id": "sparkle",
+     "at": 1500,
+     "vol": 0.5
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.forest",
+   "fx": "fireflies+notes+rays",
+   "ms": 4800,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     -0.04,
+     0.04
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.26,
+     "size": 0.36,
+     "mood": "happy",
+     "act": "hop"
+    },
+    {
+     "id": "bhalu",
+     "x": 0.74,
+     "size": 0.4,
+     "mood": "happy",
+     "cage": "closed",
+     "act": "sway"
+    }
+   ],
+   "line": "v3_sf_s7",
+   "sfx": [
+    {
+     "id": "forest_wake",
+     "at": 0,
+     "vol": 0.6
+    },
+    {
+     "id": "marimba_1",
+     "at": 1500,
+     "vol": 0.5
+    },
+    {
+     "id": "marimba_3",
+     "at": 1800,
+     "vol": 0.5
+    },
+    {
+     "id": "marimba_5",
+     "at": 2100,
+     "vol": 0.5
+    },
+    {
+     "id": "firefly_chime",
+     "at": 2600,
+     "vol": 0.4
+    }
+   ],
+   "bars": true
   }
- ]
+ ],
+ "music": "music.forest"
 }

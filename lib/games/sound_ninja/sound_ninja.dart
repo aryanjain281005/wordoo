@@ -40,6 +40,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   final List<String> _tags = [];
   final Set<int> _sliced = {}; // wrong fruits already cut (they fall away)
   final List<Offset> _trail = []; // last few points, for drawing the blade trail
+  final ValueNotifier<int> _trailTick = ValueNotifier(0); // repaints only the trail while swiping (no full rebuild per finger move)
   final List<Offset> _path = []; // the whole swipe, for deciding what was sliced
   final List<double> _cuts = []; // clap mode: cut angles across the big fruit
   Size _size = const Size(360, 420);
@@ -61,6 +62,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   void initState() {
     super.initState();
     if (demo) NinjaCombo.reset();
+    AudioManager.instance.preloadSfx(const ['slice_swish', 'fruit_pop', 'bamboo_clack', 'firefly_chime', 'miss_soft']);
     if (widget.ctx.scaffold && n > 2 && !clap) {
       _sliced.add([for (var i = 0; i < n; i++) if (i != it.correct) i].first);
       widget.ctx.feedback(Str.t(lang, 'hint'), true);
@@ -71,6 +73,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   @override
   void dispose() {
     _disposed = true;
+    _trailTick.dispose();
     _t.dispose();
     super.dispose();
   }
@@ -81,13 +84,13 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
     if (clap) {
       for (var k = 1; k < beats; k++) {
         setState(() => _cuts.add(.4 * k));
-        AudioManager.instance.sfx('whoosh', volume: .4);
+        AudioManager.instance.sfx('slice_swish', volume: .4);
         await Future.delayed(const Duration(milliseconds: 600));
         if (_disposed) return;
       }
       setState(() => _correctCut = it.correct);
     } else {
-      AudioManager.instance.sfx('whoosh', volume: .4);
+      AudioManager.instance.sfx('slice_swish', volume: .4);
       setState(() => _correctCut = it.correct);
     }
   }
@@ -129,7 +132,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
     }
     final i = _fruitHit(p);
     if (i == null) return;
-    AudioManager.instance.sfx('pop', volume: .35);
+    AudioManager.instance.sfx('fruit_pop', volume: .5);
     setState(() => _heard = i);
     _say(it.options[i].say ?? it.options[i].label);
   }
@@ -137,31 +140,30 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   void _swipe(Offset p) {
     if (demo || _resolved) return;
     _path.add(p);
-    setState(() {
-      _trail.add(p);
-      if (_trail.length > 14) _trail.removeAt(0);
-    });
+    _trail.add(p);
+    if (_trail.length > 14) _trail.removeAt(0);
+    _trailTick.value++;
   }
 
   void _swipeEnd() {
     final path = List.of(_path);
     _path.clear();
     if (demo || _resolved || path.length < 2) {
-      setState(_trail.clear);
+      setState(() { _trail.clear(); _trailTick.value++; });
       return;
     }
     final a = path.first, b = path.last;
     if ((b - a).distance < 40) {
-      setState(_trail.clear);
+      setState(() { _trail.clear(); _trailTick.value++; });
       return;
     }
     if (clap) {
       // a cut must pass through the fruit
       if (_segDist(a, b, _bigCentre) < _bigR * .8 && _cuts.length < 4) {
-        AudioManager.instance.sfx('whoosh', volume: .5);
+        AudioManager.instance.sfx('slice_swish', volume: .5);
         setState(() => _cuts.add(atan2(b.dy - a.dy, b.dx - a.dx)));
       }
-      setState(_trail.clear);
+      setState(() { _trail.clear(); _trailTick.value++; });
       return;
     }
     int? hit;
@@ -173,12 +175,12 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
         }
       }
     }
-    setState(_trail.clear);
+    setState(() { _trail.clear(); _trailTick.value++; });
     if (hit != null) _choose(hit);
   }
 
   void _choose(int i) {
-    AudioManager.instance.sfx('whoosh', volume: .5);
+    AudioManager.instance.sfx('slice_swish', volume: .5);
     if (i == it.correct) {
       final first = _attempts == 0;
       setState(() {
@@ -187,7 +189,8 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
       });
       if (first) NinjaCombo.value++;
       _say(it.options[i].say ?? it.options[i].label);
-      AudioManager.instance.sfx('sparkle', volume: .5);
+      AudioManager.instance.sfx('bamboo_clack', volume: .55);
+      AudioManager.instance.sfx('firefly_chime', volume: .3);
       widget.ctx.feedback(first ? (NinjaCombo.value >= 3 ? 'Combo ×${NinjaCombo.value}! Ninja!' : Str.good(lang)) : Str.t(lang, 'good3'), true);
       _finish(first, 1700);
       return;
@@ -264,6 +267,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
             borderRadius: BorderRadius.circular(24),
             child: Stack(fit: StackFit.expand, children: [
               ArtImage('bg.ninja.dojo', fit: BoxFit.cover, fallback: const DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF14283A), Color(0xFF1F4A3A), Color(0xFF2E6B45)])))),
+              const Positioned.fill(child: RepaintBoundary(child: CustomPaint(painter: _BambooPainter()))), // still picture: painted once
               LayoutBuilder(builder: (context, box) {
                 _size = Size(box.maxWidth, box.maxHeight);
                 return GestureDetector(
@@ -272,14 +276,11 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
                   onPanStart: (d) => _swipe(d.localPosition),
                   onPanUpdate: (d) => _swipe(d.localPosition),
                   onPanEnd: (_) => _swipeEnd(),
-                  child: AnimatedBuilder(
-                    animation: _t,
-                    builder: (_, _) => Stack(children: [
-                      Positioned.fill(child: CustomPaint(painter: _BambooPainter())),
-                      if (clap) _bigFruit() else for (var i = 0; i < n; i++) _fruit(i),
-                      Positioned.fill(child: IgnorePointer(child: CustomPaint(painter: _TrailPainter(List.of(_trail))))),
-                    ]),
-                  ),
+                  child: Stack(children: [
+                    // the bobbing fruit and the blade trail are separate layers: neither repaints the dojo or the cards
+                    Positioned.fill(child: RepaintBoundary(child: AnimatedBuilder(animation: _t, builder: (_, _) => Stack(children: [if (clap) _bigFruit() else for (var i = 0; i < n; i++) _fruit(i)])))),
+                    Positioned.fill(child: IgnorePointer(child: RepaintBoundary(child: CustomPaint(painter: _TrailPainter(_trail, _trailTick))))),
+                  ]),
                 );
               }),
               if (clap && !demo && !_resolved)
@@ -417,7 +418,7 @@ class _BigFruitPainter extends CustomPainter {
 
 class _TrailPainter extends CustomPainter {
   final List<Offset> pts;
-  _TrailPainter(this.pts);
+  _TrailPainter(this.pts, Listenable repaint) : super(repaint: repaint);
   @override
   void paint(Canvas canvas, Size size) {
     for (var k = 1; k < pts.length; k++) {
@@ -429,11 +430,12 @@ class _TrailPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_TrailPainter o) => true;
+  bool shouldRepaint(_TrailPainter o) => false; // repaints through the notifier
 }
 
 /// Placeholder dojo: bamboo stalks at the sides.
 class _BambooPainter extends CustomPainter {
+  const _BambooPainter();
   @override
   void paint(Canvas canvas, Size size) {
     final p = Paint()..color = const Color(0xFF6FBF5A);

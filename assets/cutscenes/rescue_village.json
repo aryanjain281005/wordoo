@@ -1,93 +1,333 @@
 {
- "title": "Word Village: the Keeper is free!",
+ "title": "Word Village: freed",
  "shots": [
   {
    "bg": "art:bg.island.village~storm",
-   "fx": "keys",
+   "fx": "keys+rain",
+   "ms": 4200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.05,
+     1.18
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "ullu",
-     "x": 0.38,
+     "x": 0.4,
      "size": 0.5,
+     "mood": "sad",
      "cage": "open"
     },
     {
      "id": "jailer_village",
      "x": 0.8,
-     "size": 0.18,
+     "size": 0.3,
      "mood": "surprised",
-     "y": 0.3
+     "y": 0.3,
+     "act": "shake"
     }
    ],
    "line": "v3_rescue_village_1",
-   "video": "video.rescue.village.01",
-   "sfx": "chest_open"
+   "sfx": [
+    {
+     "id": "key_turn",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "key_turn",
+     "at": 700,
+     "vol": 0.6
+    },
+    {
+     "id": "key_turn",
+     "at": 1400,
+     "vol": 0.6
+    },
+    {
+     "id": "cage_burst",
+     "at": 2400,
+     "vol": 0.8
+    },
+    {
+     "id": "fruit_pop",
+     "at": 3200,
+     "vol": 0.6
+    }
+   ],
+   "shake": 0.5
   },
   {
-   "bg": "art:bg.island.village",
-   "fx": "colour",
+   "bg": "art:bg.island.village~storm",
+   "fx": "sparkle+rays",
+   "ms": 4200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.2,
+     1.0
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "ullu",
      "x": 0.5,
-     "size": 0.55,
+     "size": 0.5,
+     "mood": "happy",
+     "cage": "open",
      "burst": true,
-     "enter": "pop"
+     "act": "hop"
     }
    ],
-   "line": "v3_rescue_village_2",
-   "video": "video.rescue.village.02",
-   "sfx": "island_restore"
+   "line": "v3_wv_r2",
+   "sfx": [
+    {
+     "id": "cage_burst",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "market_bell",
+     "at": 1400,
+     "vol": 0.5
+    }
+   ],
+   "bars": true
   },
   {
    "bg": "art:bg.island.village",
-   "fx": "sparkle",
+   "fx": "colour+sparkle+letters",
+   "ms": 4600,
    "camera": {
     "zoom": [
      1,
-     1.08
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3600,
+   "cast": [
+    {
+     "id": "ullu",
+     "x": 0.5,
+     "size": 0.5,
+     "mood": "happy",
+     "act": "wave"
+    }
+   ],
+   "line": "v3_rescue_village_2",
+   "sfx": [
+    {
+     "id": "colour_wave",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "magnifier_ting",
+     "at": 1800,
+     "vol": 0.5
+    },
+    {
+     "id": "pencil_scratch",
+     "at": 2600,
+     "vol": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.flash.bazaar",
+   "fx": "letters+lanterns+dust",
+   "ms": 5200,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     -0.04,
+     0.04
+    ]
+   },
+   "cast": [],
+   "line": "v3_wv_r4",
+   "sfx": [
+    {
+     "id": "market_bell",
+     "at": 300,
+     "vol": 0.5
+    },
+    {
+     "id": "pencil_scratch",
+     "at": 1200,
+     "vol": 0.4
+    },
+    {
+     "id": "clue_found",
+     "at": 2400,
+     "vol": 0.6
+    },
+    {
+     "id": "lantern_glow",
+     "at": 3400,
+     "vol": 0.5
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.village",
+   "fx": "confetti+sparkle",
+   "ms": 4200,
+   "camera": {
+    "zoom": [
+     1.05,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [
+    {
+     "id": "ullu",
+     "x": 0.5,
+     "size": 0.4,
+     "mood": "happy",
+     "act": "hop",
+     "y": -0.05
+    }
+   ],
+   "line": "v3_wv_r5",
+   "sfx": [
+    {
+     "id": "stamp_thud",
+     "at": 700,
+     "vol": 0.9
+    },
+    {
+     "id": "reward_fanfare",
+     "at": 900,
+     "vol": 0.5
+    }
+   ],
+   "card": "CASE CLOSED ✔"
+  },
+  {
+   "bg": "art:bg.island.village",
+   "fx": "lanterns+rays+petals",
+   "ms": 4600,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
    "cast": [
     {
      "id": "milo",
-     "x": 0.3,
-     "size": 0.34
+     "x": 0.26,
+     "size": 0.38,
+     "mood": "cheer",
+     "act": "hop"
     },
     {
      "id": "ullu",
-     "x": 0.7,
-     "size": 0.4
+     "x": 0.6,
+     "size": 0.44,
+     "act": "wave"
     }
    ],
-   "line": "v3_rescue_village_3"
+   "line": "v3_rescue_village_3",
+   "sfx": [
+    {
+     "id": "island_restore",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "firefly_chime",
+     "at": 1200,
+     "vol": 0.4
+    }
+   ],
+   "bars": true
+  },
+  {
+   "bg": "tree",
+   "fx": "sparkle+rays",
+   "ms": 5000,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.15
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_gen_r5",
+   "sfx": [
+    {
+     "id": "story_swell",
+     "at": 0,
+     "vol": 0.5
+    },
+    {
+     "id": "magic",
+     "at": 800,
+     "vol": 0.5
+    },
+    {
+     "id": "bell",
+     "at": 1400,
+     "vol": 0.5
+    }
+   ]
   }
- ]
+ ],
+ "music": "music.village"
 }

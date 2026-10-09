@@ -56,10 +56,21 @@ class ReadleAssets {
       final p = art(id);
       if (p == null || !context.mounted) continue;
       try {
-        await precacheImage(AssetImage(p), context);
+        await precacheImage(provider(p, id, MediaQuery.sizeOf(context).width), context);
       } catch (_) {}
     }
   }
+
+  /// Pixel width a picture is decoded at. Characters and props are shown 100–500 px wide but are painted at ~1300 px, so decoding
+  /// them full-size wastes memory and makes the GPU shrink a huge texture every frame; backgrounds keep their detail.
+  static int decodeWidth(String id, double screenWidthDp) {
+    final w = screenWidthDp.clamp(320, 900).toDouble();
+    if (id.startsWith('bg.') || id.startsWith('story.')) return (w * 3.2).round();
+    return (w * 1.9).round().clamp(640, 1100);
+  }
+
+  /// The image provider every ArtImage and the precacher share (same size = same cache entry).
+  static ImageProvider provider(String path, String id, double screenWidthDp) => ResizeImage(AssetImage(path), width: decodeWidth(id, screenWidthDp), policy: ResizeImagePolicy.fit, allowUpscaling: false);
 
   Iterable<String> bundledUnder(String prefix) => _bundled.where((p) => p.startsWith(prefix));
 }
@@ -74,6 +85,6 @@ class ArtImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = ReadleAssets.instance.art(id);
     if (p == null) return fallback;
-    return Image.asset(p, fit: fit, gaplessPlayback: true, filterQuality: FilterQuality.medium, errorBuilder: (_, _, _) => fallback);
+    return Image(image: ReadleAssets.provider(p, id, MediaQuery.sizeOf(context).width), fit: fit, gaplessPlayback: true, filterQuality: FilterQuality.medium, errorBuilder: (_, _, _) => fallback);
   }
 }

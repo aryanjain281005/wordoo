@@ -7,13 +7,18 @@ speaks every line with the free open-source Kokoro model (Apache 2.0) and writes
   assets/vo/en/envelopes.json  loudness every 50 ms, used for lip-sync
 Only new or changed lines are regenerated.
 
+Engines: Kokoro (default, offline) and ElevenLabs (ENGINE=eleven, character dialogue only: assets/story/lines_en.json).
+  ENGINE=eleven DRY=1 python3 tool/gen_voices.py   -> prints the credit estimate, calls nothing
+  ENGINE=eleven python3 tool/gen_voices.py         -> needs ELEVENLABS_API_KEY in .env (never committed); stops cleanly when credits run out, re-run to resume
+  Lines are generated v3 story first. Voice = "eleven" block per character in tool/voice_cast.json (swap voice_id to re-cast).
+
 Usage:  ~/readle-tools/venv/bin/python tool/gen_voices.py
 Needs:  ~/readle-tools/{kokoro-v1.0.int8.onnx, voices-v1.0.bin}, ffmpeg on PATH.
 """
 import hashlib, json, os, subprocess, sys, tempfile
 import numpy as np
 import soundfile as sf
-from kokoro_onnx import Kokoro
+import urllib.request, urllib.error, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.expanduser("~/readle-tools")
@@ -32,7 +37,53 @@ hashes = json.load(open(hash_path)) if os.path.exists(hash_path) else {}
 env_path = os.path.join(OUT, "envelopes.json")
 envelopes = json.load(open(env_path)) if os.path.exists(env_path) else {}
 
-kokoro = Kokoro(os.path.join(TOOLS, "kokoro-v1.0.int8.onnx"), os.path.join(TOOLS, "voices-v1.0.bin"))
+ENGINE = os.environ.get("ENGINE", "kokoro")
+DRY = bool(os.environ.get("DRY"))
+MODEL = os.environ.get("ELEVEN_MODEL", "eleven_flash_v2_5")  # half the credits of multilingual_v2
+kokoro = None
+if ENGINE == "kokoro":
+    from kokoro_onnx import Kokoro
+    kokoro = Kokoro(os.path.join(TOOLS, "kokoro-v1.0.int8.onnx"), os.path.join(TOOLS, "voices-v1.0.bin"))
+
+
+class OutOfCredits(Exception):
+    pass
+
+
+def eleven_key():
+    k = os.environ.get("ELEVENLABS_API_KEY")
+    if not k and os.path.exists(os.path.join(ROOT, ".env")):
+        for ln in open(os.path.join(ROOT, ".env")):
+            if ln.split("=")[0].strip() == "ELEVENLABS_API_KEY":
+                k = ln.split("=", 1)[1].strip().strip('"')
+    if not k:
+        sys.exit("ELEVENLABS_API_KEY missing (put it in .env)")
+    return k
+
+
+def eleven_tts(text, e, dst_mp3):
+    """One line -> mp3. Retries 429/5xx with backoff; raises OutOfCredits when the plan has no credits left."""
+    body = {"text": text, "model_id": MODEL, "voice_settings": {
+        "stability": e.get("stability", .5), "similarity_boost": e.get("similarity", .75),
+        "style": e.get("style", .3), "speed": e.get("speed", 1.0), "use_speaker_boost": True}}
+    req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{e['voice_id']}?output_format=mp3_44100_128",
+                                 json.dumps(body).encode(), {"xi-api-key": eleven_key(), "Content-Type": "application/json"})
+    for attempt in range(5):
+        try:
+            data = urllib.request.urlopen(req, timeout=60).read()
+            open(dst_mp3, "wb").write(data)
+            return
+        except urllib.error.HTTPError as err:
+            detail = err.read().decode("utf-8", "ignore")
+            if err.code == 429 or err.code >= 500:
+                time.sleep(2 ** attempt)
+                continue
+            if "quota" in detail or err.code in (401, 402):
+                raise OutOfCredits(detail[:160])
+            raise RuntimeError(f"{err.code} {detail[:160]}")
+        except (urllib.error.URLError, TimeoutError):
+            time.sleep(2 ** attempt)
+    raise RuntimeError("gave up after retries")
 
 
 def effects(c):
@@ -55,7 +106,15 @@ SHARDS, SHARD = int(os.environ.get("SHARDS", "1")), int(os.environ.get("SHARD", 
 part = f".{SHARD}" if SHARDS > 1 else ""
 done = 0
 mine_env, mine_hash = {}, {}
-for idx, (lid, ln) in enumerate(lines.items()):
+order = list(lines.items())
+if ENGINE == "eleven":  # only character dialogue; v3 story scenes first so the most important lines are voiced if credits run short
+    dialogue = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
+    order = sorted(((k, v) for k, v in order if k in dialogue and "eleven" in cast.get(v.get("cast", v["who"]), {})), key=lambda kv: not kv[0].startswith("v3_"))
+    need = sum(len(v["text"]) for k, v in order if hashes.get(k) != hashlib.md5(json.dumps([v, cast.get(v.get("cast", v["who"]))], sort_keys=True).encode()).hexdigest())
+    print(f"ElevenLabs: {len(order)} lines, {need} characters to generate (~{need // 2} credits on Flash v2.5, ~{need} on Multilingual v2)")
+    if DRY:
+        sys.exit(0)
+for idx, (lid, ln) in enumerate(order):
     if idx % SHARDS != SHARD:
         continue
     c = cast.get(ln.get("cast", ln["who"]), cast["milo"])  # "cast" picks a different voice for the same speaker
@@ -63,16 +122,30 @@ for idx, (lid, ln) in enumerate(lines.items()):
     dst = os.path.join(OUT, f"{lid}.ogg")
     if hashes.get(lid) == key and os.path.exists(dst):
         continue
-    try:
-        samples, sr = kokoro.create(ln["text"], voice=c["voice"], speed=c.get("speed", 1.0), lang="en-us")
-    except ValueError as e:  # nothing speakable: skip the line, keep going
-        print(f"  skip {lid}: {e}")
-        continue
     with tempfile.TemporaryDirectory() as td:
         raw = os.path.join(td, "raw.wav")
         proc = os.path.join(td, "proc.wav")
-        sf.write(raw, samples, sr)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-af", effects(c), "-ac", "1", "-ar", "24000", proc], check=True)
+        if ENGINE == "eleven":
+            mp3 = os.path.join(td, "raw.mp3")
+            try:
+                eleven_tts(ln["text"], c["eleven"], mp3)
+            except OutOfCredits as e:
+                print(f"STOP: out of credits ({e}). {done} lines done; re-run after the reset or an upgrade to resume.")
+                break
+            except RuntimeError as e:
+                print(f"  skip {lid}: {e}")
+                continue
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-ac", "1", "-ar", "24000", raw], check=True)
+            fx = c["eleven"].get("fx", {})
+        else:
+            try:
+                samples, sr = kokoro.create(ln["text"], voice=c["voice"], speed=c.get("speed", 1.0), lang="en-us")
+            except ValueError as e:  # nothing speakable: skip the line, keep going
+                print(f"  skip {lid}: {e}")
+                continue
+            sf.write(raw, samples, sr)
+            fx = c
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-af", effects(fx), "-ac", "1", "-ar", "24000", proc], check=True)
         audio, asr = sf.read(proc)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", proc, "-c:a", "libopus", "-b:a", "64k", "-application", "audio", dst], check=True)
     hop = int(asr * 0.05)
@@ -81,7 +154,7 @@ for idx, (lid, ln) in enumerate(lines.items()):
     envelopes[lid] = mine_env[lid] = [int(min(9, round(9 * (v / peak) ** 0.7))) for v in rms]
     hashes[lid] = mine_hash[lid] = key
     done += 1
-    if done % 100 == 0:  # save progress so a long run can be resumed
+    if done % 20 == 0:  # save progress so a long run can be resumed
         json.dump(mine_env if part else envelopes, open(env_path + part, "w"))
         json.dump(mine_hash if part else hashes, open(hash_path + part, "w"), indent=0)
     print(f"  {lid:28s} {ln['who']:8s} {len(audio) / asr:4.1f}s")

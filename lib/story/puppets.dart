@@ -32,6 +32,10 @@ const storyCast = <String, StoryCharacter>{
   'jugnu': StoryCharacter('jugnu', 'Jugnu', '✨', Color(0xFFB8C21B)),
   'kalam': StoryCharacter('kalam', 'Captain Kalam', '🦜', Color(0xFF2FA866)),
   'chuchu': StoryCharacter('chuchu', 'Chuchu', '🐭', Color(0xFF8A8FA3)),
+  // the Jungle Band (Sound Forest)
+  'tinku': StoryCharacter('tinku', 'Tinku', '🐒', Color(0xFFE59A3B)),
+  'koyal': StoryCharacter('koyal', 'Koyal', '🐦', Color(0xFF4FA7E0)),
+  'gajju': StoryCharacter('gajju', 'Gajju', '🐘', Color(0xFF9C8BD9)),
   // Story v3: Gumsum's six Hush Clouds (jailers). Drawn from Gumsum's own art, recoloured (no new pictures needed).
   'jailer_forest': StoryCharacter('jailer_forest', 'Drizzle', '🌧️', Color(0xFF5E8C4A)),
   'jailer_valley': StoryCharacter('jailer_valley', 'Gust', '🌪️', Color(0xFF7A55B8)),
@@ -144,7 +148,8 @@ class _PuppetState extends State<Puppet> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final a = AudioManager.instance;
-    return AnimatedBuilder(
+    // its own layer: the breathing / mouth animation must repaint only the character, never the scene behind it
+    return RepaintBoundary(child: AnimatedBuilder(
       animation: Listenable.merge([_c, a.mouth, a.speaking]),
       builder: (_, __) {
         final talking = a.speaking.value == widget.id;
@@ -212,7 +217,7 @@ class _PuppetState extends State<Puppet> with SingleTickerProviderStateMixin {
           ),
         );
       },
-    );
+    ));
   }
 }
 

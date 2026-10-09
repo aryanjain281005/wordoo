@@ -3,7 +3,97 @@
  "shots": [
   {
    "bg": "art:bg.island.village~storm",
-   "fx": "rain",
+   "fx": "rain+mist",
+   "ms": 5000,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.2
+    ],
+    "pan": [
+     0,
+     -0.03
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_wv_s1",
+   "sfx": [
+    {
+     "id": "wind_soft",
+     "at": 0,
+     "vol": 0.4
+    },
+    {
+     "id": "thunder_soft",
+     "at": 900,
+     "vol": 0.5
+    },
+    {
+     "id": "sign_creak",
+     "at": 2500,
+     "vol": 0.5
+    },
+    {
+     "id": "door_creak",
+     "at": 3300,
+     "vol": 0.3
+    }
+   ],
+   "title": "Word Village",
+   "bars": true,
+   "shake": 0.3
+  },
+  {
+   "bg": "art:bg.island.village~storm",
+   "fx": "dust+mist",
+   "ms": 4000,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.0
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0.05,
+     -0.05
+    ]
+   },
+   "cast": [
+    {
+     "id": "milo",
+     "x": 0.5,
+     "size": 0.42,
+     "mood": "injured",
+     "enter": "left",
+     "act": "sway"
+    }
+   ],
+   "line": "v3_wv_s2",
+   "sfx": [
+    {
+     "id": "sign_creak",
+     "at": 400,
+     "vol": 0.5
+    },
+    {
+     "id": "paper_rustle",
+     "at": 2000,
+     "vol": 0.4
+    }
+   ],
+   "bars": true
+  },
+  {
+   "bg": "art:bg.island.village~storm",
+   "fx": "rain+lightning",
+   "ms": 4200,
    "camera": {
     "zoom": [
      1.2,
@@ -12,80 +102,228 @@
     "pan": [
      0,
      0
-    ]
-   },
-   "ms": 3600,
-   "cast": [
-    {
-     "id": "jailer_village",
-     "x": 0.5,
-     "size": 0.42,
-     "enter": "pop",
-     "y": 0.25
-    }
-   ],
-   "line": "v3_start_village_1",
-   "video": "video.start.village.01",
-   "sfx": "cloud_whoosh"
-  },
-  {
-   "bg": "art:bg.island.village~storm",
-   "fx": "rain",
-   "camera": {
-    "zoom": [
-     1,
-     1.08
     ],
-    "pan": [
+    "panx": [
      0,
      0
     ]
    },
-   "ms": 4200,
+   "cast": [
+    {
+     "id": "jailer_village",
+     "x": 0.5,
+     "size": 0.5,
+     "y": 0.25,
+     "enter": "pop",
+     "act": "float"
+    }
+   ],
+   "line": "v3_start_village_1",
+   "sfx": [
+    {
+     "id": "thunder_soft",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "cloud_whoosh",
+     "at": 100,
+     "vol": 0.6
+    },
+    {
+     "id": "ink_blot",
+     "at": 1500,
+     "vol": 0.8
+    },
+    {
+     "id": "ink_blot",
+     "at": 2300,
+     "vol": 0.6
+    }
+   ],
+   "shake": 1
+  },
+  {
+   "bg": "art:bg.island.village~storm",
+   "fx": "rain+mist",
+   "ms": 4600,
+   "camera": {
+    "zoom": [
+     1.1,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0.05,
+     -0.05
+    ]
+   },
    "cast": [
     {
      "id": "ullu",
-     "x": 0.38,
-     "size": 0.5,
+     "x": 0.36,
+     "size": 0.52,
+     "mood": "sad",
      "cage": "closed",
-     "mood": "sad"
+     "act": "sway"
     },
     {
      "id": "jailer_village",
      "x": 0.8,
      "size": 0.26,
+     "y": 0.3,
      "enter": "right",
-     "y": 0.3
+     "act": "float",
+     "delay": 500
     }
    ],
    "line": "v3_start_village_2",
-   "video": "video.start.village.02"
+   "sfx": [
+    {
+     "id": "cage_creak",
+     "at": 600,
+     "vol": 0.5
+    }
+   ]
   },
   {
    "bg": "art:bg.island.village~storm",
-   "fx": "none",
+   "fx": "letters+mist",
+   "ms": 4800,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.12
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     -0.03,
+     0.03
     ]
    },
-   "ms": 3600,
+   "cast": [],
+   "line": "v3_wv_s5",
+   "sfx": [
+    {
+     "id": "paper_rustle",
+     "at": 300,
+     "vol": 0.4
+    },
+    {
+     "id": "quill_write",
+     "at": 2200,
+     "vol": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.village~storm",
+   "fx": "sparkle",
+   "ms": 4200,
+   "camera": {
+    "zoom": [
+     1,
+     1.1
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
    "cast": [
     {
      "id": "milo",
      "x": 0.5,
+     "size": 0.44,
      "mood": "injured",
-     "size": 0.42,
-     "enter": "left"
+     "enter": "left",
+     "act": "bounce"
     }
    ],
    "line": "v3_start_village_3",
-   "video": "video.key.reveal"
+   "sfx": [
+    {
+     "id": "key_turn",
+     "at": 1200,
+     "vol": 0.6
+    },
+    {
+     "id": "sparkle",
+     "at": 1500,
+     "vol": 0.5
+    }
+   ]
+  },
+  {
+   "bg": "art:bg.island.village",
+   "fx": "lanterns+dust+rays",
+   "ms": 4800,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.14
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     -0.04,
+     0.04
+    ]
+   },
+   "cast": [
+    {
+     "id": "ullu",
+     "x": 0.72,
+     "size": 0.42,
+     "mood": "happy",
+     "cage": "closed",
+     "act": "sway"
+    },
+    {
+     "id": "milo",
+     "x": 0.26,
+     "size": 0.34,
+     "mood": "happy",
+     "act": "hop"
+    }
+   ],
+   "line": "v3_wv_s7",
+   "sfx": [
+    {
+     "id": "lantern_glow",
+     "at": 0,
+     "vol": 0.6
+    },
+    {
+     "id": "market_bell",
+     "at": 1400,
+     "vol": 0.5
+    },
+    {
+     "id": "magnifier_ting",
+     "at": 2600,
+     "vol": 0.5
+    },
+    {
+     "id": "clue_found",
+     "at": 3200,
+     "vol": 0.5
+    }
+   ],
+   "bars": true
   }
- ]
+ ],
+ "music": "music.village"
 }

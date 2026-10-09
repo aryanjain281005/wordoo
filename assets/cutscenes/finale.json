@@ -1,159 +1,320 @@
 {
- "title": "The Storm Breaks",
+ "title": "The storm breaks",
  "shots": [
   {
    "bg": "art:island.citadel",
-   "fx": "light",
+   "fx": "light+rays+sparkle",
+   "ms": 5200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.25
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4500,
    "cast": [],
    "line": "v3_fin_1",
-   "video": "video.finale.01",
-   "sfx": "magic"
+   "sfx": [
+    {
+     "id": "story_swell",
+     "at": 0,
+     "vol": 0.6
+    },
+    {
+     "id": "magic",
+     "at": 800,
+     "vol": 0.6
+    },
+    {
+     "id": "cage_burst",
+     "at": 3200,
+     "vol": 0.7
+    },
+    {
+     "id": "colour_wave",
+     "at": 3600,
+     "vol": 0.5
+    }
+   ],
+   "bars": true
   },
   {
    "bg": "night",
-   "fx": "rain",
+   "fx": "rain+mist",
+   "ms": 5000,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.2,
+     1.0
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4500,
    "cast": [
     {
      "id": "gumsum",
      "x": 0.5,
-     "mood": "small_sad",
      "size": 0.34,
-     "y": 0.3
+     "mood": "small_sad",
+     "act": "sway",
+     "y": 0.05
     }
    ],
    "line": "v3_fin_2",
-   "video": "video.finale.02"
+   "sfx": [
+    {
+     "id": "wind_soft",
+     "at": 0,
+     "vol": 0.4
+    }
+   ]
   },
   {
    "bg": "night",
-   "fx": "sparkle",
+   "fx": "sparkle+dust",
+   "ms": 4600,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.15
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4200,
    "cast": [
     {
      "id": "milo",
-     "x": 0.25,
-     "size": 0.32
+     "x": 0.26,
+     "size": 0.38,
+     "act": "sway"
     },
     {
      "id": "gumsum",
-     "x": 0.72,
-     "mood": "small_sad",
+     "x": 0.66,
      "size": 0.3,
-     "y": 0.3
+     "mood": "small_sad",
+     "act": "sway",
+     "y": 0.05
+    },
+    {
+     "id": "dadi",
+     "x": 0.5,
+     "size": 0.22,
+     "act": "float",
+     "y": 0.5,
+     "enter": "float",
+     "delay": 900
     }
    ],
    "line": "v3_fin_3",
-   "video": "video.finale.03"
+   "sfx": [
+    {
+     "id": "page_turn",
+     "at": 300,
+     "vol": 0.5
+    },
+    {
+     "id": "book_open",
+     "at": 900,
+     "vol": 0.5
+    }
+   ]
   },
   {
    "bg": "tree",
-   "fx": "sparkle",
+   "fx": "sparkle+rays+petals",
+   "ms": 5000,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.15
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4500,
    "cast": [
     {
      "id": "gumsum",
      "x": 0.5,
-     "mood": "redeemed",
      "size": 0.4,
-     "y": 0.55,
-     "enter": "float"
+     "mood": "redeemed",
+     "act": "float",
+     "y": 0.2
     }
    ],
    "line": "v3_fin_4",
-   "video": "video.finale.04"
+   "sfx": [
+    {
+     "id": "firefly_chime",
+     "at": 400,
+     "vol": 0.5
+    },
+    {
+     "id": "magic",
+     "at": 1400,
+     "vol": 0.5
+    }
+   ],
+   "bars": true
   },
   {
    "bg": "tree",
-   "fx": "sparkle",
+   "fx": "sparkle+rays",
+   "ms": 4200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.1
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 3600,
    "cast": [
     {
      "id": "dadi",
      "x": 0.5,
      "size": 0.42,
-     "enter": "float",
-     "y": 0.35
+     "act": "sway"
     }
    ],
-   "line": "v3_fin_5"
+   "line": "v3_fin_5",
+   "sfx": [
+    {
+     "id": "story_swell",
+     "at": 0,
+     "vol": 0.5
+    },
+    {
+     "id": "bell",
+     "at": 1500,
+     "vol": 0.4
+    }
+   ]
   },
   {
    "bg": "aksharpur",
-   "fx": "sparkle",
+   "fx": "confetti+sparkle+petals+notes",
+   "ms": 5200,
    "camera": {
     "zoom": [
-     1,
-     1.08
+     1.0,
+     1.14
     ],
     "pan": [
      0,
      0
+    ],
+    "panx": [
+     0,
+     0
     ]
    },
-   "ms": 4500,
    "cast": [
     {
      "id": "milo",
-     "x": 0.5,
-     "size": 0.42,
-     "burst": true
+     "x": 0.3,
+     "size": 0.4,
+     "mood": "cheer",
+     "act": "hop"
+    },
+    {
+     "id": "gumsum",
+     "x": 0.72,
+     "size": 0.36,
+     "mood": "redeemed",
+     "act": "float",
+     "y": 0.2
     }
    ],
    "line": "v3_fin_6",
-   "video": "video.finale.05",
-   "sfx": "reward_fanfare"
+   "sfx": [
+    {
+     "id": "reward_fanfare",
+     "at": 0,
+     "vol": 0.7
+    },
+    {
+     "id": "colour_wave",
+     "at": 300,
+     "vol": 0.5
+    },
+    {
+     "id": "band_join",
+     "at": 1800,
+     "vol": 0.5
+    },
+    {
+     "id": "firefly_chime",
+     "at": 2600,
+     "vol": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "aksharpur",
+   "fx": "sparkle+rays+fireflies",
+   "ms": 5600,
+   "camera": {
+    "zoom": [
+     1.0,
+     1.2
+    ],
+    "pan": [
+     0,
+     0
+    ],
+    "panx": [
+     0,
+     0
+    ]
+   },
+   "cast": [],
+   "line": "v3_fin_7",
+   "sfx": [
+    {
+     "id": "story_swell",
+     "at": 0,
+     "vol": 0.6
+    },
+    {
+     "id": "chapter_complete",
+     "at": 1200,
+     "vol": 0.5
+    }
+   ],
+   "bars": true
   }
- ]
+ ],
+ "music": "music.aksharpur"
 }

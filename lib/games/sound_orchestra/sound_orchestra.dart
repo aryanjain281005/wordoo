@@ -17,9 +17,9 @@ class BandMember {
 }
 
 const band = [
-  BandMember('tinku', 'Tinku', '🐒', 'wood_knock', Color(0xFFE59A3B)),
-  BandMember('koyal', 'Koyal', '🐦', 'glass_ting', Color(0xFF4FA7E0)),
-  BandMember('gajju', 'Gajju', '🐘', 'thud_soft', Color(0xFF9C8BD9)),
+  BandMember('tinku', 'Tinku', '🐒', 'marimba_2', Color(0xFFE59A3B)),
+  BandMember('koyal', 'Koyal', '🐦', 'bird_1', Color(0xFF4FA7E0)),
+  BandMember('gajju', 'Gajju', '🐘', 'drum_mid', Color(0xFF9C8BD9)),
 ];
 
 /// How awake the band is during one quest (0..4). Each right answer adds a music layer; a miss loses one.
@@ -76,6 +76,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
       OrchestraBand.reset(); // a new quest starts with a sleepy band
     }
     OrchestraBand.apply();
+    AudioManager.instance.preloadSfx(const ['marimba_2', 'bird_1', 'drum_mid', 'drum_low', 'drum_hi', 'band_join', 'shaker', 'flute_trill', 'firefly_chime', 'miss_soft']);
     if (widget.ctx.scaffold && it.options.length > 2 && !clap) {
       _faded.add([for (var i = 0; i < it.options.length; i++) if (i != it.correct) i].first);
       widget.ctx.feedback(Str.t(lang, 'hint'), true);
@@ -158,7 +159,8 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
       });
       OrchestraBand.level = min(4, OrchestraBand.level + (first ? 1 : 0));
       OrchestraBand.apply();
-      AudioManager.instance.sfx('magic', volume: .5);
+      AudioManager.instance.sfx('band_join', volume: .55);
+      if (OrchestraBand.level >= 3) AudioManager.instance.sfx('flute_trill', volume: .3);
       widget.ctx.feedback(first ? Str.good(lang) : Str.t(lang, 'good3'), true);
       _finish(first, 1500);
       return;
@@ -195,7 +197,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
   // ---------------- clap the beat ----------------
   void _hitDrum({bool force = false}) {
     if (_resolved || (demo && !force) || _taps >= 4) return;
-    AudioManager.instance.sfx('thud_soft', volume: .8);
+    AudioManager.instance.sfx(const ['drum_low', 'drum_mid', 'drum_hi', 'drum_mid'][_taps % 4], volume: .85);
     setState(() {
       _taps++;
       _drumHit++;
@@ -242,7 +244,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Positioned.fill(child: IgnorePointer(child: AnimatedBuilder(animation: _beat, builder: (_, _) => CustomPaint(painter: _FireflyPainter(OrchestraBand.level, _beat.value))))),
+      Positioned.fill(child: IgnorePointer(child: RepaintBoundary(child: AnimatedBuilder(animation: _beat, builder: (_, _) => CustomPaint(painter: _FireflyPainter(OrchestraBand.level, _beat.value)))))),
       SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         child: Column(children: [
@@ -264,10 +266,12 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
         SizedBox(
           width: 74,
           height: 84,
-          child: AnimatedBuilder(
-            animation: _beat,
-            builder: (_, child) => Transform.rotate(angle: sin(_beat.value * 2 * pi) * .05, child: child),
-            child: ArtImage('char.bhalu.happy', fallback: const Center(child: Text('🐻', style: TextStyle(fontSize: 54)))),
+          child: RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: _beat,
+              builder: (_, child) => Transform.rotate(angle: sin(_beat.value * 2 * pi) * .05, child: child),
+              child: ArtImage('char.bhalu.happy', fallback: const Center(child: Text('🐻', style: TextStyle(fontSize: 54)))),
+            ),
           ),
         ),
         const SizedBox(width: 6),
@@ -353,7 +357,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
                 ),
                 Positioned(
                   bottom: 18,
-                  child: AnimatedBuilder(
+                  child: RepaintBoundary(child: AnimatedBuilder(
                     animation: _beat,
                     builder: (_, child) {
                       final bounce = _singing == i ? -10 * sin(_beat.value * pi).abs() : (awake ? -3 * sin(_beat.value * 2 * pi + i).abs() : 0.0);
@@ -368,7 +372,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
                               child: SizedBox(width: 70, height: 70, child: ArtImage('char.${m.id}.happy', fallback: Center(child: Text(m.emoji, style: const TextStyle(fontSize: 52))))),
                             ),
                     ),
-                  ),
+                  )),
                 ),
                 for (final n in _notes.where((n) => n.member == i)) _FloatingNote(key: ValueKey(n), seed: n.seed, color: m.color),
               ]),
@@ -488,6 +492,7 @@ class _FireflyPainter extends CustomPainter {
   final int level;
   final double t;
   _FireflyPainter(this.level, this.t);
+  static final Paint _glow = Paint();
   @override
   void paint(Canvas canvas, Size size) {
     final n = level * 4;
@@ -496,8 +501,10 @@ class _FireflyPainter extends CustomPainter {
       final x = (r.nextDouble() * size.width + sin((t + i * .13) * 2 * pi) * 12) % size.width;
       final y = r.nextDouble() * size.height * .9 + cos((t + i * .21) * 2 * pi) * 10;
       final a = .45 + .45 * sin((t * 2 + r.nextDouble()) * pi).abs();
-      canvas.drawCircle(Offset(x, y), 7, Paint()..color = const Color(0xFFFFF59D).withValues(alpha: a * .35)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
-      canvas.drawCircle(Offset(x, y), 2.4, Paint()..color = const Color(0xFFFFF9C4).withValues(alpha: a));
+      // soft glow from stacked translucent discs: a MaskFilter blur on every frame is expensive on the GPU
+      canvas.drawCircle(Offset(x, y), 9, _glow..color = const Color(0xFFFFF59D).withValues(alpha: a * .12));
+      canvas.drawCircle(Offset(x, y), 5.5, _glow..color = const Color(0xFFFFF59D).withValues(alpha: a * .22));
+      canvas.drawCircle(Offset(x, y), 2.4, _glow..color = const Color(0xFFFFF9C4).withValues(alpha: a));
     }
   }
 

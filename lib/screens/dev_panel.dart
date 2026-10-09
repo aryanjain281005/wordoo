@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/assets.dart';
 import '../core/audio.dart';
+import '../core/frame_stats.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../engine/campaign.dart';
@@ -37,9 +38,12 @@ class _DevPanelState extends State<DevPanel> {
     (GameId.magicWriter, IslandId.treasure, Skill.spelling),
   ];
 
-  void _play(GameId g, IslandId i, List<Skill> skills) {
+  Future<void> _play(GameId g, IslandId i, List<Skill> skills) async {
+    FrameStats.begin();
     final q = Quest(i, g == GameId.starObservatory ? QuestKind.observatory : QuestKind.standard, 'Dev test · ${levelsOf(g).names[level - 1]}', skills, 6, g, level - 1);
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q, devStep: levelStep(g, level))));
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q, devStep: levelStep(g, level))));
+    final s = FrameStats.end(Skills.game(g).name);
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s), duration: const Duration(seconds: 8)));
   }
 
   void _trial(int? autoScore) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => StormTrialScreen(dev: true, devAutoScore: autoScore)));
@@ -83,7 +87,10 @@ class _DevPanelState extends State<DevPanel> {
         const SizedBox(height: 16),
         Text('Story scenes (does not mark them as seen)', style: ts(16, color: Colors.white, w: FontWeight.w600)),
         Wrap(spacing: 8, children: [
-          for (final id in const ['prologue', 'island_start_forest', 'rescue_forest', 'trial_warning', 'trial_retry', 'finale', 'star_bridge', 'season_opener'])
+          for (final id in const [
+            'prologue', 'island_start_forest', 'rescue_forest', 'island_start_village', 'rescue_village', 'island_start_valley', 'rescue_valley', 'island_start_ocean', 'rescue_ocean',
+            'island_start_treasure', 'rescue_treasure', 'island_start_castle', 'rescue_castle', 'trial_warning', 'trial_retry', 'finale', 'star_bridge', 'season_opener',
+          ])
             ActionChip(label: Text(id), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CutsceneScreen(sceneId: id, canSkip: true)))),
         ]),
         const SizedBox(height: 16),

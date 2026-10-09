@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:ui' as ui;
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../core/assets.dart';
@@ -653,4 +655,102 @@ class WavesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(WavesPainter o) => o.t != t;
+}
+
+
+/// Paints the given pictures once, 2 px big and almost invisible, so their textures are already on the GPU when a scene
+/// needs them (the first paint of a big picture is what causes a hitch). Put it high in the tree of a screen.
+class ArtWarmUp extends StatelessWidget {
+  final List<String> prefixes;
+  const ArtWarmUp(this.prefixes, {super.key});
+  @override
+  Widget build(BuildContext context) {
+    final ids = <String>{
+      for (final f in ReadleAssets.instance.bundledUnder('assets/art/'))
+        if (prefixes.any((p) => f.substring(11).startsWith(p))) f.substring(11, f.lastIndexOf('.')),
+    };
+    return IgnorePointer(
+      child: SizedBox(
+        width: 2,
+        height: 2,
+        child: Stack(clipBehavior: Clip.hardEdge, children: [
+          for (final id in ids) Positioned(left: 0, top: 0, width: 2, height: 2, child: Opacity(opacity: .02, child: ArtImage(id, fallback: const SizedBox.shrink(), fit: BoxFit.fill))),
+        ]),
+      ),
+    );
+  }
+}
+
+
+/// Draws every kind of effect the games use (blur, colour filter, gradients, shadows, clips, layers) once, tiny and almost
+/// invisible, during the first seconds after launch. The first use of each effect makes the GPU build its pipeline
+/// (a 50–100 ms hitch); doing it here moves those hitches to the start screen, away from the games.
+class GpuWarmUp extends StatefulWidget {
+  const GpuWarmUp({super.key});
+  @override
+  State<GpuWarmUp> createState() => _GpuWarmUpState();
+}
+
+class _GpuWarmUpState extends State<GpuWarmUp> {
+  bool _on = true;
+  Timer? _t;
+  @override
+  void initState() {
+    super.initState();
+    _t = Timer(const Duration(milliseconds: 2500), () {
+      if (mounted) setState(() => _on = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _t?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_on) return const SizedBox.shrink();
+    const grey = ColorFilter.matrix(<double>[.33, .33, .33, 0, 10, .33, .33, .33, 0, 10, .33, .33, .33, 0, 10, 0, 0, 0, .85, 0]);
+    Widget cell(Widget c) => SizedBox(width: 6, height: 6, child: ClipRect(child: c));
+    return IgnorePointer(
+      child: Opacity(
+        opacity: .02,
+        child: Wrap(children: [
+          cell(Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(3), border: Border.all(color: Colors.blue, width: 1), boxShadow: const [BoxShadow(color: Colors.black, blurRadius: 8)]))),
+          cell(Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: [Colors.red, Colors.blue])))),
+          cell(Container(decoration: const BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [Colors.yellow, Colors.transparent])))),
+          cell(Container(decoration: const BoxDecoration(gradient: SweepGradient(colors: [Colors.red, Colors.green, Colors.red])))),
+          cell(ImageFiltered(imageFilter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5), child: const Text('Aa', style: TextStyle(fontSize: 10)))),
+          cell(ColorFiltered(colorFilter: grey, child: Container(color: Colors.orange))),
+          cell(ClipRRect(borderRadius: BorderRadius.circular(3), child: Container(color: Colors.green))),
+          cell(Transform.rotate(angle: .3, child: Opacity(opacity: .5, child: Container(color: Colors.purple)))),
+          cell(ShaderMask(shaderCallback: (r) => const LinearGradient(colors: [Colors.white, Colors.transparent]).createShader(r), child: Container(color: Colors.white))),
+          cell(CustomPaint(painter: _WarmPainter())),
+          cell(const Text('Ag', style: TextStyle(fontSize: 12, shadows: [Shadow(color: Colors.amber, blurRadius: 12)]))),
+          cell(ClipPath(clipper: _WarmClip(), child: Container(color: Colors.teal))),
+        ]),
+      ),
+    );
+  }
+}
+
+class _WarmPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawCircle(const Offset(3, 3), 3, Paint()..color = Colors.yellow..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+    canvas.drawLine(Offset.zero, const Offset(6, 6), Paint()..color = Colors.white..strokeWidth = 2..strokeCap = StrokeCap.round);
+    canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(0, 0, 6, 6), const Radius.circular(2)), Paint()..style = PaintingStyle.stroke..color = Colors.red);
+    canvas.drawOval(const Rect.fromLTWH(0, 1, 6, 4), Paint()..color = Colors.pink);
+  }
+
+  @override
+  bool shouldRepaint(_WarmPainter o) => false;
+}
+
+class _WarmClip extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) => Path()..moveTo(0, 0)..lineTo(size.width, 3)..lineTo(0, size.height)..close();
+  @override
+  bool shouldReclip(_WarmClip o) => false;
 }

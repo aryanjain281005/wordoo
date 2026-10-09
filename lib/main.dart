@@ -7,6 +7,7 @@ import 'core/theme.dart';
 import 'data/strings.dart';
 import 'screens/app_shell.dart';
 import 'state/app_state.dart';
+import 'widgets/art.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +32,15 @@ class ReadleApp extends StatelessWidget {
       title: '${Brand.name} — ${Brand.tagline}',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(extraSpacing: st.extraSpacing),
-      builder: (context, child) => _PhoneFrame(
-        textScale: scale,
-        child: Material(type: MaterialType.transparency, child: child!),
-      ),
+      builder: (context, child) => Stack(children: [
+        Positioned.fill(
+          child: _PhoneFrame(
+            textScale: scale,
+            child: Material(type: MaterialType.transparency, child: child!),
+          ),
+        ),
+        const Positioned(left: 0, top: 0, child: GpuWarmUp()), // effects used by the games are prepared during the start screen
+      ]),
       home: const AppShell(),
     );
   }

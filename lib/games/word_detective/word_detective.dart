@@ -98,6 +98,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
   void initState() {
     super.initState();
     if (demo) CaseBoard.reset();
+    AudioManager.instance.preloadSfx(const ['magnifier_ting', 'clue_found', 'stamp_thud', 'pencil_scratch', 'miss_soft', 'reward_fanfare']);
     if (!_foggy) _revealed.addAll(List.generate(n, (i) => i));
     if (widget.ctx.scaffold && n > 2) {
       _faded.add([for (var i = 0; i < n; i++) if (i != it.correct) i].first);
@@ -165,7 +166,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
     if (_resolved || demo || _faded.contains(i) || _phase != _Phase.search) return;
     if (!_revealed.contains(i)) {
       // first tap on a foggy sign moves the magnifier there
-      AudioManager.instance.sfx('whoosh', volume: .4);
+      AudioManager.instance.sfx('magnifier_ting', volume: .45);
       setState(() => _moveLens(_signRects[i].center + const Offset(0, 70))); // just below, so the word stays readable
       return;
     }
@@ -188,7 +189,8 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
       _say(it.say);
       widget.ctx.feedback(first ? Str.good(lang) : Str.t(lang, 'good3'), true);
       CaseBoard.clues = min(3, CaseBoard.clues + 1);
-      AudioManager.instance.sfx('bell', volume: .6);
+      AudioManager.instance.sfx('clue_found', volume: .6);
+      AudioManager.instance.sfx('pencil_scratch', volume: .3);
       if (CaseBoard.clues >= 3) {
         Future.delayed(const Duration(milliseconds: 1300), () async {
           if (_disposed) return;
@@ -236,6 +238,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
       await _line('det_think');
       return;
     }
+    AudioManager.instance.sfx('stamp_thud', volume: .8);
     AudioManager.instance.sfx('reward_fanfare', volume: .6);
     final idx = CaseBoard.caseIndex;
     setState(() {
@@ -423,7 +426,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
       left: p.dx - 38,
       top: p.dy - 38,
       child: IgnorePointer(
-        child: AnimatedBuilder(
+        child: RepaintBoundary(child: AnimatedBuilder(
           animation: _anim,
           builder: (_, _) => Transform.rotate(
             angle: -.5,
@@ -441,7 +444,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
               Container(width: 12, height: 40, decoration: BoxDecoration(color: const Color(0xFF6B3E1E), borderRadius: BorderRadius.circular(6))),
             ]),
           ),
-        ),
+        )),
       ),
     );
   }
