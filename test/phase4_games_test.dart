@@ -172,6 +172,22 @@ void main() {
     await t.pumpWidget(const SizedBox());
   });
 
+  testWidgets('Sound Ninja: a long real-phone swipe (many touch points) still slices', (t) async {
+    final it = make(Skill.phonological, 3, 2, (i) => i.id.startsWith('pr:'));
+    final out = <ItemResult>[];
+    await host(t, SoundNinjaItem(ctx: ctx(it, out)));
+    final f = t.getCenter(find.text(it.options[it.correct].emoji!));
+    final start = f - const Offset(80, 30);
+    final g = await t.startGesture(start);
+    for (var k = 1; k <= 60; k++) {
+      await g.moveTo(start + const Offset(160, 60) * (k / 60)); // 60 points: the fruit is crossed early on
+    }
+    await g.up();
+    await wait(t, 2000);
+    expect(out.single.correct, isTrue);
+    await t.pumpWidget(const SizedBox());
+  });
+
   testWidgets('Sound Ninja syllable round: cut the fruit into its beats', (t) async {
     final it = make(Skill.phonological, 2, 6, (i) => i.id.startsWith('pc:') && i.options[i.correct].label != '1');
     final beats = int.parse(it.options[it.correct].label);

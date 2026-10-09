@@ -40,7 +40,8 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   late final AnimationController _t = AnimationController(vsync: this, duration: const Duration(seconds: 6))..repeat();
   final List<String> _tags = [];
   final Set<int> _sliced = {}; // wrong fruits already cut (they fall away)
-  final List<Offset> _trail = [];
+  final List<Offset> _trail = []; // last few points, for drawing the blade trail
+  final List<Offset> _path = []; // the whole swipe, for deciding what was sliced
   final List<double> _cuts = []; // clap mode: cut angles across the big fruit
   Size _size = const Size(360, 420);
   int? _correctCut;
@@ -136,6 +137,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
 
   void _swipe(Offset p) {
     if (demo || _resolved) return;
+    _path.add(p);
     setState(() {
       _trail.add(p);
       if (_trail.length > 14) _trail.removeAt(0);
@@ -143,11 +145,13 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   }
 
   void _swipeEnd() {
-    if (demo || _resolved || _trail.length < 2) {
+    final path = List.of(_path);
+    _path.clear();
+    if (demo || _resolved || path.length < 2) {
       setState(_trail.clear);
       return;
     }
-    final a = _trail.first, b = _trail.last;
+    final a = path.first, b = path.last;
     if ((b - a).distance < 40) {
       setState(_trail.clear);
       return;
@@ -162,9 +166,9 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
       return;
     }
     int? hit;
-    for (var k = 1; k < _trail.length && hit == null; k++) {
+    for (var k = 1; k < path.length && hit == null; k++) {
       for (var i = 0; i < n; i++) {
-        if (!_sliced.contains(i) && _segDist(_trail[k - 1], _trail[k], _fruitAt(i)) < _r) {
+        if (!_sliced.contains(i) && _segDist(path[k - 1], path[k], _fruitAt(i)) < _r) {
           hit = i;
           break;
         }
