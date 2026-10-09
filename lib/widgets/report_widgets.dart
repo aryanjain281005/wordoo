@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../core/config.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../engine/personalizer.dart';
@@ -215,7 +214,7 @@ class SkillPlan extends StatelessWidget {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(Skills.of(s).name, style: ts(15)),
             Text('Step $start → ${m.step} of 10 · ${statusLabel(m.status)}', style: ts(13, color: C.purple)),
-            Text('${Campaign.islandName(island)}: ${tierName(ist.tier)}, chapter ${ist.nodes.clamp(0, Cfg.chapterNodes)}/${Cfg.chapterNodes} · ${m.cycleItems} answers',
+            Text('${Campaign.islandName(island)}: ${tierName(ist.tier)}, ${ist.nodes.clamp(0, st.campaign.nodesNeeded(island))}/${st.campaign.nodesNeeded(island)} levels · ${m.cycleItems} answers',
                 style: ts(12, color: C.inkSoft, w: FontWeight.w500)),
             if (focus.isNotEmpty) Text('Practising: ${focus.join(', ').toLowerCase()}', style: ts(12, color: C.orangeDark, w: FontWeight.w600)),
           ]),

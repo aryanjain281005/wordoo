@@ -6,6 +6,7 @@ import '../data/skills.dart';
 import '../core/audio.dart';
 import '../engine/campaign.dart';
 import '../engine/meta.dart';
+import '../engine/levels.dart';
 import '../story/story_lines.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
@@ -125,6 +126,14 @@ class _RewardDialog extends StatelessWidget {
                       ),
                     ),
                   ],
+                  if (quest != null) ...[
+                    const SizedBox(height: 10),
+                    _LevelResult(outcome: outcome, game: game),
+                  ],
+                  if (outcome.unlockedGame != null) ...[
+                    const SizedBox(height: 10),
+                    _Moment(Skills.game(outcome.unlockedGame!).emoji, 'New game unlocked!', '${Skills.game(outcome.unlockedGame!).name} is open on this island', const Color(0xFFE3F6E5)),
+                  ],
                   for (final b in outcome.newBadges) ...[
                     const SizedBox(height: 10),
                     Text('${b.emoji}  New badge: ${b.name}', textAlign: TextAlign.center, style: ts(17, color: C.purpleDark)),
@@ -146,7 +155,7 @@ class _RewardDialog extends StatelessWidget {
                   ],
                   if (outcome.chapterComplete) ...[
                     const SizedBox(height: 10),
-                    Text('🏆 Chapter complete! The island is growing. +5 stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
+                    Text('🏆 Every level on this island is cleared! +5 stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
                   ],
                   if (outcome.gem != null) ...[
                     const SizedBox(height: 12),
@@ -183,6 +192,47 @@ class _RewardDialog extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// "Level 2 cleared!" or a gentle "play it again", with the 4 level dots of this game.
+class _LevelResult extends StatelessWidget {
+  final SessionOutcome outcome;
+  final GameId game;
+  const _LevelResult({required this.outcome, required this.game});
+  @override
+  Widget build(BuildContext context) {
+    final l = outcome.level;
+    final ok = outcome.levelPassed;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(color: ok ? const Color(0xFFE3F6E5) : const Color(0xFFFFF1C2), borderRadius: BorderRadius.circular(18)),
+      child: Column(children: [
+        Text(
+          ok ? (outcome.levelNew ? 'Level $l cleared! ⭐' : 'Level $l played again ⭐') : 'Almost! Play level $l again to clear it',
+          textAlign: TextAlign.center,
+          style: ts(19, color: ok ? C.greenDark : C.orangeDark),
+        ),
+        if (!ok) Text('Get at least half right the first time.', textAlign: TextAlign.center, style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+        if (ok && outcome.levelNew && l < levelsPerGame) Text('Level ${l + 1} is open!', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
+        const SizedBox(height: 6),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          for (var k = 1; k <= levelsPerGame; k++)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: 34,
+              height: 34,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: k < l || (k == l && ok) ? C.green : (k == l ? C.orange : Colors.black12),
+              ),
+              child: Text('$k', style: ts(15, color: Colors.white)),
+            ),
+        ]),
+        Text(Skills.game(game).name, style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
+      ]),
     );
   }
 }

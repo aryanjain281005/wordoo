@@ -111,7 +111,7 @@ class JournalScreen extends StatelessWidget {
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(Campaign.islandName(i), style: ts(19)),
-            Text('${tierName(s.tier)} · ${s.nodes.clamp(0, need)}/$need quests${g != null ? ' · with ${g.name}' : ''}', style: ts(15, color: C.inkSoft, w: FontWeight.w500)),
+            Text('${tierName(s.tier)} · ${s.nodes.clamp(0, need)}/$need levels${g != null ? ' · with ${g.name}' : ''}', style: ts(15, color: C.inkSoft, w: FontWeight.w500)),
             const SizedBox(height: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),

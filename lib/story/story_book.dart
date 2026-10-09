@@ -10,9 +10,13 @@ export 'book_text.dart';
 /// sentence splitting (must match tool/export_books.dart), narration ids, and the comic panel.
 
 /// Book-world background for a sentence, picked from its words (bg.book.* in ART_PROMPTS.md).
-String bookSceneFor(String text, {String? story}) => _sceneOf(text) ?? (story == null ? null : _sceneOf(story)) ?? 'park';
+/// A sentence's own PLACE word wins; otherwise the story's setting; only then hints like animals or objects.
+String bookSceneFor(String text, {String? story}) =>
+    _sceneOf(text, places: true) ?? (story == null ? null : _sceneOf(story, places: true)) ?? _sceneOf(text) ?? (story == null ? null : _sceneOf(story)) ?? 'park';
 
-String? _sceneOf(String text) {
+const _placeWords = {'market', 'shop', 'beach', 'sea', 'island', 'farm', 'field', 'village', 'hill', 'library', 'festival', 'garden', 'home', 'house', 'room', 'park', 'school', 'zoo', 'sky', 'night'};
+
+String? _sceneOf(String text, {bool places = false}) {
   final t = text.toLowerCase();
   const map = [
     (['market', 'shop', 'mango'], 'market'),
@@ -27,7 +31,7 @@ String? _sceneOf(String text) {
     (['park', 'bench', 'tree', 'kite', 'wind', 'duck', 'zoo', 'school'], 'park'),
   ];
   for (final (words, scene) in map) {
-    if (words.any(t.contains)) return scene;
+    if (words.where((w) => !places || _placeWords.contains(w)).any(t.contains)) return scene;
   }
   return null;
 }

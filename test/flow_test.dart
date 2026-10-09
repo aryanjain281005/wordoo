@@ -113,7 +113,7 @@ void main() {
     expect(st.history.length, 2);
     st.startNextCycle();
     expect(st.campaign.season, 2);
-    expect(st.campaign.islands.values.every((i) => i.tier == 2 && i.nodes == 0), isTrue);
+    expect(st.campaign.islands.values.every((i) => i.tier == 2 && i.cleared.isEmpty), isTrue);
     expect(st.retestReady, isFalse);
     expect(st.board.length, Cfg.boardSize);
   });
@@ -125,7 +125,8 @@ void main() {
     final again = AppState();
     await again.load();
     expect(again.explorerName, 'Aarav');
-    expect(again.campaign.islands.values.fold<int>(0, (a, i) => a + i.nodes), 1);
+    expect(again.campaign.islands.values.fold<int>(0, (a, i) => a + i.nodes), st.campaign.islands.values.fold<int>(0, (a, i) => a + i.nodes));
+    expect(again.campaign.islands.values.fold<int>(0, (a, i) => a + i.cleared.values.fold(0, (x, y) => x + y.length)), lessThanOrEqualTo(1));
     expect(again.model(Skill.spelling).items, st.model(Skill.spelling).items);
     expect(again.langCode, 'en');
   });

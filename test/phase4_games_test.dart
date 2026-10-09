@@ -46,11 +46,9 @@ List<Offset> line(Offset a, Offset b) => [for (var k = 0; k <= 20; k++) Offset.l
 void main() {
   test('every island alternates between its two games; bosses stay on the main game', () {
     for (final e in islandGame2.entries) {
-      final games = {for (var n = 0; n < 9; n++) gameFor(e.key, n)};
-      expect(games, {islandGame[e.key], e.value});
-      expect(gameFor(e.key, 9), islandGame[e.key], reason: 'boss');
+      expect(islandGames(e.key), [islandGame[e.key], e.value]);
     }
-    expect(gameFor(IslandId.castle, 3), GameId.storyQuest);
+    expect(islandGames(IslandId.castle), [GameId.storyQuest]);
     for (final g in [GameId.soundNinja, GameId.soundPortal, GameId.wordBuilder, GameId.wordFlash, GameId.magicWriter]) {
       expect(GameModules.hasDedicated(g), isTrue, reason: '$g');
     }

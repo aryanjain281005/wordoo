@@ -1,6 +1,7 @@
 import 'dart:math';
 import '../content/content_pack.dart';
 import '../models/models.dart';
+import 'levels.dart';
 
 /// Builds practice items for any skill at any step (1–10) from the language's content pack.
 /// Selection prefers: the right difficulty → the child's current error focus → items seen least.
@@ -24,6 +25,47 @@ class ItemGen {
     };
     seen[it.id] = (seen[it.id] ?? 0) + 1;
     return it;
+  }
+
+  /// One item for [level] (1–4) of [game]. Every level of a game uses the same concept; only the difficulty
+  /// changes. [bump] shifts the difficulty (later seasons). Only spelling and decoding use the child's error
+  /// focus, because for the other games it would change the kind of task.
+  Item forLevel(GameId game, int level, {int bump = 0, List<String> focus = const []}) {
+    final l = level.clamp(1, levelsPerGame);
+    final st = levelStep(game, l, bump: bump);
+    final it = switch (game) {
+      GameId.soundOrchestra => _phon(st, const [], fmt0: l == 1 ? 3 : 4, audio: l >= 3),
+      GameId.soundNinja => _beats(l),
+      GameId.letterArcher || GameId.soundPortal => _gpc(st.clamp(2, 10), const []),
+      GameId.wordRocket => _decode(st, focus, pictures: l <= 3),
+      GameId.wordBuilder => _decode(st, focus),
+      GameId.wordDetective || GameId.wordFlash => _recog(st, const []),
+      GameId.spellingHive || GameId.magicWriter => _spell(st, focus),
+      GameId.storyQuest => _story(st),
+      GameId.starObservatory => make(Skill.values[rng.nextInt(6)], st * 2),
+    };
+    seen[it.id] = (seen[it.id] ?? 0) + 1;
+    return it;
+  }
+
+  /// Sound Ninja: how many pieces does the word slice into? Levels 1–3 count beats (syllables), level 4
+  /// counts every sound in a short word.
+  Item _beats(int level) {
+    final sounds = level == 4;
+    final (lo, hi) = switch (level) { 1 => (1, 2), 2 => (2, 3), 3 => (3, 4), _ => (2, 4) };
+    final want = lo + rng.nextInt(hi - lo + 1);
+    final pool = c.words.where((w) {
+      if (w.emoji == null || w.nonword || w.irregular || w.text.length > 11) return false;
+      return sounds ? (w.syllables == 1 && !w.silentE && w.units.length == want) : w.syllables == want;
+    }).toList();
+    pool.sort((a, b) => (seen['pc:${a.text}'] ?? 0).compareTo(seen['pc:${b.text}'] ?? 0));
+    final t = _pick(pool.take(8).toList());
+    final n = sounds ? t.units.length : t.syllables;
+    final others = <int>{for (final d in [-1, 1, 2, -2]) if (n + d >= 1 && n + d <= 5) n + d}.take(2);
+    final p = sounds ? 'Slice “${t.text}” into its sounds!' : 'Slice “${t.text}” into its beats!';
+    return _choice('pc:${t.text}', Skill.phonological, level * 2, p, p,
+        [Opt('$n', say: t.text), for (final o in others) Opt('$o', say: t.text, tag: sounds ? 'Failed blend' : 'Syllable count error')],
+        stimulus: t.text, emoji: t.emoji, replay: sounds ? t.units.map(c.sayUnit).join(',  ') : t.text, hint: sounds ? 'Say it very slowly. Each sound is one slice.' : 'Say it slowly and cut at every beat.', diff: level * 2.0);
   }
 
   // ---------------- helpers ----------------
@@ -86,11 +128,13 @@ class ItemGen {
   };
 
   // ---------------- phonological awareness ----------------
-  Item _phon(int step, List<String> focus) {
-    var fmt = step;
-    if (focus.contains('Wrong first sound')) fmt = min(step, 2);
-    if (focus.contains('Rhyme confusion') || focus.contains('Wrong ending sound')) fmt = step <= 4 ? max(3, step) : 7;
-    if (focus.contains('Failed blend')) fmt = step <= 6 ? max(5, step) : 6;
+  Item _phon(int step, List<String> focus, {int? fmt0, bool audio = false}) {
+    var fmt = fmt0 ?? step;
+    if (fmt0 == null) {
+      if (focus.contains('Wrong first sound')) fmt = min(step, 2);
+      if (focus.contains('Rhyme confusion') || focus.contains('Wrong ending sound')) fmt = step <= 4 ? max(3, step) : 7;
+      if (focus.contains('Failed blend')) fmt = step <= 6 ? max(5, step) : 6;
+    }
     final pics = c.words.where((w) => w.emoji != null && !w.irregular && w.syllables <= 2).toList();
     WordEntry pickT(bool Function(WordEntry) ok, String pre) => _leastSeen(_near(min(step, 5), (w) => w.emoji != null && ok(w), prefix: pre), pre);
 
@@ -126,7 +170,7 @@ class ItemGen {
       final p = c.p('rhyme', w: t.text);
       return _choice('pr:${t.text}', Skill.phonological, step, p, p,
           [Opt(match.text, emoji: match.emoji, say: match.text), for (final o in others2) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Rhyme confusion')],
-          emoji: t.emoji, hint: 'Listen to the end of the word.', diff: fmt.toDouble());
+          emoji: t.emoji, hint: 'Listen to the end of the word.', diff: max(fmt, step).toDouble(), audio: audio);
     }
     if (fmt <= 6) {
       final n = fmt == 5 ? 3 : 4;
@@ -196,7 +240,7 @@ class ItemGen {
   }
 
   // ---------------- decoding ----------------
-  Item _decode(int step, List<String> focus) {
+  Item _decode(int step, List<String> focus, {bool pictures = false}) {
     if (step >= 8) {
       final nws = c.nonwords(step, 1, rng.nextInt(1 << 30));
       final n = nws.first;
@@ -219,7 +263,7 @@ class ItemGen {
           stimulus: n.units.join(' · '), replay: n.units.map(c.sayUnit).join(',  '), hint: 'Read each piece, then glue them together.', diff: n.difficulty, audio: true);
     }
     final wantBlend = focus.contains('Incorrect blend');
-    final cand = _near(step, (w) => !w.irregular && (!wantBlend || w.blends > 0 || w.digraphs > 0), prefix: 'd:');
+    final cand = _near(step, (w) => !w.irregular && (!pictures || w.emoji != null) && (!wantBlend || w.blends > 0 || w.digraphs > 0), prefix: 'd:');
     final t = _leastSeen(cand, 'd:');
     final picture = step <= 6 && t.emoji != null;
     final pool = c.words.where((w) => (w.step - step).abs() <= 2 && w.text != t.text && (!picture || w.emoji != null)).toList();

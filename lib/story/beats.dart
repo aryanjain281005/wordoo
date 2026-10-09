@@ -14,6 +14,5 @@ const islandGuardian = {
 /// Voice-line id of the story beat that opens a quest (matches assets/story/lines_en.json).
 String beatLineFor(Quest q, Campaign c) {
   final n = q.island == IslandId.observatory ? 6 : 10;
-  final idx = q.node >= 0 ? q.node : (c.islands[q.island]!.tier * 3 + q.title.length) % n;
-  return 'beat_${q.island.name}_${idx % n}';
+  return 'beat_${q.island.name}_${Campaign.titleIndex(q.island, q.game, q.level) % n}';
 }

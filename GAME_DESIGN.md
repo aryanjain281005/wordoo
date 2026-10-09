@@ -63,9 +63,9 @@ Explorer uses a reading skill, the lantern shines and brings colour back.
 |---|---|
 | Screening (first time) | **Chapter 0 — The Broken Bridge.** Help Milo fix the bridge (already built). The bridge planks are the screening stations. |
 | Skill map | Milo's **Map of Aksharpur** appears: the grey islands the Explorer must restore. |
-| Playing (any time, any length) | **Quests.** Each island has a chapter of 10 story quests (the 10th is a boss). The Quest Board always offers 3 quests; finishing one immediately brings a new one. |
-| Getting better at a skill | That island's **restoration %** rises (70 % chapter progress + 30 % real skill growth). Finishing a chapter earns the island's **Story Gem**. |
-| All six skill chapters done | The 7th island, the **Star Observatory**, opens: 6 mixed "star map" quests that combine every skill. |
+| Playing (any time, any length) | **Levels.** Every game has **4 levels** with the same task and rising difficulty (level 4 of the main game is the boss). An island's **second game unlocks after 2 levels of its main game**. The island sheet shows each game's 4 level tiles (cleared ✓ / play ▶ / locked 🔒); the Quest Board always offers 3 next levels. |
+| Getting better at a skill | That island's **restoration %** rises (70 % levels cleared + 30 % real skill growth). Clearing every level on the island earns the island's **Story Gem**. |
+| All six skill islands cleared | The 7th island, the **Star Observatory**, opens: 4 mixed "star map" levels that combine every skill. |
 | All seven islands played through, with enough evidence per skill | **The Star Bridge appears** (the check-in, fresh screening items). Gumsum floats back, a little lighter each season. |
 | After the check-in | **New season.** Every island grows to its next tier (Restore → Grow → Flourish → Shine → Legend), with new quest chapters at the child's new levels. |
 | Season 1 ending | **Gumsum learns to read** and becomes **Gunjan (गुंजन), the Humming Cloud**. The story continues: Gunjan's cousins from the Other Side of the Clouds arrive in season 2. |
@@ -84,12 +84,23 @@ There is **no scary villain**. Gumsum is mischievous, sneezes letters, giggles, 
 | 🏰 **Story Castle** (कहानी महल) | Comprehension | Princess Pari & Kitabu the talking book | 11 Story Quest |
 | 🔭 **Star Observatory** (7th island) | All six skills, mixed | Milo & Gumsum | Star Observatory (mixed review); gateway to the **Star Bridge** check-in |
 
-### 1.6 Long-term structure (never a final screen)
+### 1.6 Levels (v2.1, replaces the 10-quest chapters)
+
+| Rule | Detail |
+|---|---|
+| 4 levels per game | Same concept on every level; only the difficulty rises (see `lib/engine/levels.dart` for each game's 4 level names and steps) |
+| Order | Levels open one after another; a level is **cleared** with at least half the answers right first time, otherwise "Almost! Play it again" |
+| Second game | Unlocks after **2 cleared levels** of the island's main game (e.g. Sound Ninja after 2 levels of Sound Orchestra) |
+| Screening | A child who clearly knows the first levels already has up to 2 levels per game marked "You know it ⏩" (never more, so every game is played) |
+| Adaptation | The learner model still adapts the scaffolding, hints and error focus inside a level; the level fixes the task and its difficulty band |
+| Seasons | Every level restarts a little harder each season |
+
+### 1.7 Long-term structure (never a final screen)
 
 ```
 Season (story arc, e.g. 1 "The Lost Words", 2 "The Whispering Winds", 3 "The Starlight Library" …)
   └─ 7 islands, each at a tier: Restore → Grow → Flourish → Shine → Legend → Legend 2 …
-       └─ Chapter: 10 story quests per skill island (quest 10 = boss) · 6 star maps on the Observatory
+       └─ Games: 1–2 per island × 4 levels each (same task, rising difficulty; main game level 4 = boss) · 4 star maps
             └─ Quest = one game round (5–8 items) + one story beat
 ```
 
@@ -535,7 +546,7 @@ For each skill the engine keeps:
 ## 3B. Reassessment (Star Bridge check-in): unlocked by progress, never by time
 
 The check-in becomes available **only when all are true**:
-1. All **six skill islands** have finished their chapter for this season (10 quests each, including the boss).
+1. All **six skill islands** have every level cleared for this season (4 levels per game; 8 on islands with two games).
 2. The **Star Observatory** (7th island) has finished its 6 mixed star maps.
 3. **At least 60 scored answers per skill** in this cycle.
 4. **Each skill's level has settled** (its ability estimate changed little over the last 3 quests).

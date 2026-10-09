@@ -1,5 +1,6 @@
 import '../core/config.dart';
 import '../models/models.dart';
+import 'levels.dart';
 import 'skill_model.dart';
 
 /// The seven islands. Six belong to one literacy skill each; the Star Observatory mixes all six.
@@ -26,8 +27,7 @@ const islandGame = {
   IslandId.observatory: GameId.starObservatory,
 };
 
-/// The second game of each island (Phase 4). Quests alternate between the island's two games so both get
-/// played; the chapter boss (node 10) is always the island's main game.
+/// The second game of each island. It unlocks after [unlockSecondAfter] levels of the island's main game.
 const islandGame2 = {
   IslandId.forest: GameId.soundNinja,
   IslandId.valley: GameId.soundPortal,
@@ -36,13 +36,8 @@ const islandGame2 = {
   IslandId.treasure: GameId.magicWriter,
 };
 
-GameId gameFor(IslandId i, int node, {int salt = 0}) {
-  final second = islandGame2[i];
-  if (second == null) return islandGame[i]!;
-  if (node == Cfg.chapterNodes - 1) return islandGame[i]!; // boss
-  final k = node >= 0 ? node : salt;
-  return k.isOdd ? second : islandGame[i]!;
-}
+/// The games on an island, main game first.
+List<GameId> islandGames(IslandId i) => [islandGame[i]!, ?islandGame2[i]];
 
 const seasonNames = ['The Lost Words', 'The Whispering Winds', 'The Starlight Library', 'The Rainbow Tides', 'The Clockwork Carnival', 'The Moonlit Kingdom'];
 String seasonName(int season) => season <= seasonNames.length ? seasonNames[season - 1] : 'Season $season';
@@ -70,9 +65,10 @@ class Quest {
   final List<Skill> skills;
   final int items;
   final GameId game;
-  final int node; // chapter node this quest completes (−1 = no node)
+  final int node; // level index 0–3 of [game] that this quest plays
   const Quest(this.island, this.kind, this.title, this.skills, this.items, this.game, this.node);
-  String get id => '${island.name}:${kind.name}:$node';
+  int get level => node + 1; // 1–4
+  String get id => '${island.name}:${game.name}:${kind.name}:$node';
   bool get mixed => skills.length > 1;
 }
 
@@ -89,11 +85,29 @@ String questKindLabel(QuestKind k) => switch (k) {
 
 class IslandState {
   int tier;
-  int nodes; // chapter nodes completed in this cycle
   double tierStartTheta;
-  IslandState({this.tier = 1, this.nodes = 0, this.tierStartTheta = 0});
-  Map<String, dynamic> toJson() => {'tier': tier, 'nodes': nodes, 'start': tierStartTheta};
-  factory IslandState.fromJson(Map<String, dynamic> j) => IslandState(tier: j['tier'] as int, nodes: j['nodes'] as int, tierStartTheta: (j['start'] as num).toDouble());
+  final Map<GameId, Set<int>> cleared; // levels (1–4) cleared this season, per game
+  final Map<GameId, Set<int>> skipped; // levels the screening showed the child already knows (count as cleared)
+  IslandState({this.tier = 1, this.tierStartTheta = 0, Map<GameId, Set<int>>? cleared, Map<GameId, Set<int>>? skipped})
+      : cleared = cleared ?? {},
+        skipped = skipped ?? {};
+
+  Set<int> done(GameId g) => {...?cleared[g], ...?skipped[g]};
+  int count(GameId g) => done(g).length;
+  int get nodes => cleared.keys.followedBy(skipped.keys).toSet().fold(0, (a, g) => a + count(g));
+  void reset() {
+    cleared.clear();
+    skipped.clear();
+  }
+
+  static Map<String, dynamic> _enc(Map<GameId, Set<int>> m) => {for (final e in m.entries) e.key.name: e.value.toList()};
+  static Map<GameId, Set<int>> _dec(Object? j) => {
+        for (final e in (j as Map? ?? const {}).entries)
+          if (GameId.values.any((g) => g.name == e.key)) GameId.values.byName(e.key as String): Set<int>.from(e.value as List),
+      };
+  Map<String, dynamic> toJson() => {'tier': tier, 'start': tierStartTheta, 'cleared': _enc(cleared), 'skipped': _enc(skipped)};
+  factory IslandState.fromJson(Map<String, dynamic> j) =>
+      IslandState(tier: j['tier'] as int, tierStartTheta: (j['start'] as num).toDouble(), cleared: _dec(j['cleared']), skipped: _dec(j['skipped']));
 }
 
 class RetestStatus {
@@ -109,13 +123,33 @@ class Campaign {
   Campaign({this.season = 1, Map<IslandId, IslandState>? islands})
       : islands = islands ?? {for (final i in IslandId.values) i: IslandState()};
 
-  int nodesNeeded(IslandId i) => i == IslandId.observatory ? Cfg.observatoryNodes : Cfg.chapterNodes;
-  bool chapterDone(IslandId i) => islands[i]!.nodes >= nodesNeeded(i);
+  int nodesNeeded(IslandId i) => islandGames(i).length * levelsPerGame;
+  bool gameDone(IslandId i, GameId g) => islands[i]!.count(g) >= levelsPerGame;
+  bool chapterDone(IslandId i) => islandGames(i).every((g) => gameDone(i, g));
   bool get skillChaptersDone => islandSkill.keys.every(chapterDone);
   bool get observatoryUnlocked => skillChaptersDone;
   bool get observatoryDone => chapterDone(IslandId.observatory);
 
-  /// Island restoration for the map: 70 % chapter progress + 30 % real skill growth this tier.
+  /// The main game is always open; the second game opens after [unlockSecondAfter] levels of the main game.
+  bool gameUnlocked(IslandId i, GameId g) => g == islandGame[i] || islands[i]!.count(islandGame[i]!) >= unlockSecondAfter;
+
+  /// Levels are played in order: a level is open when every level before it is done.
+  bool levelOpen(IslandId i, GameId g, int level) {
+    if (!gameUnlocked(i, g) || (i == IslandId.observatory && !observatoryUnlocked)) return false;
+    final d = islands[i]!.done(g);
+    return [for (var l = 1; l < level; l++) l].every(d.contains);
+  }
+
+  /// The next level to play (lowest not yet done), or null when all 4 are done.
+  int? nextLevel(IslandId i, GameId g) {
+    final d = islands[i]!.done(g);
+    for (var l = 1; l <= levelsPerGame; l++) {
+      if (!d.contains(l)) return l;
+    }
+    return null;
+  }
+
+  /// Island restoration for the map: 70 % levels cleared + 30 % real skill growth this tier.
   double restoration(IslandId i, Map<Skill, SkillModel> m) {
     final st = islands[i]!;
     final chapter = (st.nodes / nodesNeeded(i)).clamp(0.0, 1.0);
@@ -128,9 +162,9 @@ class Campaign {
   RetestStatus retest(Map<Skill, SkillModel> m) {
     final missing = <String>[];
     for (final i in islandSkill.keys) {
-      if (!chapterDone(i)) missing.add('${_islandName[i]}: ${islands[i]!.nodes}/${Cfg.chapterNodes} quests');
+      if (!chapterDone(i)) missing.add('${_islandName[i]}: ${islands[i]!.nodes}/${nodesNeeded(i)} levels');
     }
-    if (!observatoryDone) missing.add('Star Observatory: ${islands[IslandId.observatory]!.nodes}/${Cfg.observatoryNodes} star maps');
+    if (!observatoryDone) missing.add('Star Observatory: ${islands[IslandId.observatory]!.nodes}/${nodesNeeded(IslandId.observatory)} star maps');
     for (final s in Skill.values) {
       final mm = m[s]!;
       if (mm.cycleItems < Cfg.retestMinItemsPerSkill) missing.add('${_skillName[s]}: ${mm.cycleItems}/${Cfg.retestMinItemsPerSkill} answers');
@@ -139,26 +173,49 @@ class Campaign {
     return RetestStatus(missing.isEmpty, missing);
   }
 
+  /// Start of a season: remember where each skill starts, and let the screening skip levels the child
+  /// clearly knows already (at most 2 per game, so every game is always played).
   void startTiers(Map<Skill, SkillModel> m) {
     for (final e in islandSkill.entries) {
-      islands[e.key]!.tierStartTheta = m[e.value]!.theta;
+      final st = islands[e.key]!;
+      st.tierStartTheta = m[e.value]!.theta;
+      for (final g in islandGames(e.key)) {
+        final step = m[e.value]!.step;
+        final bump = st.tier - 1;
+        final skip = <int>{for (var l = 1; l <= 2; l++) if (levelStep(g, l, bump: bump) <= step - 2) l};
+        // only a run from level 1 counts (so the levels stay in order)
+        final run = <int>{};
+        for (var l = 1; skip.contains(l); l++) {
+          run.add(l);
+        }
+        st.skipped[g] = run;
+      }
     }
   }
 
-  /// After a retest: next season, every island grows a tier, chapters restart at the new levels.
+  /// After a retest: next season, every island grows a tier, all levels restart a little harder.
   void nextSeason(Map<Skill, SkillModel> m) {
     season++;
     for (final st in islands.values) {
       st.tier++;
-      st.nodes = 0;
+      st.reset();
     }
     startTiers(m);
   }
 
-  void completeNode(Quest q) {
-    if (q.node < 0) return;
+  /// Clears every level on an island (tests and the developer panel).
+  void clearIsland(IslandId i) {
+    for (final g in islandGames(i)) {
+      islands[i]!.cleared[g] = {for (var l = 1; l <= levelsPerGame; l++) l};
+    }
+  }
+
+  /// Marks the quest's level cleared. Returns true if this cleared a level that was not cleared before.
+  bool clearLevel(Quest q) {
     final st = islands[q.island]!;
-    if (st.nodes == q.node) st.nodes++;
+    if (st.done(q.game).contains(q.level)) return false;
+    st.cleared.putIfAbsent(q.game, () => {}).add(q.level);
+    return true;
   }
 
   // ---------------- quest generation ----------------
@@ -167,81 +224,83 @@ class Campaign {
     return .55 * (10 - m.step) / 9 + .25 * (errs / 6).clamp(0, 1) + (m.status == SkillStatus.struggling ? .2 : 0);
   }
 
-  Quest questFor(IslandId i, Map<Skill, SkillModel> m, {QuestKind? force}) {
+  /// Quest title for a game level: the main game uses chapter beats 1–3 and the boss (10), the second game
+  /// beats 4–7, so every level has its own story beat.
+  static int titleIndex(IslandId i, GameId g, int level) {
+    if (i == IslandId.observatory) return level == 4 ? 5 : level - 1;
+    if (g == islandGame[i]) return level == 4 ? 9 : level - 1;
+    return 2 + level;
+  }
+
+  /// A quest that plays [level] of [game] on island [i].
+  Quest questFor(IslandId i, Map<Skill, SkillModel> m, {GameId? game, int? level, QuestKind? force}) {
+    final g = game ?? islandGame[i]!;
     final st = islands[i]!;
+    final lv = (level ?? nextLevel(i, g) ?? levelsPerGame).clamp(1, levelsPerGame);
     final titles = questTitles[i]!;
+    final base = titles[titleIndex(i, g, lv).clamp(0, titles.length - 1)];
     if (i == IslandId.observatory) {
-      final node = st.nodes.clamp(0, Cfg.observatoryNodes - 1);
-      return Quest(i, force ?? QuestKind.observatory, titles[node % titles.length], Skill.values.toList(), Cfg.itemsMixed, GameId.starObservatory, chapterDone(i) ? -1 : node);
+      return Quest(i, force ?? QuestKind.observatory, base, Skill.values.toList(), Cfg.itemsMixed, GameId.starObservatory, lv - 1);
     }
-    final skill = islandSkill[i]!;
-    final mm = m[skill]!;
-    final done = chapterDone(i);
-    final node = done ? -1 : st.nodes;
-    QuestKind kind;
-    if (force != null) {
-      kind = force;
-    } else if (!done && node == Cfg.chapterNodes - 1) {
-      kind = QuestKind.boss;
-    } else if (mm.calibrationLeft > 0) {
-      kind = QuestKind.probe;
-    } else {
-      kind = switch (mm.status) {
-        SkillStatus.struggling => QuestKind.support,
-        SkillStatus.ready => QuestKind.challenge,
-        _ => QuestKind.standard,
-      };
-    }
+    final mm = m[islandSkill[i]!]!;
+    final replay = st.done(g).contains(lv);
+    final kind = force ??
+        (replay
+            ? QuestKind.bonus
+            : (lv == levelsPerGame ? (g == islandGame[i] ? QuestKind.boss : QuestKind.challenge) : (mm.status == SkillStatus.struggling ? QuestKind.support : QuestKind.standard)));
     final items = switch (kind) {
-      QuestKind.probe => Cfg.itemsProbe,
       QuestKind.support => Cfg.itemsSupport,
       QuestKind.challenge => Cfg.itemsChallenge,
       QuestKind.boss => Cfg.itemsBoss,
       _ => Cfg.itemsStandard,
     };
-    final base = done ? titles[(st.tier * 3) % (titles.length - 1)] : titles[node.clamp(0, titles.length - 1)];
     final title = switch (kind) {
       QuestKind.echo => 'Echo: $base',
-      QuestKind.bonus => 'Bonus: $base',
+      QuestKind.bonus => 'Replay: $base',
       _ => season > 1 ? '$base · Part $season' : base,
     };
-    return Quest(i, kind, title, [skill], items, gameFor(i, node, salt: st.tier + title.length), node);
+    return Quest(i, kind, title, [islandSkill[i]!], items, g, lv - 1);
   }
 
-  /// Always-on quest board (no daily limit): weakest need first, a middle skill, then a stretch for a strong skill.
+  /// Always-on quest board (no daily limit): the next level of each open game, weakest skill first.
   List<Quest> board(Map<Skill, SkillModel> m) {
     final out = <Quest>[];
     if (observatoryUnlocked && !observatoryDone) out.add(questFor(IslandId.observatory, m));
-    final open = islandSkill.keys.where((i) => !chapterDone(i)).toList()
-      ..sort((a, b) => need(m[islandSkill[b]!]!).compareTo(need(m[islandSkill[a]!]!)));
-    if (open.isNotEmpty) {
-      final picks = <IslandId>[open.first];
-      if (open.length >= 3) picks.add(open[open.length ~/ 2]);
-      if (open.length >= 2) picks.add(open.last);
-      for (final i in picks) {
-        if (out.length < Cfg.boardSize && !out.any((q) => q.island == i)) out.add(questFor(i, m));
+    final islandsByNeed = islandSkill.keys.toList()..sort((a, b) => need(m[islandSkill[b]!]!).compareTo(need(m[islandSkill[a]!]!)));
+    // islands that still have a level to play, weakest skill first
+    Quest? nextOn(IslandId i, {bool second = false}) {
+      final games = islandGames(i);
+      for (final g in second ? games.skip(1) : games.take(1)) {
+        final lv = nextLevel(i, g);
+        if (lv != null && levelOpen(i, g, lv)) return questFor(i, m, game: g, level: lv);
       }
-      for (final i in open) {
+      return null;
+    }
+
+    final open = [for (final i in islandsByNeed) if (nextOn(i) != null || nextOn(i, second: true) != null) i];
+    // weakest need, a middle skill, and a stretch for a strong skill (strong and weak skills grow together)
+    final picks = <IslandId>[if (open.isNotEmpty) open.first, if (open.length >= 3) open[open.length ~/ 2], if (open.length >= 2) open.last, ...open];
+    for (final second in [false, true]) {
+      for (final i in picks) {
         if (out.length >= Cfg.boardSize) break;
-        if (!out.any((q) => q.island == i)) out.add(questFor(i, m));
+        if (!second && out.any((q) => q.island == i)) continue;
+        final q = nextOn(i, second: second);
+        if (q != null && !out.any((o) => o.id == q.id)) out.add(q);
       }
     }
-    // after the chapters: bonus quests where evidence is still thin, then echo (spaced review) quests
+    // everything cleared: practice where evidence is still thin, then spaced review (echo)
     if (out.length < Cfg.boardSize) {
       final thin = Skill.values.where((s) => m[s]!.cycleItems < Cfg.retestMinItemsPerSkill || !m[s]!.stable).toList()
         ..sort((a, b) => m[a]!.cycleItems.compareTo(m[b]!.cycleItems));
       for (final s in thin) {
         if (out.length >= Cfg.boardSize) break;
         final i = islandOf(s);
-        if (!out.any((q) => q.island == i)) out.add(questFor(i, m, force: QuestKind.bonus));
+        if (!out.any((q) => q.island == i)) out.add(questFor(i, m, level: levelsPerGame, force: QuestKind.bonus));
       }
     }
-    if (out.length < Cfg.boardSize) {
-      final echo = islandSkill.keys.toList()..sort((a, b) => need(m[islandSkill[b]!]!).compareTo(need(m[islandSkill[a]!]!)));
-      for (final i in echo) {
-        if (out.length >= Cfg.boardSize) break;
-        if (!out.any((q) => q.island == i)) out.add(questFor(i, m, force: QuestKind.echo));
-      }
+    for (final i in islandsByNeed) {
+      if (out.length >= Cfg.boardSize) break;
+      if (!out.any((q) => q.island == i)) out.add(questFor(i, m, level: 3, force: QuestKind.echo));
     }
     return out.take(Cfg.boardSize).toList();
   }

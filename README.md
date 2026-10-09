@@ -208,7 +208,7 @@ an educator detail table (accuracy, rate, band per activity) and a disclaimer.
 > - The screening percentile sets a **starting step 1–7 of 10 per skill** (`Cfg.startStepTable`).
 > - A per-skill **learner model** (`engine/skill_model.dart`, Elo/IRT-style θ) updates after **every answer** and serves the step with ~78 % expected success.
 > - Error tags that repeat become practice targets and fade over time.
-> - The **Quest Board** (`engine/campaign.dart`) always offers 3 quests. Islands have 10-quest chapters, the 7th island is the mixed **Star Observatory**, and **seasons** grow every island a tier.
+> - The **Quest Board** (`engine/campaign.dart`) always offers 3 quests. Every game has 4 levels (same task, rising difficulty) and an island's second game unlocks after 2 levels of its main game, the 7th island is the mixed **Star Observatory**, and **seasons** grow every island a tier.
 > - The **check-in unlocks only after all seven islands** are played through, with ≥ 60 answers per skill and settled levels. There are no timers and no override.
 > - Items come from a **feature-tagged English word database** (770+ words, automatic difficulty) in `lib/content/en/`.
 >
@@ -281,7 +281,7 @@ Mistakes say *"Almost! Let's try again."* — never "Wrong" or "Game over".
 
 ## 9. Weekly cycle, parent report and next-week plan
 
-1. **Play (no time limit):** the Quest Board always offers 3 quests; each island has a 10-quest chapter (quest 10 = boss).
+1. **Play (no time limit):** the Quest Board always offers 3 quests; each game has 4 levels shown as tiles on the island sheet; the second game unlocks after 2 levels of the main game.
 2. **After all seven islands** (6 chapters + Star Observatory, ≥ 60 answers per skill, settled levels): *"The Star Bridge has appeared!"* → fresh screening.
 3. **Weekly report:** baseline → week-1 per skill, band changes, overall change, practice days / minutes / games, common slips, *What we observed*, support note.
 4. **Next adventure plan:** focus skills (with reasons such as *"Improved strongly — a lighter touch this week"*), suggested missions, new starting levels.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../story/play_scene.dart';
 import '../core/assets.dart';
 import '../engine/meta.dart';
+import '../engine/levels.dart';
 import 'journal.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
@@ -194,7 +195,6 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     final tier = st.campaign.islands[island]!.tier;
     final size = base * scale;
     final totalH = size * .95 + 70;
-    final level = r.skill == null ? 0 : st.skills[r.skill!]!.level;
     final band = r.skill == null ? null : st.bandOf(r.skill!);
     return Positioned(
       left: (pos.dx * w - size / 2).clamp(0, max(0.0, w - size)),
@@ -239,7 +239,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                             SizedBox(width: size * .32, child: GameProgressBar(value: restoration / 100, color: C.green, height: 8)),
                             const SizedBox(width: 4),
                             Text('${restoration.round()}%', style: ts(11, color: C.greenDark)),
-                            if (r.skill != null) ...[const SizedBox(width: 4), PowerPips(level: level, emoji: '⭐', max: 4)],
+                            const SizedBox(width: 6),
+                            Text('${st.campaign.islands[island]!.nodes}/${st.campaign.nodesNeeded(island)} ⭐', style: ts(11, color: C.purple)),
                           ]),
                         ),
                       ),
@@ -366,7 +367,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
             const SizedBox(width: 8),
             Flexible(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                Text(questKindLabel(q.kind).toUpperCase(), style: ts(10, color: color)),
+                Text('${g.name} · Level ${q.level}${q.kind == QuestKind.boss ? ' · Boss' : ''}'.toUpperCase(), style: ts(10, color: color), maxLines: 1, overflow: TextOverflow.ellipsis),
                 Text(q.title, style: ts(14, color: C.ink), maxLines: 1, overflow: TextOverflow.ellipsis),
               ]),
             ),
@@ -413,78 +414,161 @@ class _RegionSheet extends StatelessWidget {
     final camp = st.campaign;
     final ist = camp.islands[island]!;
     final skill = islandSkill[island];
-    final q = camp.questFor(island, st.models);
     final need = camp.nodesNeeded(island);
     final restoration = camp.restoration(island, st.models);
     final emoji = skill == null ? '🔭' : Skills.of(skill).emoji;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-      decoration: const BoxDecoration(color: Color(0xFFFFF9E8), borderRadius: BorderRadius.vertical(top: Radius.circular(34))),
-      child: SafeArea(
-        top: false,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(width: 48, height: 5, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(3))),
-          const SizedBox(height: 12),
-          Text('$emoji  ${Campaign.islandName(island)}', style: ts(28)),
-          Text('${tierName(ist.tier)} · chapter ${ist.nodes.clamp(0, need)}/$need', style: ts(15, color: C.inkSoft)),
-          const SizedBox(height: 8),
-          Row(children: [
-            Expanded(child: GameProgressBar(value: restoration / 100, color: C.green, height: 14)),
-            const SizedBox(width: 8),
-            Text('${restoration.round()}% restored', style: ts(14, color: C.greenDark)),
-          ]),
-          if (skill != null) ...[
-            const SizedBox(height: 6),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Your power: ', style: ts(15, color: C.inkSoft)), PowerPips(level: st.model(skill).band, emoji: '⚡')]),
-          ],
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: C.orange, width: 3)),
-            child: Row(children: [
-              Text(Skills.game(q.game).emoji, style: const TextStyle(fontSize: 38)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(questKindLabel(q.kind).toUpperCase(), style: ts(12, color: C.orangeDark)),
-                  Text(q.title, style: ts(19)),
-                  Text('${Skills.game(q.game).name} · ${q.items} challenges', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
-                ]),
-              ),
-              BigButton(label: 'Play', icon: Icons.play_arrow_rounded, style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => onPlay(q)),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .88),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 18),
+        decoration: const BoxDecoration(color: Color(0xFFFFF9E8), borderRadius: BorderRadius.vertical(top: Radius.circular(34))),
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Container(width: 48, height: 5, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(3))),
+              const SizedBox(height: 12),
+              Text('$emoji  ${Campaign.islandName(island)}', style: ts(28)),
+              Text('${tierName(ist.tier)} · ${ist.nodes.clamp(0, need)} of $need levels cleared', style: ts(15, color: C.inkSoft)),
+              const SizedBox(height: 8),
+              Row(children: [
+                Expanded(child: GameProgressBar(value: restoration / 100, color: C.green, height: 14)),
+                const SizedBox(width: 8),
+                Text('${restoration.round()}% restored', style: ts(14, color: C.greenDark)),
+              ]),
+              const SizedBox(height: 14),
+              for (final g in islandGames(island)) _GameLevels(island: island, game: g, onPlay: onPlay),
             ]),
           ),
-          if (skill != null) ...[
-            const SizedBox(height: 10),
-            for (final gid in Skills.of(skill).games.where((g) => !Skills.game(g).playable)) _GameRow(game: Skills.game(gid)),
-          ],
-        ]),
+        ),
       ),
     );
   }
 }
 
-class _GameRow extends StatelessWidget {
-  final GameMeta game;
-  const _GameRow({required this.game});
+/// One game on an island: its concept, how many of its 4 levels are cleared, and the 4 level tiles.
+class _GameLevels extends StatelessWidget {
+  final IslandId island;
+  final GameId game;
+  final void Function(Quest) onPlay;
+  const _GameLevels({required this.island, required this.game, required this.onPlay});
+
   @override
   Widget build(BuildContext context) {
-    final locked = !game.playable;
+    final st = context.watch<AppState>();
+    final camp = st.campaign;
+    final meta = Skills.game(game);
+    final lv = levelsOf(game);
+    final ist = camp.islands[island]!;
+    final unlocked = camp.gameUnlocked(island, game);
+    final done = ist.done(game);
+    final next = camp.nextLevel(island, game);
+    final main = islandGame[island]!;
+    final mainDone = ist.count(main);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: locked ? const Color(0xFFEDEBF5) : Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: locked ? Colors.black12 : game.color, width: 3)),
-        child: Row(children: [
-          Text(locked ? '🔒' : game.emoji, style: const TextStyle(fontSize: 38)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(game.name, style: ts(20, color: locked ? C.inkSoft : C.ink)),
-              Text(locked ? 'Coming on a future adventure' : game.tagline, style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: unlocked ? Colors.white : const Color(0xFFEDEBF5),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: unlocked ? meta.color : Colors.black12, width: 3),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Text(unlocked ? meta.emoji : '🔒', style: const TextStyle(fontSize: 34)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(meta.name, style: ts(20, color: unlocked ? C.ink : C.inkSoft)),
+                Text(lv.concept, style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+              ]),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(color: unlocked ? meta.color.withValues(alpha: .14) : Colors.black.withValues(alpha: .05), borderRadius: BorderRadius.circular(14)),
+              child: Text('${done.length}/$levelsPerGame ⭐', style: ts(15, color: unlocked ? meta.color : C.inkSoft)),
+            ),
+          ]),
+          const SizedBox(height: 10),
+          if (!unlocked)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: .7), borderRadius: BorderRadius.circular(16)),
+              child: Text('Clear $unlockSecondAfter levels of ${Skills.game(main).name} to unlock  ·  $mainDone/$unlockSecondAfter done',
+                  textAlign: TextAlign.center, style: ts(15, color: C.purpleDark)),
+            )
+          else
+            Row(children: [
+              for (var l = 1; l <= levelsPerGame; l++)
+                Expanded(child: _LevelTile(level: l, name: lv.names[l - 1], state: _state(camp, ist, l, next), color: meta.color, onTap: () => _tap(context, camp, st, l, next))),
             ]),
-          ),
         ]),
+      ),
+    );
+  }
+
+  _LevelState _state(Campaign camp, IslandState ist, int l, int? next) {
+    if (ist.skipped[game]?.contains(l) ?? false) return _LevelState.skipped;
+    if (ist.cleared[game]?.contains(l) ?? false) return _LevelState.cleared;
+    if (l == next && camp.levelOpen(island, game, l)) return _LevelState.next;
+    return _LevelState.locked;
+  }
+
+  void _tap(BuildContext context, Campaign camp, AppState st, int l, int? next) {
+    if (!camp.levelOpen(island, game, l)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Clear level ${l - 1} first to open level $l!'), duration: const Duration(seconds: 2)));
+      return;
+    }
+    onPlay(camp.questFor(island, st.models, game: game, level: l));
+  }
+}
+
+enum _LevelState { cleared, skipped, next, locked }
+
+class _LevelTile extends StatelessWidget {
+  final int level;
+  final String name;
+  final _LevelState state;
+  final Color color;
+  final VoidCallback onTap;
+  const _LevelTile({required this.level, required this.name, required this.state, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final (bg, border, badge, label) = switch (state) {
+      _LevelState.cleared => (const Color(0xFFE3F6E5), C.green, '✓', 'Cleared'),
+      _LevelState.skipped => (const Color(0xFFE8F1FF), const Color(0xFF6A9BE0), '⏩', 'You know it'),
+      _LevelState.next => (const Color(0xFFFFF1C2), C.orange, '▶', 'Play'),
+      _LevelState.locked => (const Color(0xFFEDEBF5), Colors.black12, '🔒', 'Locked'),
+    };
+    return Semantics(
+      button: true,
+      label: 'Level $level, $name, $label',
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: border, width: state == _LevelState.next ? 3.5 : 2),
+            boxShadow: state == _LevelState.next ? [BoxShadow(color: C.orange.withValues(alpha: .4), blurRadius: 10)] : const [],
+          ),
+          child: Column(children: [
+            Text('Level $level', style: ts(13, color: state == _LevelState.locked ? C.inkSoft : C.ink)),
+            const SizedBox(height: 2),
+            Text(badge, style: TextStyle(fontSize: 22, color: state == _LevelState.cleared ? C.greenDark : null)),
+            const SizedBox(height: 2),
+            SizedBox(
+              height: 30,
+              child: Center(child: Text(name, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(10.5, color: C.inkSoft, w: FontWeight.w600, h: 1.1))),
+            ),
+            Text(label, style: ts(11, color: state == _LevelState.next ? C.orangeDark : C.inkSoft)),
+          ]),
+        ),
       ),
     );
   }

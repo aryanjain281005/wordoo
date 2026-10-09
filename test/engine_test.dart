@@ -153,7 +153,7 @@ void main() {
       final camp = Campaign()..startTiers(m);
       expect(camp.retest(m).ready, isFalse);
       for (final i in islandSkill.keys) {
-        camp.islands[i]!.nodes = Cfg.chapterNodes;
+        camp.clearIsland(i);
       }
       expect(camp.observatoryUnlocked, isTrue);
       for (final mm in m.values) {
@@ -161,7 +161,7 @@ void main() {
         mm.history.addAll([5, 5.1, 5.2]);
       }
       expect(camp.retest(m).ready, isFalse, reason: 'observatory not done');
-      camp.islands[IslandId.observatory]!.nodes = Cfg.observatoryNodes;
+      camp.clearIsland(IslandId.observatory);
       expect(camp.retest(m).ready, isTrue);
     });
 
@@ -169,7 +169,7 @@ void main() {
       final m = models({});
       final camp = Campaign()..startTiers(m);
       for (final i in IslandId.values) {
-        camp.islands[i]!.nodes = 99;
+        camp.clearIsland(i);
       }
       final b = camp.board(m);
       expect(b.length, Cfg.boardSize);
@@ -179,10 +179,10 @@ void main() {
     test('a new season grows every island a tier', () {
       final m = models({});
       final camp = Campaign()..startTiers(m);
-      camp.islands[IslandId.forest]!.nodes = 10;
+      camp.clearIsland(IslandId.forest);
       camp.nextSeason(m);
       expect(camp.season, 2);
-      expect(camp.islands.values.every((i) => i.tier == 2 && i.nodes == 0), isTrue);
+      expect(camp.islands.values.every((i) => i.tier == 2 && i.cleared.isEmpty), isTrue);
     });
   });
 }

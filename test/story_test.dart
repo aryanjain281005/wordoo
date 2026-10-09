@@ -28,9 +28,8 @@ void main() {
   test('every quest has a story beat told by its island guardian', () {
     final c = Campaign();
     for (final i in IslandId.values) {
-      final n = c.nodesNeeded(i);
-      for (var node = 0; node < n; node++) {
-        final q = Quest(i, QuestKind.values.first, 'x', const [], 5, islandGame[i]!, node);
+      for (final (g, node) in [for (final g in islandGames(i)) for (var n = 0; n < 4; n++) (g, n)]) {
+        final q = Quest(i, QuestKind.values.first, 'x', const [], 5, g, node);
         final id = beatLineFor(q, c);
         expect(lines.containsKey(id), isTrue, reason: id);
         expect((lines[id] as Map)['who'], islandGuardian[i], reason: id);

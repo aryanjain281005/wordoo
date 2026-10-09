@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import '../story/book_text.dart';
 import '../engine/meta.dart';
+import '../engine/levels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
@@ -31,8 +32,12 @@ class SessionOutcome {
   final (String, String)? gift; // effort gift from Milo
   final List<(CollectionDef, CollectItem)> newItems; // collection items unlocked by this quest
   final String? teaser; // "Next time…" line of the next quest's guardian
+  final int level; // the game level this quest played (1–4)
+  final bool levelPassed; // enough right answers to clear the level
+  final bool levelNew; // the level was cleared for the first time
+  final GameId? unlockedGame; // the island's second game just unlocked
   SessionOutcome(this.stars, this.points, this.accuracy, this.adapt, this.newCollectibles, this.newBadges,
-      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0, this.gem, this.gift, this.newItems = const [], this.teaser});
+      {this.chapterComplete = false, this.retestUnlocked = false, this.restorationBefore = 0, this.restorationAfter = 0, this.gem, this.gift, this.newItems = const [], this.teaser, this.level = 1, this.levelPassed = true, this.levelNew = false, this.unlockedGame});
 }
 
 /// One play session, kept only for reports (it never limits play).
@@ -96,7 +101,8 @@ class AppState extends ChangeNotifier {
   Set<String> gems = {}; // Story Gems: 's<season>:<island>'
   List<String> gifts = []; // effort gifts, by name
   int effort = 0; // effort points toward the next gift
-  Map<String, int>? _questStart; // collection counts when the current quest began
+  Map<String, int>? _questStart;
+  bool _levelMigration = false; // collection counts when the current quest began
 
   int collectionCount(String id) => switch (id) {
         'band' => bandStickers,
@@ -141,6 +147,14 @@ class AppState extends ChangeNotifier {
       final p = await SharedPreferences.getInstance();
       final raw = p.getString(_key);
       if (raw != null) _fromJson(jsonDecode(raw) as Map<String, dynamic>);
+      if (_levelMigration) {
+        final th = {for (final e in campaign.islands.entries) e.key: e.value.tierStartTheta};
+        campaign.startTiers(models);
+        for (final e in campaign.islands.entries) {
+          e.value.tierStartTheta = th[e.key]!;
+        }
+        _levelMigration = false;
+      }
     } catch (e) {
       debugPrint('load failed: $e');
     }
@@ -240,7 +254,13 @@ class AppState extends ChangeNotifier {
     for (final s in Skill.values) {
       models.putIfAbsent(s, () => SkillModel());
     }
-    if (j['campaign'] != null) campaign = Campaign.fromJson(Map<String, dynamic>.from(j['campaign'] as Map));
+    if (j['campaign'] != null) {
+      final cj = Map<String, dynamic>.from(j['campaign'] as Map);
+      campaign = Campaign.fromJson(cj);
+      // saves from before levels existed: give the screening skips once
+      final first = (cj['islands'] as Map?)?.values.firstOrNull;
+      if (first is Map && !first.containsKey('cleared')) _levelMigration = true;
+    }
     itemSeen = Map<String, int>.from(j['itemSeen'] as Map? ?? const {});
     screeningSeen = Map<String, int>.from(j['screeningSeen'] as Map? ?? const {});
     history = (j['history'] as List).map((e) => AssessmentRecord.fromJson(Map<String, dynamic>.from(e as Map))).toList();
@@ -556,11 +576,15 @@ class AppState extends ChangeNotifier {
       for (final s in q.skills.toSet())
         if (models[s]!.step != (startSteps[s] ?? models[s]!.step)) AdaptEvent(s, startSteps[s] ?? models[s]!.step, models[s]!.step),
     ];
-    final hadChapter = campaign.chapterDone(q.island);
-    campaign.completeNode(q);
-    final chapterComplete = !hadChapter && campaign.chapterDone(q.island);
-
     final acc = results.isEmpty ? 1.0 : results.where((r) => r.correct).length / results.length;
+    final hadChapter = campaign.chapterDone(q.island);
+    final second = islandGame2[q.island];
+    final secondWasLocked = second != null && !campaign.gameUnlocked(q.island, second);
+    final passed = acc >= levelPassAccuracy;
+    final newlyCleared = passed && campaign.clearLevel(q);
+    final chapterComplete = !hadChapter && campaign.chapterDone(q.island);
+    final unlockedGame = secondWasLocked && campaign.gameUnlocked(q.island, second) ? second : null;
+
     var earned = acc >= .8 ? 3 : (acc >= .5 ? 2 : 1);
     if (q.kind == QuestKind.boss || q.kind == QuestKind.challenge) earned += 1;
     final prevUnlocked = unlocked.map((c) => c.id).toSet();
@@ -611,7 +635,8 @@ class AppState extends ChangeNotifier {
     final teaser = next.isEmpty ? null : teaserLineId(next.first.island);
     changed();
     return SessionOutcome(earned, earned * Cfg.pointsPerStar, acc, adapt, newC, newB,
-        chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after, gem: gem, gift: gift, newItems: newItems, teaser: teaser);
+        chapterComplete: chapterComplete, retestUnlocked: !wasReady && retestReady, restorationBefore: before, restorationAfter: after, gem: gem, gift: gift, newItems: newItems, teaser: teaser,
+        level: q.level, levelPassed: passed, levelNew: newlyCleared, unlockedGame: unlockedGame);
   }
 
   void equipHat(int idx) {

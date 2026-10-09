@@ -4,6 +4,7 @@ import '../core/audio.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../engine/campaign.dart';
+import '../engine/levels.dart';
 import '../models/models.dart';
 import '../widgets/common.dart';
 import '../story/cutscene.dart';
@@ -19,7 +20,7 @@ class DevPanel extends StatefulWidget {
 }
 
 class _DevPanelState extends State<DevPanel> {
-  int step = 3;
+  int level = 1;
 
   static const _games = [
     (GameId.soundOrchestra, IslandId.forest, Skill.phonological),
@@ -36,8 +37,8 @@ class _DevPanelState extends State<DevPanel> {
   ];
 
   void _play(GameId g, IslandId i, List<Skill> skills) {
-    final q = Quest(i, g == GameId.starObservatory ? QuestKind.observatory : QuestKind.standard, 'Dev test · step $step', skills, 6, g, -1);
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q, devStep: step)));
+    final q = Quest(i, g == GameId.starObservatory ? QuestKind.observatory : QuestKind.standard, 'Dev test · ${levelsOf(g).names[level - 1]}', skills, 6, g, level - 1);
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q, devStep: levelStep(g, level))));
   }
 
   @override
@@ -49,14 +50,14 @@ class _DevPanelState extends State<DevPanel> {
       body: ListView(padding: const EdgeInsets.all(16), children: [
         Text('Nothing here changes the child’s progress, levels or check-in gate.', style: ts(13, color: Colors.white70, w: FontWeight.w500)),
         const SizedBox(height: 12),
-        Text('Start step: $step of 10', style: ts(18, color: Colors.white)),
-        Slider(value: step.toDouble(), min: 1, max: 10, divisions: 9, label: '$step', onChanged: (v) => setState(() => step = v.round())),
+        Text('Level: $level of $levelsPerGame', style: ts(18, color: Colors.white)),
+        Slider(value: level.toDouble(), min: 1, max: 4, divisions: 3, label: '$level', onChanged: (v) => setState(() => level = v.round())),
         for (final (g, i, s) in _games)
           Card(
             child: ListTile(
               leading: Text(Skills.game(g).emoji, style: const TextStyle(fontSize: 28)),
               title: Text(Skills.game(g).name),
-              subtitle: Text('${Campaign.islandName(i)} · ${Skills.of(s).name}'),
+              subtitle: Text('${Campaign.islandName(i)} · ${levelsOf(g).concept} · L$level: ${levelsOf(g).names[level - 1]}'),
               trailing: const Icon(Icons.play_arrow_rounded),
               onTap: () => _play(g, i, [s]),
             ),

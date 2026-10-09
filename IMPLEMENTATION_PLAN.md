@@ -79,4 +79,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Phase 3 — Meta-progression (6 collections × 12 items from each game's counters, Story Gems per chapter per season, island grey→colour restoration + tier growth on the map, Explorer's Room, cozy streak with rain day, effort gifts, voiced 'next time' teasers, reward screen moments)
 - [x] Art batch 4 (story covers, book worlds, archer sky, character moods)
 - [x] Phase 4 — Five more games: Sound Ninja (slice fruits / cut syllables, combo), Sound Portal (energy beam to letter portals, critters), Word Builder (reef blocks → named creatures), Word Flash (firefly flash by step, bazaar stalls), Magic Writer (finger writing checked by an on-device $P-style recogniser built from the app font); islands alternate their two games
+- [x] Levels rework (team feedback): 4 levels per game with one concept and rising difficulty, level tiles on every island, second game unlocks after 2 levels of the main game, quests never switch game, level cleared at ≥ 50 % first-try, screening skips ≤ 2 known levels
 - [ ] Phase 5 — Art pass (ongoing as assets arrive)

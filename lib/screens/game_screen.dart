@@ -7,6 +7,7 @@ import '../data/skills.dart';
 import '../data/strings.dart';
 import '../engine/campaign.dart';
 import '../engine/item_gen.dart';
+import '../engine/levels.dart';
 import '../engine/skill_model.dart';
 import '../core/audio.dart';
 import '../games/game_module.dart';
@@ -70,7 +71,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     final s0 = quest.skills.first;
-    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).make(s0, (model(s0).step - 1).clamp(1, 10));
+    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).forLevel(_gameForSkill(s0), quest.level, bump: _bump);
     msg = Str.t(pack.code, 'tryDemo');
     startedAt = DateTime.now();
     beatId = beatLineFor(quest, st.campaign);
@@ -132,9 +133,15 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  /// Later seasons make every level a little harder.
+  int get _bump => dev ? 0 : (st.campaign.islands[quest.island]!.tier - 1).clamp(0, 2);
+
+  /// The game whose concept an item uses: the quest's game, or each skill's main game on the Star Observatory.
+  GameId _gameForSkill(Skill s) => quest.mixed ? Skills.of(s).demoGame : quest.game;
+
   void _nextItem() {
     final m = model(skillNow);
-    item = gen.make(skillNow, m.step, focus: m.focusErrors);
+    item = gen.forLevel(_gameForSkill(skillNow), quest.level, bump: _bump, focus: m.focusErrors);
     scaffold = m.needsScaffold || quest.kind == QuestKind.support;
   }
 
@@ -237,7 +244,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Expanded(child: Text('$region · ${questKindLabel(quest.kind)}', style: ts(14, color: const Color(0xFFFFE17A)))),
+                Expanded(child: Text('$region · Level ${quest.level} of $levelsPerGame${quest.kind == QuestKind.boss ? ' · Boss' : (quest.kind == QuestKind.bonus ? ' · Replay' : '')}', style: ts(14, color: const Color(0xFFFFE17A)))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: .18), borderRadius: BorderRadius.circular(10)),
