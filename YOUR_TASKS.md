@@ -23,7 +23,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] `prop.rocket.pearl`, `char.kachhua.talk` (§L2)
 
 ### Letter Archer
-- [ ] `char.arya.cheer`, `char.arya.thinking`, `char.garud.happy` (§K2)
+- [ ] `char.garud.happy` (§K2)
 
 ### Word Detective
 
@@ -33,13 +33,12 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 ### Sharper characters (optional upgrade)
 - [ ] Remake as single 1024 px images (today's are cut out of sheets and are a bit small): Milo (`happy`, `talk`, `sad`, `surprised`, `thinking`, `cheer`) first, then the guardians (§A, §B)
 - [ ] Missing talk frames so mouths move: `char.<guardian>.talk` for bhalu, arya, kachhua, ullu, madhu, pari, kitabu, bolt (§B)
-- [ ] Orchestra extras: `prop.orchestra.stump`, `prop.orchestra.drum` (§I2)
 
 ## 🎵 Music (Pixabay)
 - [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
-- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk, Ullu thinking, Chuchu. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
+- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk/cheer/thinking, Ullu thinking, Chuchu, orchestra stump + drum. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
 - 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`, `.dog`, `.owl` (all 9 suspects); Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
 - 10 music tracks (looping, in the app)

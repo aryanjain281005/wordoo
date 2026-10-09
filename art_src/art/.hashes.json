@@ -98,5 +98,9 @@
  "story.s-robot": "3266cf901dddc9950f80028b6dd25d13b2276a19",
  "story.s-rocket": "3557182f7f73268b5f61eed03cd3c12af6cf32f5",
  "story.s-seeds": "463e9362f09eee87f4cfeef79cf80c94d84a21a3",
- "story.s-turtle": "47e8de0922577babeb7c39f9424ffdbdab96af82"
+ "story.s-turtle": "47e8de0922577babeb7c39f9424ffdbdab96af82",
+ "char.arya.cheer": "ef92cb1dbcfde34d9484dd71648c8c91c9418021",
+ "char.arya.thinking": "e456560355072f7931eeebd9691cbc41a35c8015",
+ "prop.orchestra.drum": "62b055026f77719067d3fd6ceb563741419f8adc",
+ "prop.orchestra.stump": "dfad3b3484cef3b283b06b92baca8a115246865a"
 }

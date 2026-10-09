@@ -342,9 +342,9 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
                 Positioned(
                   bottom: 0,
                   child: SizedBox(
-                    width: 88,
-                    height: 34,
-                    child: ArtImage('prop.orchestra.stump', fit: BoxFit.fill, fallback: Container(margin: const EdgeInsets.only(top: 8), decoration: BoxDecoration(color: const Color(0xFF8B5A2B), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFF5E3A17), width: 3)))),
+                    width: 92,
+                    height: 44,
+                    child: ArtImage('prop.orchestra.stump', fit: BoxFit.contain, fallback: Container(margin: const EdgeInsets.only(top: 8), decoration: BoxDecoration(color: const Color(0xFF8B5A2B), borderRadius: BorderRadius.circular(14), border: Border.all(color: const Color(0xFF5E3A17), width: 3)))),
                   ),
                 ),
                 Positioned(
