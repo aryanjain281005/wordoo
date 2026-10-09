@@ -5,7 +5,6 @@ import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/config.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
@@ -96,7 +95,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
         _resolved = true;
         _correctShown = i;
       });
-      Speaker.instance.speak(word, widget.ctx.pack.tts);
+      AudioManager.instance.say(word, ttsLocale: widget.ctx.pack.tts);
       AudioManager.instance.sfx('bell', volume: .6);
       widget.ctx.feedback(first ? Str.good(lang) : Str.t(lang, 'good3'), true);
       _finish(ItemResult(itemId: it.id, skill: it.skill, level: it.level, correct: first, ms: ms, tags: tags), 1500);
@@ -120,7 +119,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
       _flash();
     } else {
       widget.ctx.feedback(Str.t(lang, 'another'), false);
-      Speaker.instance.speak(word, widget.ctx.pack.tts);
+      AudioManager.instance.say(word, ttsLocale: widget.ctx.pack.tts);
       _finish(ItemResult(itemId: it.id, skill: it.skill, level: it.level, correct: false, ms: _clock.elapsedMilliseconds, tags: [..._tags]), 2400);
     }
   }

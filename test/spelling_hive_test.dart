@@ -82,6 +82,7 @@ void main() {
     expect(find.byType(Draggable<int>), findsNWidgets(it.answer.length + 1));
     expect(find.text(it.answer.first), findsAtLeastNWidgets(2), reason: 'shown in the first cell');
     await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 5)); // let the spoken word finish
   });
 
   testWidgets('demo plays itself and never reports a result', (tester) async {

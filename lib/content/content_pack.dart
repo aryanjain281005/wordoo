@@ -73,6 +73,10 @@ abstract class GameContentPack {
   Map<String, String> get prompts;
   String sayUnit(String unit);
 
+  /// Picture words grouped by how they SOUND at the end (word → family). Only these are used for rhyme
+  /// games, so a child is never marked wrong for a real rhyme (spelling alone gives owl/bowl, cow/snow…).
+  Map<String, String> get rhymeFamily => const {};
+
   /// Made-up but pronounceable words at a given step (decoding practice).
   List<WordEntry> nonwords(int step, int count, int seed);
 

@@ -22,6 +22,10 @@ lines = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
 books = os.path.join(ROOT, "assets/story/books_en.json")  # story narration (tool/export_books.dart)
 if os.path.exists(books):
     lines.update(json.load(open(books)))
+say = os.path.join(ROOT, "assets/story/say_en.json")  # every word / instruction (tool/export_speech.dart)
+if os.path.exists(say):
+    lines.update(json.load(open(say)))
+os.makedirs(os.path.join(OUT, "say"), exist_ok=True)
 cast = json.load(open(os.path.join(ROOT, "tool/voice_cast.json")))
 hash_path = os.path.join(OUT, ".hashes.json")
 hashes = json.load(open(hash_path)) if os.path.exists(hash_path) else {}
@@ -46,8 +50,14 @@ def effects(c):
     return ",".join(f)
 
 
+# parallel runs: SHARDS=4 SHARD=0..3 each take every 4th line and save partial files (tool/merge_voices.py joins them)
+SHARDS, SHARD = int(os.environ.get("SHARDS", "1")), int(os.environ.get("SHARD", "0"))
+part = f".{SHARD}" if SHARDS > 1 else ""
 done = 0
-for lid, ln in lines.items():
+mine_env, mine_hash = {}, {}
+for idx, (lid, ln) in enumerate(lines.items()):
+    if idx % SHARDS != SHARD:
+        continue
     c = cast.get(ln["who"], cast["milo"])
     key = hashlib.md5(json.dumps([ln, c], sort_keys=True).encode()).hexdigest()
     dst = os.path.join(OUT, f"{lid}.ogg")
@@ -60,15 +70,18 @@ for lid, ln in lines.items():
         sf.write(raw, samples, sr)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-af", effects(c), "-ac", "1", "-ar", "24000", proc], check=True)
         audio, asr = sf.read(proc)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", proc, "-c:a", "libopus", "-b:a", "32k", "-application", "voip", dst], check=True)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", proc, "-c:a", "libopus", "-b:a", "64k", "-application", "audio", dst], check=True)
     hop = int(asr * 0.05)
     rms = np.array([np.sqrt(np.mean(audio[i:i + hop] ** 2)) for i in range(0, len(audio), hop)])
     peak = max(rms.max(), 1e-6)
-    envelopes[lid] = [int(min(9, round(9 * (v / peak) ** 0.7))) for v in rms]
-    hashes[lid] = key
+    envelopes[lid] = mine_env[lid] = [int(min(9, round(9 * (v / peak) ** 0.7))) for v in rms]
+    hashes[lid] = mine_hash[lid] = key
     done += 1
+    if done % 100 == 0:  # save progress so a long run can be resumed
+        json.dump(mine_env if part else envelopes, open(env_path + part, "w"))
+        json.dump(mine_hash if part else hashes, open(hash_path + part, "w"), indent=0)
     print(f"  {lid:28s} {ln['who']:8s} {len(audio) / asr:4.1f}s")
 
-json.dump(envelopes, open(env_path, "w"))
-json.dump(hashes, open(hash_path, "w"), indent=0)
+json.dump(mine_env if part else envelopes, open(env_path + part, "w"))
+json.dump(mine_hash if part else hashes, open(hash_path + part, "w"), indent=0)
 print(f"generated {done} lines, total {len(lines)}")

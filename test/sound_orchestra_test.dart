@@ -46,22 +46,38 @@ void main() {
     expect(ids.where((id) => id.startsWith('ps:')), isNotEmpty);
   });
 
-  testWidgets('tap a band member to hear it, ✓ to choose; the band wakes up', (tester) async {
+  testWidgets('picture rounds: one tap answers; the band wakes up', (tester) async {
     OrchestraBand.reset();
-    final it = phon(3, (i) => i.id.startsWith('pr:'));
+    final it = phon(3, (i) => i.id.startsWith('pr:') && !i.audioOptions);
     final out = <ItemResult>[];
     await pumpItem(tester, it, out: out);
     await tester.tap(member(it, it.correct));
+    await tester.pump(const Duration(seconds: 2));
+    expect(out.single.correct, isTrue);
+    expect(OrchestraBand.level, 1);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('listen-only rounds hide the pictures: tap to hear, ✓ to choose', (tester) async {
+    OrchestraBand.reset();
+    final gen = ItemGen(GameContent.of('en'), rng: Random(4));
+    final it = gen.forLevel(GameId.soundOrchestra, 3);
+    expect(it.audioOptions, isTrue);
+    final out = <ItemResult>[];
+    await pumpItem(tester, it, out: out);
+    expect(find.text(it.options[it.correct].emoji!), findsNothing, reason: 'no pictures at listen-only levels');
+    await tester.tap(find.text('${it.correct + 1}'));
     await tester.pump(const Duration(milliseconds: 300));
     expect(out, isEmpty, reason: 'first tap only listens');
     await tester.tap(find.text('✓'));
     await tester.pump(const Duration(seconds: 2));
     expect(out.single.correct, isTrue);
-    expect(OrchestraBand.level, 1);
     await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 3));
   });
 
-  testWidgets('a wrong choice gives the sound hint, then a second chance', (tester) async {
+  testWidgets('a wrong picture gives the sound hint, then a second chance', (tester) async {
     OrchestraBand.level = 2;
     final it = phon(2, (i) => i.id.startsWith('ps:'), seed: 5);
     final out = <ItemResult>[];
@@ -70,18 +86,15 @@ void main() {
     final wrong = List.generate(3, (i) => i).firstWhere((i) => i != it.correct);
     await tester.tap(member(it, wrong));
     await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('✓'));
-    await tester.pump(const Duration(milliseconds: 300));
     expect(msgs.last, it.hint);
     expect(OrchestraBand.level, 1);
     await tester.pump(const Duration(seconds: 2));
     await tester.tap(member(it, it.correct));
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('✓'));
     await tester.pump(const Duration(seconds: 2));
     expect(out.single.correct, isFalse);
     expect(out.single.tags, ['Wrong first sound']);
     await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 3));
   });
 
   testWidgets('Clap the Beat: one drum tap per syllable', (tester) async {

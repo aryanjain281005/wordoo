@@ -415,17 +415,45 @@ class _AdventureBackgroundState extends State<AdventureBackground> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+    final art = ReadleAssets.instance.art(widget.artId ?? 'bg.${widget.scene.name}');
     return Stack(fit: StackFit.expand, children: [
-      RepaintBoundary(
-        child: AnimatedBuilder(
-          animation: _c,
-          builder: (_, __) => CustomPaint(painter: _ScenePainter(widget.scene, _c.value, widget.calm)),
+      if (art != null) ...[
+        // painted background: drawn once and cached; only a few light sparkles move on their own layer
+        RepaintBoundary(child: Image.asset(art, fit: BoxFit.cover, gaplessPlayback: true, filterQuality: FilterQuality.medium)),
+        RepaintBoundary(child: IgnorePointer(child: AnimatedBuilder(animation: _c, builder: (_, _) => CustomPaint(painter: _MotesPainter(_c.value, widget.calm ? 10 : 18))))),
+      ] else
+        RepaintBoundary(
+          child: AnimatedBuilder(
+            animation: _c,
+            builder: (_, _) => CustomPaint(painter: _ScenePainter(widget.scene, _c.value, widget.calm)),
+          ),
         ),
-      ),
-      if (ReadleAssets.instance.art(widget.artId ?? 'bg.${widget.scene.name}') case final p?) Image.asset(p, fit: BoxFit.cover),
       if (widget.child != null) widget.child!,
     ]);
   }
+}
+
+/// A few soft glowing motes drifting upward over a painted background (cheap: small circles only).
+class _MotesPainter extends CustomPainter {
+  final double t;
+  final int n;
+  _MotesPainter(this.t, this.n);
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (var i = 0; i < n; i++) {
+      final r = Random(i * 97 + 13);
+      final speed = 3 + r.nextInt(4);
+      final y = (r.nextDouble() - t * speed) % 1.0;
+      final x = r.nextDouble() * size.width + sin((t * speed + r.nextDouble()) * 2 * pi) * 14;
+      final a = (sin((t * 40 + i) * .7).abs() * .5 + .25) * (y < .1 ? y * 10 : 1);
+      final rad = 1.6 + r.nextDouble() * 2.2;
+      canvas.drawCircle(Offset(x, y * size.height), rad * 2.4, Paint()..color = Colors.white.withValues(alpha: a * .25));
+      canvas.drawCircle(Offset(x, y * size.height), rad, Paint()..color = const Color(0xFFFFF6D8).withValues(alpha: a));
+    }
+  }
+
+  @override
+  bool shouldRepaint(_MotesPainter o) => o.t != t;
 }
 
 class _ScenePainter extends CustomPainter {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
@@ -57,7 +56,7 @@ class _MagicWriterItemState extends State<MagicWriterItem> with SingleTickerProv
   bool get demo => widget.ctx.demo;
   String get word => letters.join();
   WriterGuide get guide => widget.ctx.scaffold && writerGuide(it.level) == WriterGuide.none ? WriterGuide.tiles : writerGuide(it.level);
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   @override
   void initState() {

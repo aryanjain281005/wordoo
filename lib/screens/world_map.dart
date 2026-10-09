@@ -68,6 +68,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ReadleAssets.instance.precache(context, ['island.', 'bg.day', 'char.milo.happy']);
       final st = context.read<AppState>();
       if (st.campaign.observatoryUnlocked && !st.badges.contains('obs-s${st.campaign.season}')) {
         st.badges.add('obs-s${st.campaign.season}');
@@ -263,13 +264,14 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                         if (isNext) _PulseRing(size: size),
                         // colour returns as the island is restored (Gumsum's grey fades); painted island art when available
                         Positioned.fill(
-                          child: ColorFiltered(
+                          // cached on its own layer: scrolling and the pulsing ring never re-filter the picture
+                          child: RepaintBoundary(child: ColorFiltered(
                             colorFilter: ColorFilter.matrix(_saturation(locked ? 1 : .35 + .65 * (restoration / 100).clamp(0.0, 1.0))),
                             child: ArtImage(
                               'island.${island.name}',
                               fallback: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked)),
                             ),
-                          ),
+                          )),
                         ),
                         // the island grows a tier every season
                         if (!locked && tier >= 2)
@@ -409,7 +411,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
         children: [
           Flexible(
             child: Container(
-              padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
+              padding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
               decoration: BoxDecoration(
                 color: C.ink.withValues(alpha: .85),
                 borderRadius: BorderRadius.circular(30),
@@ -420,8 +422,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                 children: [
                   ClipOval(
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 36,
+                      height: 36,
                       color: const Color(0xFFBEE7FF),
                       child: FittedBox(
                         fit: BoxFit.cover,
@@ -434,7 +436,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Flexible(
                     child: Text(
                       st.explorerName,
@@ -447,27 +449,25 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
               ),
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 4),
           StarChip(st.stars),
-          const SizedBox(width: 6),
+          const SizedBox(width: 2),
           RoundIconButton(
             icon: Icons.menu_book_rounded,
             label: 'Explorer’s Journal',
-            size: 46,
+            size: 42,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JournalScreen())),
           ),
-          const SizedBox(width: 6),
           RoundIconButton(
             icon: Icons.backpack_rounded,
             label: 'My treasures',
-            size: 46,
+            size: 42,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen())),
           ),
-          const SizedBox(width: 6),
           RoundIconButton(
             icon: Icons.settings_rounded,
             label: 'Grown-up area',
-            size: 46,
+            size: 42,
             onTap: () async {
               if (await askParentGate(context)) {
                 if (mounted) context.read<AppState>().go(AppScreen.dashboard);

@@ -5,6 +5,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'assets.dart';
+import 'speech_key.dart';
 import 'tts.dart';
 
 /// One place for every sound in the game.
@@ -27,6 +28,7 @@ class AudioManager {
   AudioPlayer? _music;
   AudioPlayer? _voice;
   String? _musicId;
+  Map<String, String> _sayIndex = {}; // speech key → recorded clip id (assets/story/say_en.json)
   Map<String, List<int>> _envelopes = {}; // per voice line: loudness 0..9 every 50 ms
   Timer? _lip;
   Completer<void>? _voiceDone;
@@ -44,9 +46,13 @@ class AudioManager {
         final raw = jsonDecode(await rootBundle.loadString('assets/vo/en/envelopes.json')) as Map<String, dynamic>;
         _envelopes = raw.map((k, v) => MapEntry(k, List<int>.from(v as List)));
       } catch (_) {}
-      for (final id in const ['ui_tap', 'correct_1', 'correct_2', 'correct_3', 'miss_soft', 'tile_pick', 'tile_snap', 'star_1', 'pop']) {
-        await _pool(id);
-      }
+      try {
+        final raw = jsonDecode(await rootBundle.loadString('assets/story/say_en.json')) as Map<String, dynamic>;
+        _sayIndex = {for (final e in raw.entries) speechKey((e.value as Map)['text'] as String): e.key};
+      } catch (_) {}
+      // every sound effect is loaded up-front, so the first tap on anything sounds instantly
+      final all = ReadleAssets.instance.bundledUnder('assets/sfx/').where((p) => p.endsWith('.ogg'));
+      await Future.wait([for (final p in all) _pool(p.substring('assets/sfx/'.length, p.length - 4))]);
       _ready = true;
     } catch (e) {
       debugPrint('audio init: $e');
@@ -135,6 +141,30 @@ class AudioManager {
   /// Length of a generated voice line (from its lip-sync envelope); null when only TTS is available.
   Duration? voiceLength(String id) => hasVoice(id) && _envelopes[id] != null ? Duration(milliseconds: _envelopes[id]!.length * 50) : null;
 
+  /// Recorded clip for a phrase (word, sound, instruction, story sentence), if one was generated.
+  String? sayId(String text) {
+    final id = _sayIndex[speechKey(text)];
+    return id != null && hasVoice(id) ? id : null;
+  }
+
+  /// Say a word / sound / instruction in the narrator's recorded voice (falls back to device TTS).
+  /// "c,  a,  t" plays each sound's clip in turn.
+  Future<void> say(String text, {String ttsLocale = 'en-IN'}) async {
+    if (text.contains(',  ')) {
+      final gen = ++_sayGen;
+      for (final part in text.split(',').map((x) => x.trim()).where((x) => x.isNotEmpty)) {
+        if (gen != _sayGen) return;
+        await voice(sayId(part) ?? '', part, character: 'say', ttsLocale: ttsLocale);
+        await Future.delayed(const Duration(milliseconds: 120));
+      }
+      return;
+    }
+    ++_sayGen;
+    await voice(sayId(text) ?? '', text, character: 'say', ttsLocale: ttsLocale);
+  }
+
+  int _sayGen = 0;
+
   /// Speak a character line. Completes when the line has finished (approximately, for TTS).
   Future<void> voice(String id, String text, {String character = 'milo', String ttsLocale = 'en-IN'}) async {
     await stopVoice();
@@ -143,12 +173,17 @@ class AudioManager {
     final done = Completer<void>();
     _voiceDone = done;
     var played = false;
+    debugPrint('VOICE ${DateTime.now().millisecondsSinceEpoch % 100000} id=$id clip=${hasVoice(id)} "${text.length > 40 ? text.substring(0, 40) : text}"');
     if (enabled && hasVoice(id)) {
       try {
         final p = AudioPlayer();
         _voice = p;
-        p.onPlayerComplete.first.then((_) {
+        late final StreamSubscription<void> sub;
+        sub = p.onPlayerComplete.listen((_) {
           if (!done.isCompleted) done.complete();
+          sub.cancel();
+        }, onDone: () {
+          if (!done.isCompleted) done.complete(); // player disposed (a newer line started)
         });
         await p.play(AssetSource('assets/vo/en/$id.ogg'));
         played = true;
@@ -186,11 +221,15 @@ class AudioManager {
     if (d != null && !d.isCompleted) d.complete(); // release whoever is waiting for the line to end
     _lip?.cancel();
     mouth.value = 0;
-    try {
-      await _voice?.stop();
-      await _voice?.dispose();
-    } catch (_) {}
+    // Order matters: take the player out first and send the TTS "stop" immediately. A slow, older stop must
+    // never land after a NEW line has started (that silenced the first sentence of every round).
+    final p = _voice;
     _voice = null;
-    await Speaker.instance.stop();
+    Speaker.instance.stop();
+    try {
+      await p?.stop();
+      await p?.dispose();
+    } catch (_) {}
   }
+
 }

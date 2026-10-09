@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../core/theme.dart';
 import '../core/audio.dart';
-import '../core/tts.dart';
 import 'art.dart';
 
 enum BtnStyle { primary, go, soft, ghost }
@@ -61,6 +60,7 @@ class _BigButtonState extends State<BigButton> {
             ? () {
                 HapticFeedback.selectionClick();
                 AudioManager.instance.sfx('ui_tap', volume: .5);
+                HapticFeedback.selectionClick();
                 widget.onTap!();
               }
             : null,
@@ -210,7 +210,7 @@ class _CompanionState extends State<Companion> with SingleTickerProviderStateMix
 
   void _maybeSpeak() {
     if (widget.speakLocale != null && widget.message != null) {
-      Speaker.instance.speak(widget.message!, widget.speakLocale!);
+      AudioManager.instance.say(widget.message!, ttsLocale: widget.speakLocale!);
     }
   }
 
@@ -288,7 +288,7 @@ class StarChip extends StatelessWidget {
   const StarChip(this.stars, {super.key});
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
         decoration: BoxDecoration(
           color: C.ink.withValues(alpha: .85),
           borderRadius: BorderRadius.circular(30),
@@ -338,7 +338,10 @@ class RoundIconButton extends StatelessWidget {
         button: true,
         label: label,
         child: GestureDetector(
-          onTap: onTap,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
           behavior: HitTestBehavior.opaque,
           // the touch area is never smaller than 48 dp (accessibility), even when the circle is drawn smaller
           child: SizedBox(

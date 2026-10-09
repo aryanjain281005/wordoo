@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../core/tts.dart';
@@ -10,6 +11,7 @@ import '../engine/campaign.dart';
 import '../engine/item_gen.dart';
 import '../engine/levels.dart';
 import '../engine/skill_model.dart';
+import '../core/assets.dart';
 import '../core/audio.dart';
 import '../games/game_module.dart';
 import '../models/models.dart';
@@ -42,6 +44,21 @@ class GameScreen extends StatefulWidget {
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
+
+/// Pictures each game shows (decoded ahead of time when a quest opens).
+const _gameArt = <GameId, List<String>>{
+  GameId.soundOrchestra: ['char.bhalu.', 'char.tinku.', 'char.koyal.', 'char.gajju.', 'prop.orchestra.'],
+  GameId.soundNinja: ['bg.ninja.', 'char.pip.'],
+  GameId.letterArcher: ['bg.archer.', 'char.arya.'],
+  GameId.soundPortal: ['bg.portal.', 'char.bolt.'],
+  GameId.wordRocket: ['bg.rocket.', 'char.kachhua.', 'prop.rocket.'],
+  GameId.wordBuilder: ['bg.reef.', 'char.coral.'],
+  GameId.wordDetective: ['bg.detective.', 'char.ullu.', 'char.suspect.', 'char.chuchu.'],
+  GameId.wordFlash: ['bg.flash.', 'char.jugnu.'],
+  GameId.spellingHive: ['bg.hive', 'prop.hive.', 'char.madhu.'],
+  GameId.magicWriter: ['bg.writer.', 'prop.writer.', 'char.kalam.'],
+  GameId.storyQuest: ['story.', 'bg.book.', 'char.pari.', 'char.kitabu.', 'prop.emotion.', 'prop.castle.', 'char.gumsum.'],
+};
 
 class _GameScreenState extends State<GameScreen> {
   _Phase phase = _Phase.intro;
@@ -77,7 +94,10 @@ class _GameScreenState extends State<GameScreen> {
     startedAt = DateTime.now();
     beatId = beatLineFor(quest, st.campaign);
     guardian = islandGuardian[quest.island]!;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _tellBeat());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tellBeat();
+      ReadleAssets.instance.precache(context, ['bg.island.${quest.island.name}', 'char.milo.', 'char.${guardian}.', ..._gameArt[quest.game] ?? const []]);
+    });
     // boss quests (the 10th of a chapter) get the exciting track; Story Castle reads to the calm library track
     AudioManager.instance.music(quest.kind == QuestKind.boss ? 'music.boss' : (quest.island == IslandId.castle ? 'music.library' : 'music.${quest.island.name}'));
   }
@@ -162,6 +182,7 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
     AudioManager.instance.sfxOneOf(good ? const ['correct_1', 'correct_2', 'correct_3'] : const ['miss_soft']);
+    good ? HapticFeedback.mediumImpact() : HapticFeedback.selectionClick(); // a little "bump" makes answers feel real
     apply();
   }
 

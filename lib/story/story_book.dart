@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../core/assets.dart';
 import '../core/audio.dart';
 import '../core/theme.dart';
-import '../core/tts.dart';
 export 'book_text.dart';
 
 /// Shared pieces of the "living books" used by Story Quest and the Library:
@@ -98,7 +97,7 @@ class BookPanel extends StatelessWidget {
           GestureDetector(
             onTap: () {
               AudioManager.instance.stopVoice();
-              Speaker.instance.speak(words[i].replaceAll(RegExp(r'[^\w’\x27-]'), ''), ttsLocale);
+              AudioManager.instance.say(words[i].replaceAll(RegExp(r'[^\w’\x27-]'), ''), ttsLocale: ttsLocale);
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 120),
@@ -135,6 +134,8 @@ class Narrator {
     _stopped = false;
     final a = AudioManager.instance;
     final words = sentence.split(RegExp(r'\s+'));
+    // authored stories have Dadi's narration; generated stories use the recorded sentence bank
+    if (!a.hasVoice(lineId)) lineId = a.sayId(sentence) ?? lineId;
     final total = a.voiceLength(lineId)?.inMilliseconds ?? (400 + sentence.length * 62);
     final weights = [for (final w in words) w.length + 2];
     final sum = weights.fold<int>(0, (x, y) => x + y);

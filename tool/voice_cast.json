@@ -81,5 +81,9 @@
   "voice": "af_nicole",
   "speed": 1.15,
   "pitch": 1.35
+ },
+ "say": {
+  "voice": "hf_beta",
+  "speed": 0.88
  }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../story/story_lines.dart';
@@ -69,7 +68,7 @@ class _WordRocketItemState extends State<WordRocketItem> with TickerProviderStat
     return s.length == cells.length ? s : cells;
   }
 
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   Future<void> _line(String id) async {
     final l = StoryLines.instance[id];

@@ -58,6 +58,7 @@ class Str {
     },
   };
 
+  static Iterable<String> get keys => _t['en']!.keys;
   static String t(String lang, String key) => _t[lang]?[key] ?? _t['en']![key] ?? key;
   static String good(String lang) => t(lang, 'good${1 + _rng.nextInt(3)}');
 }

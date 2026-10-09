@@ -117,7 +117,7 @@ def cutout(img: Image.Image, id_: str = '') -> Image.Image:
     pad = round(max(out.size) * 0.04)
     canvas = Image.new("RGBA", (out.width + 2 * pad, out.height + 2 * pad), (0, 0, 0, 0))
     canvas.paste(out, (pad, pad))
-    canvas.thumbnail((900, 900), Image.LANCZOS)
+    canvas.thumbnail((1600, 1600), Image.LANCZOS)
     return canvas
 
 
@@ -139,11 +139,14 @@ def main(only=None):
                 out.unlink(missing_ok=True)
                 hashes[id_] = h
                 continue
+            # best quality (size is not a constraint): keep the source resolution, never upscale
             landscape = id_.startswith(("bg.book.", "story.")) or img.width > img.height
-            res = cover(img.convert("RGB"), *((1200, 800) if landscape else (1080, 1920)))
-            res.save(out, "WEBP", quality=82, method=6)
+            tw, th = (1536, 1024) if landscape else (1440, 2560)
+            scale = min(1.0, max(img.width / tw, img.height / th))
+            res = cover(img.convert("RGB"), round(tw * scale), round(th * scale))
+            res.save(out, "WEBP", quality=94, method=6)
         else:
-            cutout(img, id_).save(out, "WEBP", quality=88, method=6)
+            cutout(img, id_).save(out, "WEBP", quality=96, method=6)
         hashes[id_] = h
         done.append(id_)
         print("ok ", id_, f"{out.stat().st_size // 1024} KB")

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../story/puppets.dart';
@@ -75,7 +74,8 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
   void dispose() {
     _disposed = true;
     _narrator.stop();
-    AudioManager.instance.stopVoice();
+    // the demo copy on the intro screen closes while the real round is already reading: never stop that voice
+    if (!demo) AudioManager.instance.stopVoice();
     _restore.dispose();
     _scroll.dispose();
     super.dispose();
@@ -200,7 +200,7 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
       _lookBack();
     } else {
       widget.ctx.feedback(Str.t(lang, 'another'), false);
-      Speaker.instance.speak(it.options[it.correct].label, tts);
+      AudioManager.instance.say(it.options[it.correct].label, ttsLocale: tts);
       _finish(false, 2600);
     }
   }
@@ -376,7 +376,7 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
                 if (o.emoji == null && face != null) Padding(padding: const EdgeInsets.only(right: 10), child: face),
                 Expanded(child: Text(o.label, style: ts(20, color: C.ink, w: FontWeight.w600))),
                 GestureDetector(
-                  onTap: () => Speaker.instance.speak(o.say ?? o.label, tts),
+                  onTap: () => AudioManager.instance.say(o.say ?? o.label, ttsLocale: tts),
                   child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.volume_up_rounded, color: C.inkSoft, size: 24)),
                 ),
               ]),

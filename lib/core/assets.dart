@@ -48,6 +48,20 @@ class ReadleAssets {
 
   /// True when a file is really bundled in the app (used to auto-discover sfx and voice files).
   bool bundled(String path) => _bundled.contains(path);
+
+  /// Decode every picture whose id starts with one of [prefixes] ahead of time (no stutter on first show).
+  Future<void> precache(BuildContext context, List<String> prefixes) async {
+    final ids = {for (final f in _bundled) if (f.startsWith('assets/art/')) f.substring(11, f.lastIndexOf('.'))};
+    for (final id in ids.where((id) => prefixes.any(id.startsWith))) {
+      final p = art(id);
+      if (p == null || !context.mounted) continue;
+      try {
+        await precacheImage(AssetImage(p), context);
+      } catch (_) {}
+    }
+  }
+
+  Iterable<String> bundledUnder(String prefix) => _bundled.where((p) => p.startsWith(prefix));
 }
 
 /// Image with a placeholder: shows the real art when the manifest has it, otherwise the fallback widget.
@@ -60,6 +74,6 @@ class ArtImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = ReadleAssets.instance.art(id);
     if (p == null) return fallback;
-    return Image.asset(p, fit: fit, errorBuilder: (_, _, _) => fallback);
+    return Image.asset(p, fit: fit, gaplessPlayback: true, filterQuality: FilterQuality.medium, errorBuilder: (_, _, _) => fallback);
   }
 }

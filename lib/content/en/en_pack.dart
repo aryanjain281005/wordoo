@@ -108,7 +108,12 @@ class EnglishGameContent extends GameContentPack {
   @override
   String sayUnit(String unit) => _say[unit] ?? unit;
 
+  /// Rhymes by sound (checked by ear), for the picture words.
+  @override
+  Map<String, String> get rhymeFamily => const {'cat': 'at', 'bat': 'at', 'rat': 'at', 'hat': 'at', 'dog': 'og', 'frog': 'og', 'hen': 'en', 'pen': 'en', 'fox': 'ox', 'ox': 'ox', 'box': 'ox', 'bee': 'ee', 'tree': 'ee', 'key': 'ee', 'tea': 'ee', 'snake': 'ake', 'cake': 'ake', 'pancake': 'ake', 'goat': 'oat', 'coat': 'oat', 'boat': 'oat', 'bear': 'air', 'pear': 'air', 'chair': 'air', 'duck': 'uck', 'truck': 'uck', 'sock': 'ock', 'clock': 'ock', 'rock': 'ock', 'peacock': 'ock', 'van': 'an', 'pan': 'an', 'car': 'ar', 'star': 'ar', 'guitar': 'ar', 'corn': 'orn', 'unicorn': 'orn', 'popcorn': 'orn', 'mug': 'ug', 'ladybug': 'ug', 'nut': 'ut', 'donut': 'ut', 'coconut': 'ut', 'rice': 'ice', 'dice': 'ice', 'cap': 'ap', 'map': 'ap', 'bag': 'ag', 'flag': 'ag', 'bed': 'ed', 'sled': 'ed', 'bread': 'ed', 'bell': 'ell', 'shell': 'ell', 'phone': 'one', 'bone': 'one', 'train': 'ain', 'rain': 'ain', 'nose': 'ose', 'rose': 'ose', 'moon': 'oon', 'spoon': 'oon', 'balloon': 'oon', 'mouse': 'ouse', 'house': 'ouse', 'ear': 'eer', 'deer': 'eer', 'snail': 'ail', 'whale': 'ail', 'parrot': 'arrot', 'carrot': 'arrot', 'ant': 'ant', 'plant': 'ant'};
+
   // ---------------- made-up words ----------------
+  static const nonwordBank = 80;
   static const _onsets1 = ['b', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'z'];
   static const _onsets2 = ['bl', 'br', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr', 'pl', 'pr', 'sk', 'sl', 'sm', 'sn', 'sp', 'st', 'sw', 'tr'];
   static const _digraphOn = ['sh', 'ch', 'th'];
@@ -119,7 +124,8 @@ class EnglishGameContent extends GameContentPack {
 
   @override
   List<WordEntry> nonwords(int step, int count, int seed) {
-    final rng = Random(seed);
+    // a fixed bank of 80 made-up words per step, so every one of them has a recorded voice clip
+    final rng = Random(seed % nonwordBank + step * 1000);
     final real = {for (final w in _words) w.text};
     final out = <WordEntry>[];
     var guard = 0;

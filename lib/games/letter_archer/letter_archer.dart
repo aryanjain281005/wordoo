@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
@@ -42,7 +41,7 @@ class _LetterArcherItemState extends State<LetterArcherItem> {
   Item get it => widget.ctx.item;
   String get lang => widget.ctx.pack.code;
   bool get demo => widget.ctx.demo;
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   @override
   void initState() {

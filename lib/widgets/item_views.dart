@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../core/config.dart';
 import '../core/theme.dart';
 import '../core/audio.dart';
-import '../core/tts.dart';
 import '../data/lang.dart';
 import '../data/strings.dart';
 import '../models/models.dart';
@@ -72,7 +71,7 @@ class _ItemViewState extends State<ItemView> {
 
   Item get it => widget.item;
   String get lang => widget.pack.code;
-  void _say(String t) => Speaker.instance.speak(t, widget.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.pack.tts);
 
   @override
   void initState() {

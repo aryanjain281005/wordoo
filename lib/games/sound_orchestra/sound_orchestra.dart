@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
@@ -65,7 +64,9 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
   String get tts => widget.ctx.pack.tts;
   bool get clap => it.id.startsWith('pc:');
   bool get blend => it.id.startsWith('pb:');
-  bool get pictures => it.options.every((o) => o.emoji != null);
+  /// Listen-only rounds (levels 3–4) hide the pictures: the child must hear the rhyme.
+  bool get listenOnly => it.audioOptions;
+  bool get pictures => !listenOnly && it.options.every((o) => o.emoji != null);
   List<String> get _units => (it.replaySay ?? '').split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
 
   @override
@@ -89,7 +90,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
     super.dispose();
   }
 
-  void _say(String t) => Speaker.instance.speak(t, tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: tts);
 
   /// Maestro Bhalu sings the challenge; for blends the chorus sings one sound at a time.
   Future<void> _sing() async {
@@ -143,6 +144,8 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
     Future.delayed(const Duration(milliseconds: 900), () {
       if (!_disposed && _singing == i) setState(() => _singing = null);
     });
+    // with pictures, one tap is the answer (children expect that); listen-only rounds use ✓ to choose
+    if (!listenOnly && !demo) _choose(i);
   }
 
   void _choose(int i) {
@@ -271,6 +274,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(it.prompt, style: ts(19, color: C.ink)),
+            if (listenOnly && !clap) Text('Tap a band member to hear their word, then ✓', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
             if (blend) ...[const SizedBox(height: 6), _chorusDots()],
           ]),
         ),
@@ -367,8 +371,12 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
             const SizedBox(height: 6),
             SizedBox(
               height: 48,
-              child: sel && !_resolved && !demo
-                  ? BigButton(label: '✓', style: BtnStyle.go, width: 70, height: 46, fontSize: 24, onTap: () => _choose(i))
+              child: listenOnly && sel && !_resolved && !demo
+                  ? AnimatedBuilder(
+                      animation: _beat,
+                      builder: (_, child) => Transform.scale(scale: 1 + .08 * sin(_beat.value * 2 * pi), child: child),
+                      child: BigButton(label: '✓', style: BtnStyle.go, width: 86, height: 48, fontSize: 28, onTap: () => _choose(i)),
+                    )
                   : Text(m.name, style: ts(14, color: Colors.white, w: FontWeight.w600).copyWith(shadows: const [Shadow(color: Color(0x99000000), blurRadius: 4)])),
             ),
           ]),

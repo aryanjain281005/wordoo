@@ -163,10 +163,16 @@ class ItemGen {
           emoji: t.emoji, hint: 'Listen to the very first sound.', diff: fmt.toDouble());
     }
     if (fmt <= 4) {
-      final t = pickT((w) => w.rime != null && pics.any((o) => o.text != w.text && o.rime == w.rime), 'pr:');
-      final match = _pick(pics.where((o) => o.text != t.text && o.rime == t.rime).toList());
-      final others = _others(pics, 2, (o) => o.rime != t.rime && (fmt == 3 || o.firstUnit == t.firstUnit));
-      final others2 = others.length < 2 ? _others(pics, 2, (o) => o.rime != t.rime) : others;
+      // rhymes by sound: only words in a checked rhyme family (fall back to spelling only if a language has none)
+      final fam = c.rhymeFamily;
+      String? rh(WordEntry w) => fam.isEmpty ? w.rime : fam[w.text];
+      final rpics = c.words.where((w) => w.emoji != null && !w.nonword && rh(w) != null).toList();
+      final t = pickT((w) => rh(w) != null && rpics.any((o) => o.text != w.text && rh(o) == rh(w)), 'pr:');
+      final match = _pick(rpics.where((o) => o.text != t.text && rh(o) == rh(t)).toList());
+      // wrong answers must clearly NOT rhyme (and at level 2+ start with the same sound, to make it tricky)
+      bool notRhyme(WordEntry o) => o.text != t.text && rh(o) != rh(t) && o.rime != t.rime && o.text.substring(max(0, o.text.length - 2)) != t.text.substring(max(0, t.text.length - 2));
+      final others = _others(pics, 2, (o) => notRhyme(o) && (fmt == 3 || o.firstUnit == t.firstUnit));
+      final others2 = others.length < 2 ? _others(pics, 2, notRhyme) : others;
       final p = c.p('rhyme', w: t.text);
       return _choice('pr:${t.text}', Skill.phonological, step, p, p,
           [Opt(match.text, emoji: match.emoji, say: match.text), for (final o in others2) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Rhyme confusion')],

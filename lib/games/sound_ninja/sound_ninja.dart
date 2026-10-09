@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../widgets/common.dart';
@@ -56,7 +55,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
   bool get clap => it.id.startsWith('pc:');
   int get n => it.options.length;
   int get beats => int.tryParse(it.options[it.correct].label) ?? 1;
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   @override
   void initState() {

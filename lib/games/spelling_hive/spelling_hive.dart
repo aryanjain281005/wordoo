@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../story/puppets.dart';
@@ -45,7 +44,7 @@ class _SpellingHiveItemState extends State<SpellingHiveItem> with TickerProvider
   String get lang => widget.ctx.pack.code;
   bool get demo => widget.ctx.demo;
   bool get full => !_slots.contains(null);
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   @override
   void initState() {

@@ -6,7 +6,6 @@ import '../../core/assets.dart';
 import '../../core/audio.dart';
 import '../../core/config.dart';
 import '../../core/theme.dart';
-import '../../core/tts.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
 import '../../story/story_lines.dart';
@@ -92,8 +91,8 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
   DetectiveCase get kase => _solvedCase ?? CaseBoard.current;
   int get n => it.options.length;
 
-  /// Fog only from step 2 up; the very first steps show the signs plainly.
-  bool get _foggy => it.level >= 2;
+  /// Levels 1–2 show the signs plainly; Gumsum's fog (and the magnifier) only arrives at levels 3–4.
+  bool get _foggy => it.level >= 6;
 
   @override
   void initState() {
@@ -114,7 +113,7 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
     super.dispose();
   }
 
-  void _say(String t) => Speaker.instance.speak(t, widget.ctx.pack.tts);
+  void _say(String t) => AudioManager.instance.say(t, ttsLocale: widget.ctx.pack.tts);
 
   Future<void> _line(String id) async {
     final l = StoryLines.instance[id];
@@ -342,7 +341,24 @@ class _WordDetectiveItemState extends State<WordDetectiveItem> with SingleTicker
             child: Stack(children: [
               Positioned.fill(child: ArtImage('bg.detective.street', fit: BoxFit.cover, fallback: CustomPaint(painter: _StreetPainter(n)))),
               for (var i = 0; i < n; i++) _sign(i, rects[i]),
-              if (_lens != null && !_resolved) _magnifier(),
+              if (_foggy && _lens != null && !_resolved) _magnifier(),
+              if (!_resolved && !demo)
+                Positioned(
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                  child: IgnorePointer(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: .9), borderRadius: BorderRadius.circular(14)),
+                      child: Text(
+                        _foggy && _revealed.length < n ? '🔍 Tap a foggy sign (or drag the magnifier) to read it, then tap the word you heard' : '👆 Tap the sign with the word you heard',
+                        textAlign: TextAlign.center,
+                        style: ts(14, color: C.ink, w: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
             ]),
           ),
         ),
