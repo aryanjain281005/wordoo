@@ -96,8 +96,12 @@ class ItemGen {
 
     if (fmt <= 2 && focus.isEmpty && rng.nextDouble() < .35) {
       // Clap the Beat: one drum tap per syllable (1–2 beats at step 1, up to 3 at step 2)
+      // pick the beat count first, so answers are not almost always "1"
       final maxSyl = step <= 1 ? 2 : 3;
-      final t = _leastSeen(_near(min(step, 5), (w) => w.emoji != null && !w.nonword && w.syllables <= maxSyl && w.text.length <= 9, prefix: 'pc:'), 'pc:');
+      final want = 1 + rng.nextInt(maxSyl);
+      final pool = c.words.where((w) => w.emoji != null && !w.nonword && w.syllables == want && w.text.length <= 10).toList()
+        ..sort((a, b) => (a.difficulty - step).abs().compareTo((b.difficulty - step).abs()));
+      final t = _leastSeen(pool.take(40).toList(), 'pc:');
       final p = c.p('clap', w: t.text);
       return _choice('pc:${t.text}', Skill.phonological, step, p, p,
           [Opt('${t.syllables}', say: t.text), for (var n = 1; n <= 3; n++) if (n != t.syllables) Opt('$n', say: t.text, tag: 'Syllable count error')],

@@ -510,5 +510,49 @@
  "gem_found": {
   "who": "dadi",
   "text": "A Story Gem! The whole island is shining because of you."
+ },
+ "how_soundNinja": {
+  "who": "pip",
+  "text": "A true ninja hears every piece of a word! Slice the right sound fruit."
+ },
+ "how_soundPortal": {
+  "who": "bolt",
+  "text": "Beep! Drag a beam from the sound to its letter portal. Fix my portals!"
+ },
+ "how_wordBuilder": {
+  "who": "coral",
+  "text": "Build the name in the reef, block by block, and a new creature hatches!"
+ },
+ "how_wordFlash": {
+  "who": "jugnu",
+  "text": "Watch my fireflies! The word shines for a blink, then find it in the jars."
+ },
+ "how_magicWriter": {
+  "who": "kalam",
+  "text": "Arr! Trace the glowing rune with your finger and the chest will open!"
+ },
+ "ninja_slice": {
+  "who": "pip",
+  "text": "Swish! Clean slice!"
+ },
+ "portal_fixed": {
+  "who": "bolt",
+  "text": "Beep boop! Portal fixed! A critter zooms through!"
+ },
+ "reef_hatch": {
+  "who": "coral",
+  "text": "Look! A brand new creature, named by you!"
+ },
+ "flash_catch": {
+  "who": "jugnu",
+  "text": "You caught it! Another stall lights up!"
+ },
+ "writer_open": {
+  "who": "kalam",
+  "text": "Arr, the quill obeys you! The chest is open!"
+ },
+ "writer_again": {
+  "who": "kalam",
+  "text": "Steady, matey. Follow the glowing line once more."
  }
 }

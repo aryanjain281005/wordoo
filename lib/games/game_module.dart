@@ -5,6 +5,11 @@ import '../widgets/item_views.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import 'letter_archer/letter_archer.dart';
+import 'magic_writer/magic_writer.dart';
+import 'sound_ninja/sound_ninja.dart';
+import 'sound_portal/sound_portal.dart';
+import 'word_builder/word_builder.dart';
+import 'word_flash/word_flash.dart';
 import 'sound_orchestra/sound_orchestra.dart';
 import 'spelling_hive/spelling_hive.dart';
 import 'story_quest/story_quest.dart';
@@ -33,6 +38,12 @@ class GameModules {
     GameId.wordDetective: (c, ctx, key) => WordDetectiveItem(key: key, ctx: ctx, cluesEver: _state(c)?.detectiveClues ?? 0),
     GameId.letterArcher: (c, ctx, key) => LetterArcherItem(key: key, ctx: ctx, lanternsLit: _state(c)?.lanternsLit ?? 0, explorerName: _state(c)?.explorerName ?? ''),
     GameId.wordRocket: (c, ctx, key) => WordRocketItem(key: key, ctx: ctx, seaLog: _state(c)?.seaLog ?? 0),
+    // Phase 4: each island's second game shares that skill's persistent counter
+    GameId.soundNinja: (c, ctx, key) => SoundNinjaItem(key: key, ctx: ctx, heardRight: _state(c)?.bandStickers ?? 0),
+    GameId.soundPortal: (c, ctx, key) => SoundPortalItem(key: key, ctx: ctx, critters: _state(c)?.lanternsLit ?? 0),
+    GameId.wordBuilder: (c, ctx, key) => WordBuilderItem(key: key, ctx: ctx, reefSize: _state(c)?.seaLog ?? 0),
+    GameId.wordFlash: (c, ctx, key) => WordFlashItem(key: key, ctx: ctx, stallsLit: _state(c)?.detectiveClues ?? 0),
+    GameId.magicWriter: (c, ctx, key) => MagicWriterItem(key: key, ctx: ctx, runeBook: _state(c)?.hiveBees ?? 0),
     GameId.storyQuest: (c, ctx, key) => StoryQuestItem(key: key, ctx: ctx, libraryBooks: _state(c)?.libraryBooks.length ?? 0),
   };
 

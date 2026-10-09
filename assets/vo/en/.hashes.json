@@ -222,5 +222,16 @@
 "tease_castle": "8582c7e8861c0101c0620e2f6ebe9d34",
 "tease_observatory": "4b8c874d329f9339981a31ac1cf61ca7",
 "gift_found": "4c28cc6ca3a8cf929a77777bff4a6193",
-"gem_found": "39fc6f64c7ff81070ebec46d9df1a97b"
+"gem_found": "39fc6f64c7ff81070ebec46d9df1a97b",
+"how_soundNinja": "ec504a39d8728ebfe28ffb1038c9d9b6",
+"how_soundPortal": "65e775872ab90f7f865098e9eaed760d",
+"how_wordBuilder": "0286d81107e1aefcd536ad4ba3ba0e96",
+"how_wordFlash": "64601f3ae42d94dbd15d5cbb1ec72c91",
+"how_magicWriter": "13e372bbd9333c26b60699340e6009d1",
+"ninja_slice": "5a9d5436182715f235a59a6d175ac3d6",
+"portal_fixed": "6e9d2dbc315bd54a4161e92ffc22add7",
+"reef_hatch": "02554840b2f1459434b4fea6305df3aa",
+"flash_catch": "c3fc4f281d5c561e14822e46847c9762",
+"writer_open": "6d60106c5405cc315fd458651d1e2009",
+"writer_again": "8fe8d72dc65f931281a522ed823cb983"
 }

@@ -26,6 +26,24 @@ const islandGame = {
   IslandId.observatory: GameId.starObservatory,
 };
 
+/// The second game of each island (Phase 4). Quests alternate between the island's two games so both get
+/// played; the chapter boss (node 10) is always the island's main game.
+const islandGame2 = {
+  IslandId.forest: GameId.soundNinja,
+  IslandId.valley: GameId.soundPortal,
+  IslandId.ocean: GameId.wordBuilder,
+  IslandId.village: GameId.wordFlash,
+  IslandId.treasure: GameId.magicWriter,
+};
+
+GameId gameFor(IslandId i, int node, {int salt = 0}) {
+  final second = islandGame2[i];
+  if (second == null) return islandGame[i]!;
+  if (node == Cfg.chapterNodes - 1) return islandGame[i]!; // boss
+  final k = node >= 0 ? node : salt;
+  return k.isOdd ? second : islandGame[i]!;
+}
+
 const seasonNames = ['The Lost Words', 'The Whispering Winds', 'The Starlight Library', 'The Rainbow Tides', 'The Clockwork Carnival', 'The Moonlit Kingdom'];
 String seasonName(int season) => season <= seasonNames.length ? seasonNames[season - 1] : 'Season $season';
 
@@ -187,7 +205,7 @@ class Campaign {
       QuestKind.bonus => 'Bonus: $base',
       _ => season > 1 ? '$base · Part $season' : base,
     };
-    return Quest(i, kind, title, [skill], items, islandGame[i]!, node);
+    return Quest(i, kind, title, [skill], items, gameFor(i, node, salt: st.tier + title.length), node);
   }
 
   /// Always-on quest board (no daily limit): weakest need first, a middle skill, then a stretch for a strong skill.

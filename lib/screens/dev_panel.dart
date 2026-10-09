@@ -28,6 +28,11 @@ class _DevPanelState extends State<DevPanel> {
     (GameId.wordDetective, IslandId.village, Skill.wordRecognition),
     (GameId.spellingHive, IslandId.treasure, Skill.spelling),
     (GameId.storyQuest, IslandId.castle, Skill.comprehension),
+    (GameId.soundNinja, IslandId.forest, Skill.phonological),
+    (GameId.soundPortal, IslandId.valley, Skill.gpc),
+    (GameId.wordBuilder, IslandId.ocean, Skill.decoding),
+    (GameId.wordFlash, IslandId.village, Skill.wordRecognition),
+    (GameId.magicWriter, IslandId.treasure, Skill.spelling),
   ];
 
   void _play(GameId g, IslandId i, List<Skill> skills) {
