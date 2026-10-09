@@ -38,7 +38,8 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
 | All 8 `bg.cut.*` | ✅ Remade as single scenes (9 Oct), in the app | — |
 | `bg.detective.street`, all 9 suspects | ✅ In the app (9 Oct) | — |
-| Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | redo `char.pari.happy` with Pari alone (see §H1) |
+| Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | `char.pari.happy` remade by Claude (Pari alone) ✅ |
+| 14 story covers, 10 `bg.book.*`, `bg.archer.sky`, Arya talk, Ullu thinking, Chuchu | ✅ In the app (9 Oct) | `char.ullu.talk` must be redone (see §M) |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
@@ -419,3 +420,35 @@ Until then each zone is a code-drawn gradient (light → dark).
 
 ### Priority for Phase 2f
 `bg.rocket.zone1`, `bg.rocket.zone2`, then zones 3–4, then the Pearl.
+
+---
+
+## M. Phase 3 — Meta-progression (rewards that keep children coming back)
+
+Everything here is optional: the app already shows emoji and code-drawn art. Painted versions make the room and the map feel richer.
+
+### M1. Explorer's Room (**portrait 1440 × 2560**)
+| File name | Prompt (after Style block) |
+|---|---|
+| `bg.room.png` | A cosy, EMPTY Indian child's bedroom seen from the front, warm peach walls with a subtle rangoli dot pattern, a wooden floor with a round pink-and-yellow rug in the lower middle, soft evening lamp light. **Leave these areas plain so the app can place things there:** a big empty window frame top-left, an empty wall area top-right, one empty wooden shelf on the right wall, an empty glass aquarium on a low cabinet on the left, an empty flower pot bottom-right. No people, no toys, no text. Vertical 9:16. |
+
+### M2. Islands for the world map (1024 × 1024, plain white background, ONE floating island, seen slightly from above)
+The app fades each island from grey to full colour as the child restores it, so draw them in **full colour**.
+
+| File name | Prompt (after Style block) |
+|---|---|
+| `island.forest.png` | A small round floating island covered in lush jungle: tall green trees, giant ferns, a tree-stump music stage with a tabla, glowing mushrooms, rocks and roots hanging underneath. |
+| `island.valley.png` | A small floating island with purple and lilac hills, a tiny archery target, colourful kites on strings, paper lanterns, a winding path. |
+| `island.ocean.png` | A small floating island that is mostly a turquoise lagoon with a little lighthouse, a yellow rocket-submarine in the water, coral and palm trees at the edges. |
+| `island.village.png` | A small floating island with a cosy Indian village: three colourful houses, a chai stall, bunting flags, a well, marigold garlands. |
+| `island.treasure.png` | A small floating tropical island with a giant flowering tree holding a golden beehive, a half-buried treasure chest, sunflowers and a tiny pirate flag. |
+| `island.castle.png` | A small floating island with a pink-and-gold storybook castle (Rajasthani domes and arches), flags shaped like bookmarks, open books floating around it. |
+| `island.observatory.png` | A small floating island with a domed observatory and a big brass telescope pointing at the sky, tiny stars sparkling around it. |
+
+### Priority for Phase 3
+`bg.room`, then the 7 `island.*` pictures.
+
+### Fixes from batch 4 (9 Oct)
+- `char.ullu.talk`: the uploaded image is a **different owl** (no hat, on a branch), so it is not used. Please remake it as an **edit of `char.ullu.happy`**: identical (hat, magnifier, Chuchu), only the beak open.
+- `char.arya.happy`: Claude made it from your `char.arya.talk` (same pose, mouth closed), so the pair matches. Nothing to do.
+- `char.pari.happy`: Claude made it from `char.pari.talk` with Pari alone. Nothing to do.

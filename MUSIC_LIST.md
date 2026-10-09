@@ -33,7 +33,7 @@ steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 | Star Observatory                | `music.observatory` ✅                                          |
 | Check-in / dashboard            | `music.bridge` ✅ / `music.calm` ✅                             |
 
-**All 13 tracks are in the app.** No new music is needed for the six main games.
+**All 13 tracks are in the app.** Phase 3 (rewards, room) needs no new music: the room uses the map theme. No new music is needed for the six main games.
 (`music.castle` is kept for the Story Castle island screens planned in Phase 3.)
 
 ## Second batch (✅ done 9 Oct: story, library, boss)

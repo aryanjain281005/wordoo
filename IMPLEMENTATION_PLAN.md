@@ -76,4 +76,6 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Phase 2e — Letter Archer (Flame: lanterns with letters, slingshot bow + tap-to-auto-aim, drift by step, aiming guide, wrong lanterns dim, Golden Lantern fireworks with the child's name after 3 first-try hits, persistent lanterns in the valley sky; physics unit-tested)
 - [x] Phase 2f — Word Rocket (Flame ocean scene: fuel cells tap-to-hear, swipe-up blend zip, picture / heard / alien-name rounds, BOOST dive + depth meter to the Pearl of Sounds, sputter + slow re-read help, 4 zones by step, Sea Log)
 - [x] Art & music batch 2 integrated (8 cutscene backgrounds, detective street, goat suspect; story / library / boss music wired)
-- [ ] Phase 3 — Meta-progression
+- [x] Phase 3 — Meta-progression (6 collections × 12 items from each game's counters, Story Gems per chapter per season, island grey→colour restoration + tier growth on the map, Explorer's Room, cozy streak with rain day, effort gifts, voiced 'next time' teasers, reward screen moments)
+- [x] Art batch 4 (story covers, book worlds, archer sky, character moods)
+- [ ] Phase 4 — Five more games

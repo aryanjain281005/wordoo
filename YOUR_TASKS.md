@@ -12,22 +12,22 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 
 ### Most visible first
 - [ ] Sound Orchestra band: `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (§I1)
-- [ ] **Redo `char.pari.happy` with Pari ALONE** (today's has Kitabu next to her, so he flickers when she talks). Use `char.pari.talk` as the reference: same pose, mouth closed, smiling (§H1)
 
-### Word Rocket (new)
+### Phase 3: room & map (new)
+- [ ] Empty cosy bedroom `bg.room` (ART_PROMPTS §M1)
+- [ ] 7 map islands `island.forest` … `island.observatory` (§M2)
+- [ ] **Redo `char.ullu.talk`** as an edit of `char.ullu.happy` (the uploaded one is a different owl) (§M)
+
+### Word Rocket
 - [ ] 4 ocean zones `bg.rocket.zone1` … `bg.rocket.zone4` (ART_PROMPTS §L1)
 - [ ] `prop.rocket.pearl`, `char.kachhua.talk` (§L2)
 
 ### Letter Archer
-- [ ] Festival night sky `bg.archer.sky` (ART_PROMPTS §K1)
-- [ ] `char.arya.talk`, `char.arya.cheer`, `char.arya.thinking`, `char.garud.happy` (§K2)
+- [ ] `char.arya.cheer`, `char.arya.thinking`, `char.garud.happy` (§K2)
 
 ### Word Detective
-- [ ] `char.ullu.talk`, `char.ullu.thinking`, `char.chuchu.happy` (§J3)
 
 ### Story Quest pictures
-- [ ] 14 story covers `story.s-hat` … `story.s-cloud` (§H3)
-- [ ] 10 story-world backgrounds `bg.book.park` … `bg.book.street` (§H2)
 - [ ] Props: `prop.book.closed`, `prop.book.open`, `prop.castle.tower_broken`, `prop.castle.tower_restored`, 6 `prop.emotion.*` faces (§H4)
 
 ### Sharper characters (optional upgrade)
@@ -39,6 +39,7 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Send the **Pixabay page links** of the 10 tracks already in the app (for `assets/music/CREDITS.txt`)
 
 ## ✅ Done
+- 9 Oct (batch 4): 14 story covers, 10 story-world backgrounds, festival sky, Arya talk, Ullu thinking, Chuchu. Claude remade `char.pari.happy` (Pari alone) and `char.arya.happy` (matches her talk picture)
 - 9 Oct: 8 cutscene backgrounds (single scenes), `bg.detective.street`, `char.suspect.goat`, `.cat`, `.cow`, `.monkey`, `.mouse`, `.parrot`, `.pig`, `.dog`, `.owl` (all 9 suspects); Pari talk/cheer/sad/thinking; Kitabu talk/cheer/surprised/thinking; music `music.story`, `music.library`, `music.boss`
 - 12 backgrounds, 27 character images, 5 Spelling Hive props (cut out and in the app)
 - 10 music tracks (looping, in the app)
