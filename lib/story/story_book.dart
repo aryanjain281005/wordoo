@@ -10,7 +10,9 @@ export 'book_text.dart';
 /// sentence splitting (must match tool/export_books.dart), narration ids, and the comic panel.
 
 /// Book-world background for a sentence, picked from its words (bg.book.* in ART_PROMPTS.md).
-String bookSceneFor(String text) {
+String bookSceneFor(String text, {String? story}) => _sceneOf(text) ?? (story == null ? null : _sceneOf(story)) ?? 'park';
+
+String? _sceneOf(String text) {
   final t = text.toLowerCase();
   const map = [
     (['market', 'shop', 'mango'], 'market'),
@@ -27,7 +29,7 @@ String bookSceneFor(String text) {
   for (final (words, scene) in map) {
     if (words.any(t.contains)) return scene;
   }
-  return 'park';
+  return null;
 }
 
 /// Story characters that have painted art, found by name in a sentence.
@@ -52,12 +54,13 @@ class BookPanel extends StatelessWidget {
   final double pictureHeight;
   final String ttsLocale;
   final bool glow; // flashes when the answer is in this panel
-  const BookPanel({super.key, required this.storyId, required this.emoji, required this.sentence, required this.index, this.litWord = -1, this.pictureHeight = 190, this.ttsLocale = 'en-IN', this.glow = false});
+  final String? storyText; // whole story: panels with no place word keep the story's setting
+  const BookPanel({super.key, required this.storyId, required this.emoji, required this.sentence, required this.index, this.litWord = -1, this.pictureHeight = 190, this.ttsLocale = 'en-IN', this.glow = false, this.storyText});
 
   @override
   Widget build(BuildContext context) {
     final words = sentence.split(RegExp(r'\s+'));
-    final scene = bookSceneFor(sentence);
+    final scene = bookSceneFor(sentence, story: storyText);
     final cast = bookCastFor(sentence);
     final cover = index == 0 ? ReadleAssets.instance.art('story.$storyId') : null;
     return Column(mainAxisSize: MainAxisSize.min, children: [

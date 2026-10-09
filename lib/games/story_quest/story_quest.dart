@@ -286,6 +286,7 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
             glow: _glow == _page,
             pictureHeight: _asked ? 115 : 190,
             ttsLocale: tts,
+            storyText: it.passage,
           ),
         ),
         const SizedBox(height: 8),
@@ -321,7 +322,10 @@ class _StoryQuestItemState extends State<StoryQuestItem> with SingleTickerProvid
           _navButton(Icons.chevron_right_rounded, _page < _pages.length - 1, () => _flip(1)),
         ]),
         if (!demo)
-          Align(alignment: Alignment.centerRight, child: Text('📚 ${widget.libraryBooks + (_restored && isAuthoredStory(_storyId) ? 1 : 0)} books restored', style: ts(12, color: C.inkSoft, w: FontWeight.w600))),
+          Align(alignment: Alignment.centerRight, child: Text(() {
+            final n = widget.libraryBooks + (_restored && isAuthoredStory(_storyId) ? 1 : 0);
+            return '📚 $n ${n == 1 ? 'book' : 'books'} restored';
+          }(), style: ts(12, color: C.inkSoft, w: FontWeight.w600))),
       ]),
     );
   }

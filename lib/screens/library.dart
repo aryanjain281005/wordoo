@@ -163,7 +163,7 @@ class _BookReaderState extends State<BookReader> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(color: const Color(0xFFFFF8EA), borderRadius: BorderRadius.circular(26), border: Border.all(color: const Color(0xFFD9B98A), width: 3)),
                       child: Column(children: [
-                        BookPanel(key: ValueKey(page), storyId: widget.story.id, emoji: widget.story.emoji, sentence: pages[page], index: page, litWord: lit, pictureHeight: 230, ttsLocale: tts),
+                        BookPanel(key: ValueKey(page), storyId: widget.story.id, emoji: widget.story.emoji, sentence: pages[page], index: page, litWord: lit, pictureHeight: 230, ttsLocale: tts, storyText: widget.story.text),
                         const SizedBox(height: 10),
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           RoundIconButton(icon: Icons.chevron_left_rounded, label: 'Previous page', onTap: () => _go(-1)),
