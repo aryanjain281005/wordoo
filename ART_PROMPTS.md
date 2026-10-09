@@ -37,7 +37,7 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 |---|---|---|
 | `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
 | All 8 `bg.cut.*` | ✅ Remade as single scenes (9 Oct), in the app | — |
-| `bg.detective.street`, suspects goat, cat, cow, monkey, mouse, parrot | ✅ In the app (9 Oct) | owl still to do |
+| `bg.detective.street`, all 9 suspects | ✅ In the app (9 Oct) | — |
 | Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | redo `char.pari.happy` with Pari alone (see §H1) |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
