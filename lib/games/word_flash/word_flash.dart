@@ -175,7 +175,7 @@ class _WordFlashItemState extends State<WordFlashItem> with SingleTickerProvider
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(_showing ? 'Look! Remember it…' : (_flashedOnce ? 'Which jar has the same word?' : 'Watch the fireflies!'), style: ts(18, color: C.ink)),
-              if (!demo) Text('🏮 $lit stalls lit in the bazaar', style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
+              if (!demo) Text('🏮 $lit ${lit == 1 ? 'stall' : 'stalls'} lit in the bazaar', style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
             ]),
           ),
           RoundIconButton(
