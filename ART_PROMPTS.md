@@ -482,3 +482,92 @@ Characters are 1024 × 1024, plain white background, ONE pose.
 
 ### Priority for Phase 4
 The 5 backgrounds, then the two chests, then the talk frames.
+
+
+---
+
+## O. Story v3 — new characters and reference stills (for `GAME_DESIGN_V3.md` and `ANIMATION_PROMPTS.md`)
+
+These pictures are needed **before** the AI videos: the video tools start from them, which keeps every character
+on-model. Same rules as always: **one single picture**, plain flat white background for characters and props,
+1024 × 1024 for characters, 1440 × 2560 portrait for scenes. Use the existing picture of a character as a
+**reference image** whenever you can.
+
+### O1. The Story Tree with the seven Keepers (portrait 1440 × 2560)
+| File name | Prompt (after Style block) |
+|---|---|
+| `still.tree.keepers.png` | The Great Story Tree at golden evening (a giant ancient banyan-like tree whose leaves glow like warm golden pages, glowing letters drifting up like fireflies) on a grassy floating island above the clouds. Under it, the seven Story Keepers stand in a gentle half-circle facing the viewer: in the centre **Milo**, a young orange fox with cream cheek tufts and a leaf-green scarf; then a big brown bear conductor in a red kurta with a baton; an Indian girl archer (about 12) with a long black braid, purple tunic and golden bow; an old green sea turtle with a white moustache and navy captain hat; a round brown owl in a tweed deerstalker hat with a magnifying glass and a tiny grey mouse with a notebook; a regal honeybee queen with a glowing honey-drop crown; and an Indian princess (about 10) in a pink and gold lehenga with a blue talking book with googly eyes. Around them sit smiling animals (rabbit, peacock, baby elephant), smiling living flowers with petal faces, and small fluffy white clouds with happy faces. Vertical 9:16. |
+| `still.map.storm.png` | A bird's-eye view of six small floating islands in a ring around a central floating island with a big grey leafless-looking Story Tree. Each of the six islands has its own small swirling grey storm cloud above it and a fluffy grey cloud cage on top: a jungle island, a purple valley island with kites, a lagoon island with a lighthouse, a colourful village island, a tropical island with a giant beehive tree, and a pink castle island. Everything is muted and stormy but not scary; soft cartoon zig-zag lightning inside the storm clouds. Vertical 9:16. |
+
+### O2. Gumsum, three looks (1024 × 1024, plain white background)
+Use your existing `char.gumsum.happy` as the reference image so he stays the same character.
+
+| File name | Prompt (after Style block + Gumsum block) |
+|---|---|
+| `char.gumsum.villain.png` | Gumsum as a **HUGE theatrical storm cloud**: dark slate-grey, puffy and towering, big expressive eyes with bold angry eyebrows, a wide smug grin, two cloud arms raised dramatically like a pantomime villain, small cartoon zig-zag lightning bolts glowing softly inside his body, a few stolen glowing letters trapped inside. Funny-villain, never scary. |
+| `char.gumsum.small_sad.png` | Gumsum after the storm breaks: a **small**, soft light-grey cloud, big watery sad eyes, no angry eyebrows, hugging himself with his little cloud arms, one tiny raindrop falling. Lonely and gentle; the viewer should feel sorry for him. |
+| `char.gumsum.redeemed.png` | Gumsum redeemed: a soft **glowing white-gold** cloud with rosy cheeks and a shy happy smile, little golden letters swirling inside him like happy fireflies, a tiny rainbow arching from his side. Friendly and warm. |
+
+### O3. Milo, injured (1024 × 1024, plain white background)
+Use your `char.milo.happy` as the reference image.
+
+| File name | Prompt |
+|---|---|
+| `char.milo.injured.png` | Milo the young orange fox (cream cheek tufts and chest, leaf-green scarf, small satchel of glowing leaves), sitting up a little dizzy, with a **neat white bandage wrapped around the tip of his fluffy tail**, one ear drooping, a small plaster on his cheek, but a brave hopeful smile. Cute, not hurt-looking. |
+| `char.milo.injured.talk.png` | **Edit of `char.milo.injured`**: identical, only the mouth open while speaking. |
+
+### O4. The six Hush Clouds (Gumsum's jailers), 1024 × 1024, plain white background
+All six share **one design**: a small round puffy storm cloud (about the size of a pumpkin), two tiny cloud arms, a cheeky
+grumpy face with bushy eyebrows and a pouty mouth, a few soft zig-zag sparks inside. Only the **colour** and the
+**prop** change, so they look like a family. Make one, then use it as the reference for the other five.
+
+| File name | Name | Prompt (after Style block + the shared design above) |
+|---|---|---|
+| `char.jailer.forest.png` | Drizzle (Sound Forest) | The Hush Cloud **Drizzle**, coloured **moss-green**, arms crossed, smug grumpy look, holding a cloth draped over a little drum so no music can play. |
+| `char.jailer.valley.png` | Gust (Symbol Valley) | The Hush Cloud **Gust**, coloured **violet**, arms crossed, smug grumpy look, holding a tangle of knotted kite strings. |
+| `char.jailer.ocean.png` | Murk (Word Ocean) | The Hush Cloud **Murk**, coloured **dark teal**, arms crossed, smug grumpy look, holding a heavy rusty anchor on a chain. |
+| `char.jailer.village.png` | Smudge (Word Village) | The Hush Cloud **Smudge**, coloured **orange-brown**, arms crossed, smug grumpy look, holding an ink-blotted signboard with smeared letters. |
+| `char.jailer.treasure.png` | Sulk (Treasure Island) | The Hush Cloud **Sulk**, coloured **mustard-yellow**, arms crossed, smug grumpy look, holding a big honey jar with a padlock. |
+| `char.jailer.castle.png` | Hush (Story Castle) | The Hush Cloud **Hush**, coloured **pinkish-grey**, arms crossed, smug grumpy look, holding a closed storybook locked with a clasp. |
+
+For each, also make `char.jailer.<island>.talk.png` (edit: only the mouth open) and `char.jailer.<island>.popped.png`
+(edit: the same cloud shrunk to half size with a surprised face and a little burst of raindrops and a tiny rainbow).
+
+### O5. The six cloud cages (1024 × 1024, plain white background)
+A fluffy round **cloud cage**: a puffy grey cloud bubble with soft rounded cloud "bars", a big ornate **golden lock with
+a keyhole** on the front, floating slightly above the ground. The Keeper inside looks **bored and grumpy, not scared**.
+Use each Keeper's `.happy` picture as the reference.
+
+| File name | Prompt |
+|---|---|
+| `prop.cage.forest.png` | The fluffy grey cloud cage described above. Inside sits a big round friendly brown bear conductor in a red silk kurta with gold buttons, tiny gold bow-tie, small round spectacles, holding a thin baton, arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.valley.png` | The fluffy grey cloud cage described above. Inside sits a confident kind Indian girl of about 12 with a long black braid, purple tunic with gold trim, brown boots and a golden bow, with her friendly eagle Garud (orange scarf), arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.ocean.png` | The fluffy grey cloud cage described above. Inside sits an old friendly green sea turtle with a white bushy moustache, navy captain hat with a gold anchor badge and a brass telescope, arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.village.png` | The fluffy grey cloud cage described above. Inside sits a serious but lovable round brown owl in a tweed deerstalker hat holding a brass magnifying glass, with his tiny grey mouse friend Chuchu holding a notebook, arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.treasure.png` | The fluffy grey cloud cage described above. Inside sits a regal but kind round honeybee queen with soft yellow-brown stripes, shimmering wings, a crown made of a glowing honey drop and a tiny honeycomb cape, arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.castle.png` | The fluffy grey cloud cage described above. Inside sits an adventurous Indian princess of about 10 with a long black side braid, pink and gold lehenga, white sneakers and a small golden lantern-shaped crown, with Kitabu the chubby blue talking book with googly eyes, arms folded, bored and grumpy, peeking through the cloud bars. |
+| `prop.cage.empty.png` | The same cloud cage, empty, with the golden lock open, puffs starting to drift apart. |
+
+### O6. Keys and lock (512 × 512, plain white background)
+| File name | Prompt |
+|---|---|
+| `prop.key.gold.png` | A single ornate golden key with a tiny glowing Story-Tree leaf on its round handle, soft sparkle, slightly tilted. |
+| `prop.key.empty.png` | The same key shape as a faint grey outline only (an empty key slot). |
+| `prop.lock.gold.png` | A big ornate golden padlock with a keyhole and a Story-Tree leaf emblem, soft glow. |
+
+### O7. The Storm Citadel (seventh island)
+| File name | Prompt |
+|---|---|
+| `island.citadel.png` | (1024 × 1024, plain white background) The Star Observatory floating island (a domed observatory with a big brass telescope) now taken over by a storm: wrapped in a huge spiralling dark-grey storm cloud, soft cartoon lightning zig-zags circling it like a crown, purple-grey colours. Use `island.observatory` as the reference image. |
+| `bg.citadel.png` | (portrait 1440 × 2560) Inside the Storm Citadel: an old observatory hall with a giant brass telescope, star maps on the walls, swirling storm clouds through the open dome, purple-blue light; calm open middle for the Trial questions. |
+
+### O8. Keeper roster portraits (512 × 512, plain white background, round badge)
+For each Keeper, a round portrait badge: `prop.badge.<id>.png` for `milo`, `bhalu`, `arya`, `kachhua`, `ullu`,
+`madhu`, `pari`. A circular golden frame with leaf details around the Keeper's smiling head and shoulders (use their
+`.happy` picture as reference). The app shows a greyed version while the Keeper is still caged, so only the colour badge is needed.
+
+### Priority for Story v3
+1. `char.gumsum.villain`, `char.milo.injured`, `still.tree.keepers`, `still.map.storm` (needed for the prologue video)
+2. One Hush Cloud, then the other five; the six cages
+3. `island.citadel`, `char.gumsum.small_sad`, `char.gumsum.redeemed`
+4. Keys, lock, badges, `bg.citadel`

@@ -8,6 +8,12 @@ Claude processes, checks and installs them.
 Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.md`](MUSIC_LIST.md).
 **Tip:** name each file exactly as listed (e.g. `char.suspect.monkey.png`), not with the image tool's title. **Remember:** every image must be ONE single picture, not a sheet of views (see the rule in the Style block).
 
+## 🎬 Story v3 (new, most important)
+- [ ] **Reference stills first** (ART_PROMPTS §O): `char.gumsum.villain`, `char.milo.injured` (+ `.talk`), `still.tree.keepers`, `still.map.storm`
+- [ ] Six Hush Clouds `char.jailer.<island>` (+ `.talk`, `.popped`) and six cages `prop.cage.<island>` (§O4–O5)
+- [ ] `island.citadel`, `bg.citadel`, `char.gumsum.small_sad`, `char.gumsum.redeemed`, keys/lock (`prop.key.gold`, `prop.key.empty`, `prop.lock.gold`), 7 badges `prop.badge.<id>` (§O2, O6–O8)
+- [ ] **48 AI video clips** from [`ANIMATION_PROMPTS.md`](ANIMATION_PROMPTS.md), saved as `assets/video/video.<name>.mp4`: prologue (9), island start (12), rescue (12), trial (3 + retry), finale (5), extras
+
 ## 🎨 Images
 
 ### Phase 4: the five new games (new)

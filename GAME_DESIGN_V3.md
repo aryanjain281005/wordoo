@@ -1,6 +1,6 @@
 # Readle — Game Design v3: *The Rescue of the Story Keepers*
 
-> Status: **design only, not implemented.** `GAME_DESIGN.md` (v2.1) still describes the app as it is built today.
+> Status: **approved 10 Oct (decisions in §9); implementation in progress.** `GAME_DESIGN.md` (v2.1) still describes the app as it is built today.
 > This document re-tells the story and changes the progression rules with the **fewest possible changes**:
 > every game, level, character and picture we already have is reused. Only one small new character set is
 > proposed (the storm-cloud jailers), and even that is made from existing Gumsum art.
@@ -41,7 +41,9 @@ island bursts back into colour.
 **The finale.** When all six Keepers are free, the **seventh island**, Gumsum's **Storm Citadel** (the old Star
 Observatory, now wrapped in storm), appears. Gumsum challenges the Explorer to **the Storm Trial**, a test mixing
 everything they have learned. Score high enough and the light of every story, shining through the seven Keepers,
-**breaks the storm**. Gumsum shrinks to a tiny, grumbling cloud and drifts away ("This isn't over!"), which is the hook for the next season.
+**breaks the storm**. **Softer redemption:** Gumsum shrinks to a small, lonely grey cloud. Nobody ever told *him* a story,
+and that is why he hated them. The Keepers and the Explorer tell him one. He brightens to white-gold and becomes
+the Story Tree's gentle rain cloud, a friend. The next season brings a new threat from beyond the clouds.
 
 > **Tone guardrails** (unchanged from v2): no scary imagery. Cages are made of fluffy grey cloud, not bars. Keepers
 > are *bored and grumpy* in their cages, not hurt or crying. Milo's injury is a bandaged tail, played for warmth
@@ -110,17 +112,10 @@ Fewer than half right: **0 keys**, "Almost! Play again"; the next level stays lo
 
 **A Keeper is freed only when the island's key total reaches its maximum (28, or 14 on Story Castle).**
 
-⚠️ **Design risk (please confirm):** the maximum needs **every level answered 100 % first try**, including
-8/8 on two boss levels. Our players are 5–10 and many are at risk of dyslexia, so some will find perfection very
-hard and may feel stuck. The adaptive engine **cannot** soften this, because each level has a fixed difficulty. Mitigations (pick any):
-
-1. **Recommended:** free the Keeper at **≥ 80 % of the maximum** (23/28; 12/14 on Story Castle), and keep the last
-   keys as a **gold "Perfect Rescue"** badge. Children who want 28/28 can still chase it.
-2. Keep "maximum only", but after 3 replays of the same level without improving, Milo offers a **practice round**
-   with hints. Its keys still count, so the child can get unstuck.
-3. Keep "maximum only" exactly as written (simplest; watch it in the Phase 8 playtest).
-
-This document assumes **option 1** in the numbers below; changing it is one constant.
+**Decided (10 Oct): maximum keys.** Every level must be cleared with 100 % first-try answers. A child who
+is not there yet keeps replaying (new questions each time) and keeps every key already won. Safety nets that do not
+lower the bar: Milo's hints and the extra-help mode stay on inside levels, and the island sheet always shows which
+levels still have keys to win ("2 keys left on Level 3").
 
 ### 3.3 Island key meter (UI)
 
@@ -194,7 +189,7 @@ colours, thick outlines, one clear idea per shot, sound effects on every beat, n
 | A2 ×6 | **Island start** (first visit to each island) | 20–25 s | Fly-in over the stormy island → the jailer cloud pops up and taunts → push-in on the cage: the Keeper waves sadly ("Explorer! In here!") → Milo explains the two games → **key reveal**: a key spins and shows "28 keys open the cage" |
 | A3 ×6 | **Rescue** (key meter reaches the threshold) | 15–20 s | Keys fly into the lock one by one (fast) → cage bursts into fluffy puffs → jailer shrinks and pops into a sprinkle → **colour wave** sweeps the island (grey → full colour) → the Keeper does a happy dance and joins Milo (sticker-burst) → Tree glows a bit brighter (1 of 6 lights on) |
 | A4 | **Trial warning** (before the 7th island) | 20 s | All six Keepers in a 6-panel split, then together → the Storm Citadel rises, lightning → Gumsum: "A test! Answer **21 of 30** right and my storm breaks. Fail, and it stays forever!" → big on-screen card: **"Storm Trial · 30 questions · score 21 to win ⚡"** → Milo: "We can do this together!" |
-| A5 | **Finale** (Trial passed) | 30–40 s | Lightning meter fills → beam of light from the Tree through all seven Keepers → storm cracks and bursts → Gumsum shrinks to a tiny cloud ("This isn't over!") and drifts away → whole realm in colour, animals dance → Tree full of light → season badge |
+| A5 | **Finale** (Trial passed) | 40–50 s | Lightning meter fills → beam of light from the Tree through all seven Keepers → storm cracks and bursts → Gumsum shrinks to a small, sad grey cloud, alone → **softer redemption:** Milo and the Explorer sit beside him; the Keepers tell him a story; he listens, starts to glow and turns soft white-gold ("Nobody ever told me a story before…") → he floats up and becomes the Tree's gentle rain cloud, a friend → whole realm in colour, animals dance → season badge |
 | A6 | Trial not passed | 8 s | Storm rumbles, Gumsum smirks; Keepers cheer the child on; "Try again whenever you're ready" |
 
 **Extras (cheap, high value):** key-earned fly-in (every level, 1 s) · boss-level intro (3 s: jailer appears,
@@ -208,7 +203,7 @@ colours, thick outlines, one clear idea per shot, sound effects on every beat, n
 | 2. AI image-to-video (for 2–4 "hero" shots) | Feed our painted backgrounds/characters as the first frame to a video model (e.g. Kling AI, Runway Gen-4, Google Veo 3, Hailuo) with a prompt; drop the MP4 into a cutscene shot | Real motion (eruption, flying, storm) that looks cinematic | Characters drift off-model; little control; 5–10 s clips; needs an account and credits; check commercial licence | Free tiers limited; ≈ $10–30/month |
 | 3. Rive / Lottie by an animator | Professional rigged characters and VFX | Nessy-level quality, small files, interactive | Needs a hired animator (weeks) | Paid |
 
-**Recommendation:** build **all six animations with option 1** (Claude does it, no new art needed). Optionally add
+**Decided (10 Oct): AI video is used** for the cinematic animations; prompts are in [`ANIMATION_PROMPTS.md`](ANIMATION_PROMPTS.md). The code cutscene engine plays the clips (with our recorded voices on top) and does the small in-game moments (key fly-in, boss card, unlocks). The earlier plan remains the fallback while clips are missing: build **all six animations with option 1** (Claude does it, no new art needed). Optionally add
 **AI video for 2–3 spectacle shots** (storm attack in A1, cage burst in A3, storm breaking in A5). Claude writes
 those prompts, using our existing art as the starting frame, but someone has to create the account and download
 the clips (they need an account, and possibly payment).
@@ -255,9 +250,9 @@ New voices: the six jailers can be one cloud voice pitched up or down per island
 
 **Total ≈ 9 days.** Nothing in the screening, learner model, games or levels changes.
 
-## 9. Decisions needed from the team
+## 9. Decisions (team, 10 Oct)
 
-1. Rescue threshold: **maximum keys** as written, or **≥ 80 % + Perfect Rescue badge** (recommended)? (§3.2)
-2. Storm Trial: **30 questions, pass 21** OK? (§5)
-3. Animations: **code cutscenes only**, or also **AI video for 2–3 hero shots** (needs an account)? (§6.3)
-4. Gumsum's ending: drifts away grumbling (season-2 hook, as written), or a softer redemption later?
+1. Rescue threshold: **maximum keys** (100 % first try on every level).
+2. Storm Trial: **30 questions, pass 21**: approved.
+3. Animations: **AI video** for the cinematic moments (prompts in `ANIMATION_PROMPTS.md`).
+4. Gumsum's ending: **softer redemption** (he hears his first story and becomes the Tree's rain cloud).
