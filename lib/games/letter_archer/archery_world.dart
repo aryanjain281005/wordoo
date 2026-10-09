@@ -36,13 +36,15 @@ class ArcheryWorld {
   Offset get bow => Offset(size.width / 2, size.height - 70);
   Offset get nock => bow + pull;
 
-  Offset home(int i) => Offset(size.width * (i + 1) / (lanterns + 1), size.height * (.2 + (i.isOdd ? .14 : 0)));
+  Offset home(int i) => Offset(size.width * (i + 1) / (lanterns + 1), size.height * (.2 + (i.isOdd ? .17 : 0)));
 
   Offset lanternAt(int i, [double? at]) {
     final tt = at ?? t;
     final h = home(i);
     final up = rise[i] == null ? 0.0 : -pow(rise[i]!, 1.6) * 90;
-    final amp = drift * size.width * .06;
+    // sway stays inside each lantern's own lane, so neighbours never overlap
+    final lane = size.width / (lanterns + 1);
+    final amp = min(drift * size.width * .06, max(0.0, (lane - radius * 1.9) / 2));
     return h + Offset(sin(tt * (.6 + .15 * i) + i * 2.1) * amp, cos(tt * .9 + i) * 5 + up);
   }
 

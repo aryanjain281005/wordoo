@@ -67,6 +67,19 @@ void main() {
     expect(w.arrow, isNull, reason: 'a new arrow is ready');
   });
 
+  test('drifting lanterns never overlap on a phone-sized sky', () {
+    for (final n in [2, 3, 4]) {
+      final w = make(drift: 2, n: n)..size = const Size(375, 450);
+      for (var t = 0.0; t < 30; t += .05) {
+        for (var a = 0; a < n; a++) {
+          for (var b = a + 1; b < n; b++) {
+            expect((w.lanternAt(a, t) - w.lanternAt(b, t)).distance, greaterThan(w.radius * 1.9), reason: 'n=$n t=$t');
+          }
+        }
+      }
+    }
+  });
+
   test('Letter Archer is the registered module for its game', () => expect(GameModules.hasDedicated(GameId.letterArcher), isTrue));
 
   Item letter(int step, int seed) => ItemGen(GameContent.of('en'), rng: Random(seed)).make(Skill.gpc, step);
