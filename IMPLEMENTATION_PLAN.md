@@ -78,4 +78,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Art & music batch 2 integrated (8 cutscene backgrounds, detective street, goat suspect; story / library / boss music wired)
 - [x] Phase 3 — Meta-progression (6 collections × 12 items from each game's counters, Story Gems per chapter per season, island grey→colour restoration + tier growth on the map, Explorer's Room, cozy streak with rain day, effort gifts, voiced 'next time' teasers, reward screen moments)
 - [x] Art batch 4 (story covers, book worlds, archer sky, character moods)
-- [ ] Phase 4 — Five more games
+- [x] Phase 4 — Five more games: Sound Ninja (slice fruits / cut syllables, combo), Sound Portal (energy beam to letter portals, critters), Word Builder (reef blocks → named creatures), Word Flash (firefly flash by step, bazaar stalls), Magic Writer (finger writing checked by an on-device $P-style recogniser built from the app font); islands alternate their two games
+- [ ] Phase 5 — Art pass (ongoing as assets arrive)

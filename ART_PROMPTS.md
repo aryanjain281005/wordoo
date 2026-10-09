@@ -41,6 +41,7 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | Pari & Kitabu moods (8 images) | ✅ In the app (9 Oct) | `char.pari.happy` remade by Claude (Pari alone) ✅ |
 | 14 story covers, 10 `bg.book.*`, `bg.archer.sky`, Arya talk, Ullu thinking, Chuchu | ✅ In the app (9 Oct) | `char.ullu.talk` must be redone (see §M) |
 | Band, Garud, 4 ocean zones, Story Quest props (batches 5–7) | ✅ In the app (9 Oct) | — |
+| `bg.room` + 7 map islands (batch 8) | ✅ In the app (9 Oct) | — |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
@@ -453,3 +454,28 @@ The app fades each island from grey to full colour as the child restores it, so 
 - `char.ullu.talk`: the uploaded image is a **different owl** (no hat, on a branch), so it is not used. Please remake it as an **edit of `char.ullu.happy`**: identical (hat, magnifier, Chuchu), only the beak open.
 - `char.arya.happy`: Claude made it from your `char.arya.talk` (same pose, mouth closed), so the pair matches. Nothing to do.
 - `char.pari.happy`: Claude made it from `char.pari.talk` with Pari alone. Nothing to do.
+
+---
+
+## N. Phase 4 — the five second games (all optional; the games draw their own placeholders)
+
+Backgrounds are **portrait 1440 × 2560** with a calm middle (the game draws its pieces on top).
+Characters are 1024 × 1024, plain white background, ONE pose.
+
+| File name | Game | Prompt (after Style block) |
+|---|---|---|
+| `bg.ninja.dojo.png` | Sound Ninja | A peaceful night bamboo grove dojo: tall green bamboo at both sides, paper lanterns, a wooden practice platform at the bottom, fireflies, soft moonlight. Open middle. Vertical 9:16. |
+| `bg.portal.workshop.png` | Sound Portal | Bolt's cosy robot workshop: teal and copper walls, gears and pipes at the edges, glowing blue wires, tool shelves, warm workbench lamp. Open middle. Vertical 9:16. |
+| `bg.reef.city.png` | Word Builder | An underwater reef city: coral towers like little buildings in pink, orange and purple, sea-grass streets, bubbles, sun rays from above, the lower half calm sandy floor. Open middle. Vertical 9:16. |
+| `bg.flash.bazaar.png` | Word Flash | An Indian night bazaar seen from the street: closed stalls with striped awnings (chai, bangles, kites, sweets) along the edges, strings of unlit bulbs, deep indigo sky, a few fireflies. Open dark middle. Vertical 9:16. |
+| `bg.writer.cove.png` | Magic Writer | A pirate cove at sunset: golden sand, a wrecked rowing boat, palm trees, glowing runes carved on cliff rocks, orange-pink sky. Open middle. Vertical 9:16. |
+| `prop.writer.chest.png` | Magic Writer | A closed wooden pirate treasure chest with gold bands and a glowing purple rune lock on the lid (512 × 512, plain white background). |
+| `prop.writer.chest_open.png` | Magic Writer | The same chest wide open, golden light and coins, a crown and gems spilling out (512 × 512, plain white background). |
+| `char.pip.talk.png` | Sound Ninja | **Edit of `char.pip.happy`:** identical, only the mouth open. |
+| `char.bolt.talk.png` | Sound Portal | **Edit of `char.bolt.happy`:** identical, only the screen face showing an open pixel mouth. |
+| `char.coral.talk.png` | Word Builder | **Edit of `char.coral.happy`:** identical, only the mouth open. |
+| `char.jugnu.talk.png` | Word Flash | **Edit of `char.jugnu.happy`:** identical, only the mouth open. |
+| `char.kalam.talk.png` | Magic Writer | **Edit of `char.kalam.happy`:** identical, only the beak open. |
+
+### Priority for Phase 4
+The 5 backgrounds, then the two chests, then the talk frames.

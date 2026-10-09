@@ -120,5 +120,13 @@
  "prop.emotion.proud": "ed860d7aa16e351f6bebb65b4e0c685d9382ca36",
  "prop.emotion.sad": "5b36eb59599cbd28d490ca8b330b08711006fb4f",
  "prop.emotion.scared": "0d1b66daad4e0fa32b6e379506ce927474a8b2bc",
- "prop.emotion.surprised": "4136f1a2d84a5b2ba9f47bb60970810bb6fb2244"
+ "prop.emotion.surprised": "4136f1a2d84a5b2ba9f47bb60970810bb6fb2244",
+ "bg.room": "230a7b546eb1bb06c071cb25e1b2a0fe2a17894d",
+ "island.castle": "68ca1f6656fd51a72b0e648fadc2d4076eed1ed0",
+ "island.forest": "c1eae0f1e5912f1637b63939e1e05f4ebc11d3bb",
+ "island.observatory": "11daa3442c0ffb944f8c4e84b19e80d475d8f02a",
+ "island.ocean": "7f6540344f62ef28c348eaf43e15d7e8e680b3dc",
+ "island.treasure": "01428986e8b251302c43bb1b5d16ce33506adb63",
+ "island.valley": "c7f3739c9a278ab7f3d24e1dcc0dca660749dc82",
+ "island.village": "539ed09b53a9960c71461807681db0c206b24778"
 }
