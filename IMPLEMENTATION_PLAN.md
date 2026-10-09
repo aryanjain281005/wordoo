@@ -72,4 +72,5 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Phase 2b — Story Quest (comic-book panels per sentence, Dadi narration for all 14 authored stories with word highlighting, tap-a-word, Kitabu asks, look-back help that reopens the answer panel, emotion faces, Story Library to re-read, castle restoration)
 - [x] Phase 2c — Sound Orchestra (band on tree stumps, tap-to-hear + ✓ to choose, blend chorus, new Clap-the-Beat syllable rounds, band wakes up layer by layer with music volume + fireflies, sound-specific hints; syllable counter fixed)
 - [x] Device validation on the Vivo: fixed audio never playing on devices (assets/assets path), voice waiting/fallback, oversized hatch bee, Story Quest scroll + page fade, cutscene pan edge, Android back on grown-up screens, Journal art, Library tiles
-- [ ] Phase 2d — Word Detective
+- [x] Phase 2d — Word Detective (6 voiced mini mysteries, fogged village signs + draggable magnifier, clue cards, suspect line-up and reveal, detective rank, look-alike hints)
+- [ ] Phase 2e — Letter Archer (Flame)

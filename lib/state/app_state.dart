@@ -82,7 +82,8 @@ class AppState extends ChangeNotifier {
   // rewards
   int stars = 0;
   Set<String> libraryBooks = {}; // Story Quest: authored stories understood → re-readable Library + restored castle towers
-  int hiveBees = 0; // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
+  int hiveBees = 0;
+  int detectiveClues = 0; // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
   // settings
@@ -171,6 +172,7 @@ class AppState extends ChangeNotifier {
         'cycleSessionStart': cycleSessionStart,
         'stars': stars,
         'hiveBees': hiveBees,
+        'detectiveClues': detectiveClues,
         'libraryBooks': libraryBooks.toList(),
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
@@ -217,6 +219,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = j['cycleSessionStart'] as int? ?? 0;
     stars = j['stars'] as int;
     hiveBees = j['hiveBees'] as int? ?? 0;
+    detectiveClues = j['detectiveClues'] as int? ?? 0;
     libraryBooks = Set<String>.from(j['libraryBooks'] as List? ?? const []);
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
@@ -269,6 +272,7 @@ class AppState extends ChangeNotifier {
     cycleSessionStart = 0;
     stars = 0;
     hiveBees = 0;
+    detectiveClues = 0;
     libraryBooks = {};
     badges = {};
     seenScenes = {};
@@ -480,6 +484,7 @@ class AppState extends ChangeNotifier {
     final tag = r.tags.isEmpty ? null : r.tags.first;
     m.update(r.correct ? 1 : 0, item.diff, ms: r.ms, tag: tag);
     if (item.skill == Skill.spelling && r.correct) hiveBees++;
+    if (item.skill == Skill.wordRecognition && r.correct) detectiveClues++;
     if (item.skill == Skill.comprehension && r.correct) {
       final id = storyIdOfItem(item.id);
       if (isAuthoredStory(id)) libraryBooks.add(id);

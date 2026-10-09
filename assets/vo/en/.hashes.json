@@ -189,5 +189,21 @@
 "bookq_s_cloud_0": "d0f89cd899cea566151edfe73e46b23a",
 "bookq_s_cloud_1": "b8ff128a12f7eb681e87b6bf7c882864",
 "bookq_s_cloud_2": "43f9bfa3621611ef1f18353899123f86",
-"bookq_s_cloud_3": "b26322e8803b231dfce5563a94179f00"
+"bookq_s_cloud_3": "b26322e8803b231dfce5563a94179f00",
+"det_intro_0": "855aa1cb4111a71986e59858ef9d1107",
+"det_reveal_0": "e2be35398cd86701ef59930c4c9dd001",
+"det_intro_1": "9a030e1d7ff2b34699c75e458f1a1900",
+"det_reveal_1": "eee8370b0f0acb60cfca13ec1d573174",
+"det_intro_2": "7fdbb7e7f022eb03b0e1177452a42a39",
+"det_reveal_2": "36d300eeca8672755275f20b712ab9be",
+"det_intro_3": "f43607dd8ae680118f55542908e61b59",
+"det_reveal_3": "f08dff9acd647510d5a5a2a4bc58ab90",
+"det_intro_4": "2a2a3ded65fb7ae47cbdba795860720e",
+"det_reveal_4": "679915c4a1da4d34a5e00b82a58c03b4",
+"det_intro_5": "5b40213811ca972f81d5747603e29abe",
+"det_reveal_5": "823c0460c8a915ea41ccaa4f54fae39a",
+"det_clue": "841b9c0021697740fcad95cdd3f857b4",
+"det_accuse": "1d6b246774a6943cb00daf1492f98297",
+"det_think": "7452e7de6468450802f4a1083953814b",
+"det_scared": "27825255401413c9056a973789a83349"
 }

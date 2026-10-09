@@ -378,5 +378,69 @@
  "how_starObservatory": {
   "who": "milo",
   "text": "Every star needs a different skill. Let's use them all!"
+ },
+ "det_intro_0": {
+  "who": "ullu",
+  "text": "A mystery! Who took the mangoes from the market?"
+ },
+ "det_reveal_0": {
+  "who": "ullu",
+  "text": "It was the goat! He just wanted a juicy snack. Case closed!"
+ },
+ "det_intro_1": {
+  "who": "ullu",
+  "text": "A mystery! Who ate all the laddoos?"
+ },
+ "det_reveal_1": {
+  "who": "ullu",
+  "text": "It was the little mouse! His tummy was rumbling. Case closed!"
+ },
+ "det_intro_2": {
+  "who": "ullu",
+  "text": "A mystery! Who rang the temple bell at midnight?"
+ },
+ "det_reveal_2": {
+  "who": "ullu",
+  "text": "It was the monkey! He wanted to make music. Case closed!"
+ },
+ "det_intro_3": {
+  "who": "ullu",
+  "text": "A mystery! Who hid Arya's kite?"
+ },
+ "det_reveal_3": {
+  "who": "ullu",
+  "text": "It was the parrot! He wanted to fly with it. Case closed!"
+ },
+ "det_intro_4": {
+  "who": "ullu",
+  "text": "A mystery! Who splashed mud on the school wall?"
+ },
+ "det_reveal_4": {
+  "who": "ullu",
+  "text": "It was the piglet! He was playing in the puddles. Case closed!"
+ },
+ "det_intro_5": {
+  "who": "ullu",
+  "text": "A mystery! Who borrowed the library book?"
+ },
+ "det_reveal_5": {
+  "who": "ullu",
+  "text": "It was the puppy! He wanted a bedtime story. Case closed!"
+ },
+ "det_clue": {
+  "who": "ullu",
+  "text": "A clue! Well done, detective."
+ },
+ "det_accuse": {
+  "who": "ullu",
+  "text": "Three clues! Now, detective, who did it?"
+ },
+ "det_think": {
+  "who": "ullu",
+  "text": "Hmm… look at the clues again."
+ },
+ "det_scared": {
+  "who": "chuchu",
+  "text": "C-c-could it be a ghost?!"
  }
 }

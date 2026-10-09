@@ -332,3 +332,38 @@ Sleeping members are shown in grey by the app automatically, so only the happy c
 
 ### Priority for Phase 2c
 `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (then the props).
+
+---
+
+## J. Phase 2d — Word Detective ("The Case of the Switched Signs")
+
+Each quest is a mini mystery: Gumsum's fog covers the village signs, the child finds the right word with a
+magnifier, collects 3 clues and names the culprit. Until these exist the app draws a simple street and uses emoji.
+
+### J1. Street scene (**landscape 1536 × 1024**, full scene)
+| File name | Prompt (after Style block) |
+|---|---|
+| `bg.detective.street.png` | A cosy Indian village lane at golden evening, three small colourful houses side by side (orange, turquoise, pink) with tiled roofs and wooden doors, marigold garlands, a lamp post, cobbled path. **The upper-middle band of the picture (where three hanging signboards will be placed by the app) must be plain wall with no windows or text.** Soft, slightly misty mood. Landscape. |
+
+### J2. Suspects (1024 × 1024, plain white background, ONE pose, cute and innocent-looking)
+| File name | Prompt (after Style block) |
+|---|---|
+| `char.suspect.goat.png` | A cheeky white baby goat with tiny horns, a bit of chewed paper sticking out of his mouth, guilty sideways grin. |
+| `char.suspect.monkey.png` | A playful brown monkey holding a banana peel behind his back, innocent wide eyes. |
+| `char.suspect.cow.png` | A gentle spotted Indian cow with a marigold garland and a small bell, calm sleepy smile. |
+| `char.suspect.mouse.png` | A tiny grey mouse with round ears and laddoo crumbs on his whiskers, hands behind his back. |
+| `char.suspect.cat.png` | A fluffy ginger cat sitting neatly, tail curled around her paws, looking very innocent. |
+| `char.suspect.parrot.png` | A bright green parrot with a red beak, a kite string tangled around one foot, mid-squawk. |
+| `char.suspect.pig.png` | A pink piglet covered in happy mud splashes, big grin, curly tail. |
+| `char.suspect.dog.png` | A sleepy brown puppy hugging a small storybook, one ear flopped over. |
+| `char.suspect.owl.png` | A small fluffy owl with huge round eyes sitting on a branch. |
+
+### J3. Detective team extras (1024 × 1024, plain white background, ONE pose)
+| File name | Prompt (after Style block) |
+|---|---|
+| `char.ullu.talk.png` | **Edit of `char.ullu.happy`:** identical, only the beak open while speaking. |
+| `char.ullu.thinking.png` | Inspector Ullu holding his magnifier up to one huge eye, eyebrow raised, deep in thought. |
+| `char.chuchu.happy.png` | Chuchu, a tiny nervous grey mouse with a notebook and a laddoo, big worried eyes, trembling whiskers. |
+
+### Priority for Phase 2d
+`bg.detective.street`, then the 9 `char.suspect.*`, then `char.ullu.talk`.

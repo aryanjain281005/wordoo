@@ -15,6 +15,11 @@ Full prompts: [`ART_PROMPTS.md`](ART_PROMPTS.md) · track details: [`MUSIC_LIST.
 - [ ] Sound Orchestra band: `char.tinku.happy`, `char.koyal.happy`, `char.gajju.happy` (§I1)
 - [ ] Story Quest helpers: `char.pari.talk`, `char.kitabu.talk`, `char.kitabu.thinking`, `char.pari.cheer` (§H1)
 
+### Word Detective (new)
+- [ ] Street scene `bg.detective.street` (ART_PROMPTS §J1)
+- [ ] 9 suspects `char.suspect.goat` … `char.suspect.owl` (§J2)
+- [ ] `char.ullu.talk`, `char.ullu.thinking`, `char.chuchu.happy` (§J3)
+
 ### Story Quest pictures
 - [ ] 14 story covers `story.s-hat` … `story.s-cloud` (§H3)
 - [ ] 10 story-world backgrounds `bg.book.park` … `bg.book.street` (§H2)
