@@ -18,7 +18,7 @@ steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 ## Status (9 Oct)
 
 ✅ All 10 tracks are in the app. Claude converted them to small looping OGG files (about 1–2 MB each instead of 2–8 MB).
-**Still needed from you:** the **Pixabay page link** for each of the 10 tracks you picked, so they can be listed in `assets/music/CREDITS.txt` (good practice, and proof of licence if a store ever asks).
+**Still needed from you:** the **Pixabay page link** for each of the 13 tracks you picked, so they can be listed in `assets/music/CREDITS.txt` (good practice, and proof of licence if a store ever asks).
 
 ## Which track plays where (all games built so far)
 
@@ -33,9 +33,10 @@ steady, no sudden loud drops, 1–3 minutes long, and nothing scary or too fast.
 | Star Observatory                | `music.observatory` ✅                                          |
 | Check-in / dashboard            | `music.bridge` ✅ / `music.calm` ✅                             |
 
-No new music is needed for Letter Archer; the festive valley track already fits.
+**All 13 tracks are in the app.** No new music is needed for the six main games.
+(`music.castle` is kept for the Story Castle island screens planned in Phase 3.)
 
-## Next tracks (Phase 2b and story scenes)
+## Second batch (✅ done 9 Oct: story, library, boss)
 
 | #   | File name                                                                                                      | Where it plays                                                | Mood                      | Search on Pixabay                                                                                                                                                         | Pick if…                                                                                              |
 | --- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |

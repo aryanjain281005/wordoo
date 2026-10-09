@@ -74,6 +74,8 @@ class AudioManager {
   /// A random variation (e.g. correct_1/2/3) so repeated feedback doesn't sound mechanical.
   Future<void> sfxOneOf(List<String> ids, {double volume = .8}) => sfx(ids[Random().nextInt(ids.length)], volume: volume);
 
+  String? get currentMusic => _musicId;
+
   Future<void> music(String id) async {
     if (!enabled || _musicId == id) return;
     _musicId = id;

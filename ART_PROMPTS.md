@@ -36,7 +36,8 @@ Check each tool's terms allow commercial use before the app is published. Keep a
 | Group | Result | What happens now |
 |---|---|---|
 | `bg.castle`, `bg.day`, `bg.forest`, `bg.hive`, `bg.night`, all 7 `bg.island.*` | ✅ Perfect, in the app | — |
-| All 8 `bg.cut.*` | ❌ Came out as a grid of 12 small variations, so each picture is only ~300 px | **Please make these again** (single scene, see the rule in the Style block). Until then, cutscenes use the nearest good background |
+| All 8 `bg.cut.*` | ✅ Remade as single scenes (9 Oct), in the app | — |
+| `bg.detective.street`, suspects goat, cat, cow, monkey, mouse, parrot | ✅ In the app (9 Oct) | pig, dog, owl still to do |
 | Characters `char.*` and props `prop.*` | ⚠️ Came out as model sheets (front, side, back and close-ups) | Claude cut out the **front view** of each automatically and removed the white background, so they already work in the app. But the cut-outs are small (about 300–400 px, Milo only 278 px wide), so they look a little soft on big screens. Making them again as single images (1024 px) gives sharp art. Optional, after the cutscene backgrounds; start with Milo |
 
 ---
@@ -392,3 +393,27 @@ Use your `char.arya.happy` as the reference image.
 
 ### Priority for Phase 2e
 `bg.archer.sky`, then `char.arya.talk`.
+
+---
+
+## L. Phase 2f — Word Rocket ("Captain Kachhua's Bubble Rocket")
+
+The game draws the rocket, fuel cells, bubbles and the alien creatures itself. Images add the four ocean zones behind them.
+Until then each zone is a code-drawn gradient (light → dark).
+
+### L1. Ocean zones (**portrait 1440 × 2560**, full scene, calm middle: the rocket dives through the centre)
+| File name | Zone (steps) | Prompt (after Style block) |
+|---|---|---|
+| `bg.rocket.zone1.png` | Sunlight Zone (1–3) | Bright shallow tropical sea seen from inside the water: turquoise water, sunbeams from the surface, a few coral heads and seaweed along the bottom edge, small bubbles. Open clear water in the middle. Vertical 9:16. |
+| `bg.rocket.zone2.png` | Twilight Zone (4–5) | Deeper blue water, fading light rays from far above, rocky cliffs with sea fans at the sides, a few glowing plankton. Open water in the middle. Vertical 9:16. |
+| `bg.rocket.zone3.png` | Deep Zone (6–7) | Very deep dark-navy ocean, gentle glowing bioluminescent dots in teal and green, silhouettes of a distant shipwreck and kelp at the bottom. Mysterious but friendly. Open water in the middle. Vertical 9:16. |
+| `bg.rocket.zone4.png` | Alien Trench (8–10) | The deepest ocean trench: dark violet-black water, glowing purple and pink crystals and strange friendly plants on the trench walls at both sides, soft magical light. Open water in the middle. Vertical 9:16. |
+
+### L2. Extras (512 × 512, plain white background, ONE object)
+| File name | Prompt (after Style block) |
+|---|---|
+| `prop.rocket.pearl.png` | The Pearl of Sounds: a big glowing pearl with a soft rainbow shimmer and tiny golden musical notes inside, resting in an open pink scallop shell. |
+| `char.kachhua.talk.png` | **Edit of `char.kachhua.happy`:** identical, only the mouth open while speaking (1024 × 1024). |
+
+### Priority for Phase 2f
+`bg.rocket.zone1`, `bg.rocket.zone2`, then zones 3–4, then the Pearl.

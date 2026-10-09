@@ -9,6 +9,7 @@ import 'sound_orchestra/sound_orchestra.dart';
 import 'spelling_hive/spelling_hive.dart';
 import 'story_quest/story_quest.dart';
 import 'word_detective/word_detective.dart';
+import 'word_rocket/word_rocket.dart';
 
 /// Everything a game needs to show ONE item. The shared GameHost (game_screen.dart) owns the quest,
 /// the learner model, rewards and story; a game module only turns an item into play.
@@ -31,6 +32,7 @@ class GameModules {
     GameId.soundOrchestra: (c, ctx, key) => SoundOrchestraItem(key: key, ctx: ctx),
     GameId.wordDetective: (c, ctx, key) => WordDetectiveItem(key: key, ctx: ctx, cluesEver: _state(c)?.detectiveClues ?? 0),
     GameId.letterArcher: (c, ctx, key) => LetterArcherItem(key: key, ctx: ctx, lanternsLit: _state(c)?.lanternsLit ?? 0, explorerName: _state(c)?.explorerName ?? ''),
+    GameId.wordRocket: (c, ctx, key) => WordRocketItem(key: key, ctx: ctx, seaLog: _state(c)?.seaLog ?? 0),
     GameId.storyQuest: (c, ctx, key) => StoryQuestItem(key: key, ctx: ctx, libraryBooks: _state(c)?.libraryBooks.length ?? 0),
   };
 

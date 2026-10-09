@@ -82,9 +82,13 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
   late final AnimationController _cam = AnimationController(vsync: this, duration: const Duration(seconds: 4));
   late final AnimationController _ambient = AnimationController(vsync: this, duration: const Duration(seconds: 20))..repeat();
 
+  String? _musicBefore;
+
   @override
   void initState() {
     super.initState();
+    _musicBefore = AudioManager.instance.currentMusic;
+    AudioManager.instance.music('music.story');
     _start();
   }
 
@@ -142,6 +146,7 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
   void dispose() {
     _closing = true;
     AudioManager.instance.stopVoice();
+    if (_musicBefore != null) AudioManager.instance.music(_musicBefore!);
     _cam.dispose();
     _ambient.dispose();
     super.dispose();
@@ -170,7 +175,7 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
                 final zz = max(z, 1 + 2 * p.abs() + .02);
                 return Transform.translate(offset: Offset(0, p * box.maxHeight), child: Transform.scale(scale: zz, child: child));
               },
-              child: AnimatedSwitcher(duration: const Duration(milliseconds: 700), child: KeyedSubtree(key: ValueKey('bg$i${shot.bg}'), child: _background(shot))),
+              child: AnimatedSwitcher(duration: const Duration(milliseconds: 700), child: KeyedSubtree(key: ValueKey('bg$i${shot.bg}'), child: SizedBox.expand(child: _background(shot)))),
             ),
             _fx(shot),
             for (final c in shot.cast) _castMember(c, box, i),

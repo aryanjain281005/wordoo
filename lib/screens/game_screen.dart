@@ -76,7 +76,8 @@ class _GameScreenState extends State<GameScreen> {
     beatId = beatLineFor(quest, st.campaign);
     guardian = islandGuardian[quest.island]!;
     WidgetsBinding.instance.addPostFrameCallback((_) => _tellBeat());
-    AudioManager.instance.music('music.${quest.island.name}');
+    // boss quests (the 10th of a chapter) get the exciting track; Story Castle reads to the calm library track
+    AudioManager.instance.music(quest.kind == QuestKind.boss ? 'music.boss' : (quest.island == IslandId.castle ? 'music.library' : 'music.${quest.island.name}'));
   }
 
   late final String beatId;

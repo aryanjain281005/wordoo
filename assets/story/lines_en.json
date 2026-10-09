@@ -442,5 +442,37 @@
  "det_scared": {
   "who": "chuchu",
   "text": "C-c-could it be a ghost?!"
+ },
+ "rocket_boost": {
+  "who": "kachhua",
+  "text": "Bubbles and barnacles! BOOST!"
+ },
+ "rocket_sputter": {
+  "who": "kachhua",
+  "text": "Oh no, the engine sputtered! Let's read the fuel cells again."
+ },
+ "rocket_zone_1": {
+  "who": "kachhua",
+  "text": "Welcome to the Sunlight Zone, explorer. Read the fuel cells and we dive!"
+ },
+ "rocket_zone_2": {
+  "who": "kachhua",
+  "text": "Ahoy! The Twilight Zone. The water is getting darker."
+ },
+ "rocket_zone_3": {
+  "who": "kachhua",
+  "text": "The Deep Zone! Only clever readers come this far."
+ },
+ "rocket_zone_4": {
+  "who": "kachhua",
+  "text": "The Alien Trench! Strange creatures live here. Can you read their names?"
+ },
+ "rocket_pearl": {
+  "who": "kachhua",
+  "text": "There it is! The Pearl of Sounds! You found it, explorer!"
+ },
+ "rocket_blend": {
+  "who": "kachhua",
+  "text": "Swipe up to blend the sounds together!"
  }
 }

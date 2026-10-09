@@ -205,5 +205,13 @@
 "det_clue": "841b9c0021697740fcad95cdd3f857b4",
 "det_accuse": "1d6b246774a6943cb00daf1492f98297",
 "det_think": "7452e7de6468450802f4a1083953814b",
-"det_scared": "27825255401413c9056a973789a83349"
+"det_scared": "27825255401413c9056a973789a83349",
+"rocket_boost": "d78ae5677d2a962ec45ca7d9008fc638",
+"rocket_sputter": "9de7214b93e952fe288890ef9f619c4c",
+"rocket_zone_1": "69d474dd30977a9fc8f362b8959f4cc2",
+"rocket_zone_2": "6d3a6f57113164f9a5af739e6499e736",
+"rocket_zone_3": "7eb48bede4688eefc7d2a46744048b67",
+"rocket_zone_4": "139693eb5c742733851b3f47543d8936",
+"rocket_pearl": "12cce5048edfe69b2325c0f43b2b0408",
+"rocket_blend": "dc383f0c2352c20d0ed94934077b5dce"
 }

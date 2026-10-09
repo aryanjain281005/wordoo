@@ -84,7 +84,8 @@ class AppState extends ChangeNotifier {
   Set<String> libraryBooks = {}; // Story Quest: authored stories understood → re-readable Library + restored castle towers
   int hiveBees = 0;
   int detectiveClues = 0;
-  int lanternsLit = 0; // Letter Archer: every right letter lights a lantern that stays in the valley sky // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
+  int lanternsLit = 0;
+  int seaLog = 0; // Word Rocket: words blended right → sea creatures met in the Sea Log // Letter Archer: every right letter lights a lantern that stays in the valley sky // Word Detective: right words found → clues → detective rank // Spelling Hive: one baby bee hatches for every word spelt correctly, forever
   Set<String> badges = {};
 
   // settings
@@ -175,6 +176,7 @@ class AppState extends ChangeNotifier {
         'hiveBees': hiveBees,
         'detectiveClues': detectiveClues,
         'lanternsLit': lanternsLit,
+        'seaLog': seaLog,
         'libraryBooks': libraryBooks.toList(),
         'badges': badges.toList(),
         'seenScenes': seenScenes.toList(),
@@ -223,6 +225,7 @@ class AppState extends ChangeNotifier {
     hiveBees = j['hiveBees'] as int? ?? 0;
     detectiveClues = j['detectiveClues'] as int? ?? 0;
     lanternsLit = j['lanternsLit'] as int? ?? 0;
+    seaLog = j['seaLog'] as int? ?? 0;
     libraryBooks = Set<String>.from(j['libraryBooks'] as List? ?? const []);
     badges = Set<String>.from(j['badges'] as List);
     seenScenes = Set<String>.from(j['seenScenes'] as List? ?? const []);
@@ -277,6 +280,7 @@ class AppState extends ChangeNotifier {
     hiveBees = 0;
     detectiveClues = 0;
     lanternsLit = 0;
+    seaLog = 0;
     libraryBooks = {};
     badges = {};
     seenScenes = {};
@@ -490,6 +494,7 @@ class AppState extends ChangeNotifier {
     if (item.skill == Skill.spelling && r.correct) hiveBees++;
     if (item.skill == Skill.wordRecognition && r.correct) detectiveClues++;
     if (item.skill == Skill.gpc && r.correct) lanternsLit++;
+    if (item.skill == Skill.decoding && r.correct) seaLog++;
     if (item.skill == Skill.comprehension && r.correct) {
       final id = storyIdOfItem(item.id);
       if (isAuthoredStory(id)) libraryBooks.add(id);

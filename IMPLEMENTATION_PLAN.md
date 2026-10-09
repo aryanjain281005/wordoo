@@ -74,4 +74,6 @@ its tests pass; and it runs smoothly on the Vivo V2130.
 - [x] Device validation on the Vivo: fixed audio never playing on devices (assets/assets path), voice waiting/fallback, oversized hatch bee, Story Quest scroll + page fade, cutscene pan edge, Android back on grown-up screens, Journal art, Library tiles
 - [x] Phase 2d — Word Detective (6 voiced mini mysteries, fogged village signs + draggable magnifier, clue cards, suspect line-up and reveal, detective rank, look-alike hints)
 - [x] Phase 2e — Letter Archer (Flame: lanterns with letters, slingshot bow + tap-to-auto-aim, drift by step, aiming guide, wrong lanterns dim, Golden Lantern fireworks with the child's name after 3 first-try hits, persistent lanterns in the valley sky; physics unit-tested)
-- [ ] Phase 2f — Word Rocket (Flame)
+- [x] Phase 2f — Word Rocket (Flame ocean scene: fuel cells tap-to-hear, swipe-up blend zip, picture / heard / alien-name rounds, BOOST dive + depth meter to the Pearl of Sounds, sputter + slow re-read help, 4 zones by step, Sea Log)
+- [x] Art & music batch 2 integrated (8 cutscene backgrounds, detective street, goat suspect; story / library / boss music wired)
+- [ ] Phase 3 — Meta-progression
