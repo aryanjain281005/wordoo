@@ -60,7 +60,7 @@
 | 6 | [🧠 Personalisation & Adaptive Difficulty](#6-personalisation-and-adaptive-difficulty) | How Wordoo learns and adapts to each child |
 | 7 | [🎮 The 11-Game Architecture](#7-the-11-game-architecture-and-the-6-playable-games) | Six playable games, eight floating islands & five coming |
 | 8 | [⭐ Rewards](#8-rewards) | Stars, treasures, badges, and the Star Observatory |
-| 9 | [📅 Weekly Cycle & Parent Report](#9-weekly-cycle-parent-report-and-next-week-plan) | Check-ins, growth reports, and the next plan |
+| 9 | [📅 Weekly Cycle & Parent Report](#9-weekly-cycle-parent-report-and-next-week-plan) | Check-ins, growth reports, the emailed Gemini parent report, and the next plan |
 | 10 | [🌐 Languages & Content](#10-languages-and-content-architecture) | English, Hindi, and the language-pack system |
 | 11 | [🎨 Visual Design System](#11-visual-design-system) | Painted scenes, character gallery, and components |
 | 12 | [🔒 Accessibility, Privacy & Safety](#12-accessibility-privacy-and-safety) | What is stored, what is never stored |
@@ -508,6 +508,18 @@ Items are generated from language-pack word lists (`lib/engine/item_factory.dart
 3. **Weekly report:** baseline → week-1 per skill, band changes, overall change, practice days / minutes / games, common slips, *What we observed*, support note.
 4. **Next adventure plan:** focus skills (with reasons such as *"Improved strongly — a lighter touch this week"*), suggested missions, new starting levels.
 5. **Learning loop** screen, then week 2 starts with a fresh plan.
+
+### 📧 Emailed parent report (written by Gemini)
+
+Besides the in-app dashboard, a parent can get a **detailed progress report by email** after every check-in.
+
+<p align="center"><img src="docs/parent-report-email.png" width="420" alt="The emailed Wordoo progress report: highlights and a skill-by-skill breakdown with baseline → latest scores"/></p>
+
+- **Where:** Grown-up Dashboard → *Email the full report* → parent's email + a consent tick → *Send report now*. After consent, the report is also sent automatically after each later check-in.
+- **What it contains:** warm summary, highlights, every skill with *baseline → latest* score and band (Needs Support / Developing / Strong), focus areas with 5–10 minute home activities, a 7-day plan, tips, when to talk to the teacher, and a fixed "not a medical or diagnostic assessment" disclaimer. English or simple Hindi.
+- **How it is made:** the phone sends only the numbers behind the dashboard to the server (`POST /report/email`). The **Gemini API** writes the report from a strict system prompt (`server/src/report.js`). The server then checks it — scores and bands must match the app's numbers, no diagnostic words — retries once, and falls back to a plain template if needed. It is rendered as HTML and sent through Gmail SMTP (or Resend). With no mail account configured it is saved to `server/outbox/` instead.
+- **Privacy:** consent is required; the parent's address stays on the phone and the server stores only its domain; one report per address per minute; the Gemini key and mail password live only in the git-ignored `.env`.
+- **Set-up:** see [`REPORT_EMAIL.md`](REPORT_EMAIL.md) (Gmail app password, `.env` lines, restart the server).
 
 > **Demo controls** (grown-up dashboard): load Profile A (Aarav) / Profile B (Meera). There is no time-skipping and no retest override; then open screening and check-in reports, the learning loop, or reset.
 
