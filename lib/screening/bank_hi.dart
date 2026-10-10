@@ -94,7 +94,7 @@ class HindiScreenBank extends ScreenBank {
     _name('n2', 'A', '✂️', 'कैंची', ['कैची', 'scissors']),
     _name('n3', 'A', '🦋', 'तितली', ['butterfly']),
     _name('n4', 'A', '🐢', 'कछुआ', ['कछुवा', 'turtle']),
-    _name('n5', 'A', '🌈', 'इंद्रधनुष', ['इन्द्रधनुष', 'rainbow']),
+    _name('n5', 'A', '☂️', 'छाता', ['छतरी', 'umbrella']),
     _name('n6', 'A', '🚲', 'साइकिल', ['साइकल', 'cycle']),
     _name('n7', 'A', '🔑', 'चाबी', ['चाभी', 'key']),
     _name('n8', 'B', '🦒', 'जिराफ़', ['जिराफ', 'giraffe']),

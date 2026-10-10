@@ -22,14 +22,21 @@ import urllib.request, urllib.error, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOLS = os.path.expanduser("~/readle-tools")
-OUT = os.path.join(ROOT, "assets/vo/en")
-lines = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
-books = os.path.join(ROOT, "assets/story/books_en.json")  # story narration (tool/export_books.dart)
-if os.path.exists(books):
-    lines.update(json.load(open(books)))
-say = os.path.join(ROOT, "assets/story/say_en.json")  # every word / instruction (tool/export_speech.dart)
-if os.path.exists(say):
-    lines.update(json.load(open(say)))
+VL = os.environ.get("VOLANG", "en")  # "hi" = the Hindi demo: assets/story/lines_hi.json + say_hi.json -> assets/vo/hi
+OUT = os.path.join(ROOT, f"assets/vo/{VL}")
+if VL == "hi":
+    lines = json.load(open(os.path.join(ROOT, "assets/story/lines_hi.json")))
+    say = os.path.join(ROOT, "assets/story/say_hi.json")  # Hindi words, sounds and instructions (tool/export_speech_hi.dart)
+    if os.path.exists(say):
+        lines.update(json.load(open(say)))
+else:
+    lines = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
+    books = os.path.join(ROOT, "assets/story/books_en.json")  # story narration (tool/export_books.dart)
+    if os.path.exists(books):
+        lines.update(json.load(open(books)))
+    say = os.path.join(ROOT, "assets/story/say_en.json")  # every word / instruction (tool/export_speech.dart)
+    if os.path.exists(say):
+        lines.update(json.load(open(say)))
 os.makedirs(os.path.join(OUT, "say"), exist_ok=True)
 cast = json.load(open(os.path.join(ROOT, "tool/voice_cast.json")))
 hash_path = os.path.join(OUT, ".hashes.json")
@@ -108,9 +115,9 @@ done = 0
 mine_env, mine_hash = {}, {}
 order = list(lines.items())
 if ENGINE == "eleven":  # only character dialogue; v3 story scenes first so the most important lines are voiced if credits run short
-    dialogue = json.load(open(os.path.join(ROOT, "assets/story/lines_en.json")))
+    dialogue = json.load(open(os.path.join(ROOT, f"assets/story/lines_{VL}.json")))
     order = sorted(((k, v) for k, v in order if k in dialogue and "eleven" in cast.get(v.get("cast", v["who"]), {})), key=lambda kv: not kv[0].startswith("v3_"))
-    need = sum(len(v["text"]) for k, v in order if hashes.get(k) != hashlib.md5(json.dumps([v, cast.get(v.get("cast", v["who"]))], sort_keys=True).encode()).hexdigest())
+    need = sum(len(v["text"]) for k, v in order if hashes.get(k) != hashlib.md5(json.dumps([v, (lambda cc: cc if VL == "hi" else {kk: vv for kk, vv in cc.items() if kk != "hi_voice"})(cast.get(v.get("cast", v["who"])))], sort_keys=True).encode()).hexdigest())
     print(f"ElevenLabs: {len(order)} lines, {need} characters to generate (~{need // 2} credits on Flash v2.5, ~{need} on Multilingual v2)")
     if DRY:
         sys.exit(0)
@@ -118,7 +125,8 @@ for idx, (lid, ln) in enumerate(order):
     if idx % SHARDS != SHARD:
         continue
     c = cast.get(ln.get("cast", ln["who"]), cast["milo"])  # "cast" picks a different voice for the same speaker
-    key = hashlib.md5(json.dumps([ln, c], sort_keys=True).encode()).hexdigest()
+    hc = c if VL == "hi" else {k: v for k, v in c.items() if k != "hi_voice"}  # Hindi-only settings never change an English line's hash
+    key = hashlib.md5(json.dumps([ln, hc], sort_keys=True).encode()).hexdigest()
     dst = os.path.join(OUT, f"{lid}.ogg")
     if hashes.get(lid) == key and os.path.exists(dst):
         continue
@@ -139,7 +147,7 @@ for idx, (lid, ln) in enumerate(order):
             fx = c["eleven"].get("fx", {})
         else:
             try:
-                samples, sr = kokoro.create(ln["text"], voice=c["voice"], speed=c.get("speed", 1.0), lang="en-us")
+                samples, sr = kokoro.create(ln["text"], voice=c.get("hi_voice", c["voice"]) if VL == "hi" else c["voice"], speed=c.get("speed", 1.0), lang="hi" if VL == "hi" else "en-us")
             except ValueError as e:  # nothing speakable: skip the line, keep going
                 print(f"  skip {lid}: {e}")
                 continue

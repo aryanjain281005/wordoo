@@ -1,4 +1,5 @@
 import 'en/en_pack.dart';
+import 'hi/hi_pack.dart';
 
 /// Language-independent description of a word. The engine only ever reads these features;
 /// how they are computed is language-specific (English now, Hindi later).
@@ -86,13 +87,20 @@ abstract class GameContentPack {
   /// Procedurally generated short story for early comprehension steps.
   StoryEntry storyFromTemplate(int step, int seed);
 
+  /// The content the Sound Forest games draw from. English: the pack itself (nothing changes). The Hindi demo swaps in Hindi
+  /// words and rhymes for those two games only.
+  GameContentPack get phono => this;
+
   String p(String key, {String w = '', String r = '', String x = ''}) =>
       (prompts[key] ?? key).replaceAll('{w}', w).replaceAll('{r}', r).replaceAll('{x}', x);
 }
 
-/// Version 1 is English-only. Hindi will be added as another [GameContentPack] and enabled here.
+/// English is the full game. Hindi (demo) is Sound Forest only: [forIsland] gives Hindi content for that island and English
+/// for everything else, so no other game changes when a child chooses Hindi.
 class GameContent {
-  static const enabledLanguages = ['en'];
+  static const enabledLanguages = ['en', 'hi'];
   static final GameContentPack _en = EnglishGameContent();
-  static GameContentPack of(String lang) => _en; // only English is enabled in v1
+  static final GameContentPack _hi = HindiGameContent();
+  static GameContentPack of(String lang) => _en; // everything outside the Hindi demo
+  static GameContentPack forHindiDemo(String lang) => lang == 'hi' ? _hi : _en;
 }

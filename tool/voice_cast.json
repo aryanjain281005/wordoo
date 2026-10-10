@@ -11,7 +11,8 @@
    "fx": {
     "pitch": 1.06
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "dadi": {
   "voice": "hf_alpha",
@@ -27,7 +28,8 @@
    "fx": {
     "reverb": true
    }
-  }
+  },
+  "hi_voice": "hf_alpha"
  },
  "gumsum": {
   "voice": "am_onyx",
@@ -43,7 +45,8 @@
     "pitch": 0.86,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hm_omega"
  },
  "bhalu": {
   "voice": "am_onyx",
@@ -57,7 +60,8 @@
    "fx": {
     "pitch": 0.92
    }
-  }
+  },
+  "hi_voice": "hm_omega"
  },
  "arya": {
   "voice": "hf_beta",
@@ -69,7 +73,8 @@
    "stability": 0.45,
    "style": 0.4,
    "fx": {}
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "kachhua": {
   "voice": "bm_george",
@@ -84,7 +89,8 @@
    "fx": {
     "pitch": 0.92
    }
-  }
+  },
+  "hi_voice": "hm_omega"
  },
  "ullu": {
   "voice": "bm_daniel",
@@ -98,7 +104,8 @@
    "fx": {
     "pitch": 0.97
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "madhu": {
   "voice": "bf_emma",
@@ -112,7 +119,8 @@
    "fx": {
     "pitch": 1.04
    }
-  }
+  },
+  "hi_voice": "hf_alpha"
  },
  "pari": {
   "voice": "af_kore",
@@ -126,7 +134,8 @@
    "fx": {
     "pitch": 1.08
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "kitabu": {
   "voice": "bm_lewis",
@@ -139,7 +148,8 @@
    "style": 0.3,
    "speed": 0.95,
    "fx": {}
-  }
+  },
+  "hi_voice": "hm_omega"
  },
  "bolt": {
   "voice": "am_adam",
@@ -154,7 +164,8 @@
    "fx": {
     "robot": true
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "pip": {
   "voice": "am_echo",
@@ -169,7 +180,8 @@
    "fx": {
     "pitch": 1.1
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "coral": {
   "voice": "af_jessica",
@@ -184,7 +196,8 @@
    "fx": {
     "pitch": 1.08
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "jugnu": {
   "voice": "af_nicole",
@@ -199,7 +212,8 @@
    "fx": {
     "pitch": 1.25
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "kalam": {
   "voice": "bm_fable",
@@ -213,7 +227,8 @@
    "fx": {
     "pitch": 1.12
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "chuchu": {
   "voice": "af_nicole",
@@ -228,11 +243,13 @@
    "fx": {
     "pitch": 1.4
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "say": {
   "voice": "hf_beta",
-  "speed": 0.88
+  "speed": 0.88,
+  "hi_voice": "hf_beta"
  },
  "gumsum_small": {
   "voice": "af_sky",
@@ -249,7 +266,8 @@
     "pitch": 1.3,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hf_alpha"
  },
  "jailer_forest": {
   "voice": "am_echo",
@@ -265,7 +283,8 @@
     "pitch": 1.2,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "jailer_valley": {
   "voice": "af_nicole",
@@ -281,7 +300,8 @@
     "pitch": 1.25,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  },
  "jailer_ocean": {
   "voice": "bm_george",
@@ -297,7 +317,8 @@
     "pitch": 1.15,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hm_omega"
  },
  "jailer_village": {
   "voice": "am_adam",
@@ -313,7 +334,8 @@
     "pitch": 1.25,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hm_psi"
  },
  "jailer_treasure": {
   "voice": "bf_emma",
@@ -329,7 +351,8 @@
     "pitch": 1.2,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hf_alpha"
  },
  "jailer_castle": {
   "voice": "af_sky",
@@ -345,6 +368,7 @@
     "pitch": 1.25,
     "echo": true
    }
-  }
+  },
+  "hi_voice": "hf_beta"
  }
 }

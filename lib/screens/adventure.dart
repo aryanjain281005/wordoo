@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/loc.dart';
 import '../core/theme.dart';
 import '../data/strings.dart';
 import '../state/app_state.dart';
@@ -14,6 +15,7 @@ class AdventureIntro extends StatelessWidget {
     final st = context.watch<AppState>();
     final re = st.hasBaseline;
     final line = Str.t(st.langCode, re ? 'skyBridge' : 'bridge');
+    final tr = Tr(st.hindi); // Hindi demo: this bridge screen before the screening
     return AdventureBackground(
       scene: re ? Scene.castle : Scene.forest,
       child: SafeArea(
@@ -23,16 +25,16 @@ class AdventureIntro extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 680),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Pop(child: Text(re ? 'Your Next Adventure Awaits!' : 'Your First Adventure', textAlign: TextAlign.center, style: ts(38, color: Colors.white, w: FontWeight.w900).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 10)]))),
+                Pop(child: Text(tr(re ? 'Your Next Adventure Awaits!' : 'Your First Adventure'), textAlign: TextAlign.center, style: ts(38, color: Colors.white, w: FontWeight.w900).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 10)]))),
                 const SizedBox(height: 18),
                 Pop(index: 1, child: _BridgePicture(broken: true)),
                 const SizedBox(height: 14),
-                Pop(index: 2, child: Companion(type: st.avatar.companion, size: 130, message: '${Brand.companion} says: $line', speakLocale: st.pack.tts)),
+                Pop(index: 2, child: Companion(type: st.avatar.companion, size: 130, message: tr.f('{companion} says: {line}', {'companion': st.hindi ? 'मिलो' : Brand.companion, 'line': line}), speakLocale: st.pack.tts)),
                 const SizedBox(height: 22),
                 Pop(
                   index: 3,
                   child: BigButton(
-                    label: re ? 'Let’s Go!' : 'Let’s Fix It!',
+                    label: tr(re ? 'Let’s Go!' : 'Let’s Fix It!'),
                     icon: Icons.construction_rounded,
                     style: BtnStyle.go,
                     width: 300,
@@ -43,7 +45,7 @@ class AdventureIntro extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(color: Colors.black.withValues(alpha: .28), borderRadius: BorderRadius.circular(16)),
-                  child: Text('For grown-ups: this adventure is a literacy screening (about 15 minutes). The phone listens to reading-aloud activities and scores them automatically. It is not a diagnosis.',
+                  child: Text(tr('For grown-ups: this adventure is a literacy screening (about 15 minutes). The phone listens to reading-aloud activities and scores them automatically. It is not a diagnosis.'),
                       textAlign: TextAlign.center, style: ts(14, color: Colors.white, w: FontWeight.w500)),
                 ),
               ]),

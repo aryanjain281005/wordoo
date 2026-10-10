@@ -60,7 +60,7 @@ line("v3_sf_r5", "bhalu", "One, two, three, and a-ONE! Tinku, Koyal, Gajju, wake
 line("v3_sf_r7", "dadi", "Hear that? The whole forest is singing, and the first light of the Story Tree is glowing.")
 
 save("island_start_forest", "Sound Forest: the storm island", [
-    shot(STORM("forest"), 5200, fx="rain+mist", title="Sound Forest", bars=True, zoom=(1.0, 1.22), pany=(0.0, -0.03), ln=line("v3_sf_s1", "dadi", lines["v3_sf_s1"]["text"]),
+    shot(STORM("forest"), 5200, fx="rain+mist", title="Sound Forest", title_hi="आवाज़ों का जंगल", bars=True, zoom=(1.0, 1.22), pany=(0.0, -0.03), ln=line("v3_sf_s1", "dadi", lines["v3_sf_s1"]["text"]),
          cues=[("wind_soft", 0, .5), ("thunder_soft", 900, .5), ("leaves_rustle", 2800, .35)], shake=.3),
     shot(STORM("forest"), 4000, fx="mist+dust", zoom=(1.12, 1.0), panx=(.04, -.04), bars=True, ln="v3_sf_s2",
          cast=[c("milo", .5, .42, MILO_HURT, enter="left", act="sway")], cues=[("owl_hoot", 800, .35)]),

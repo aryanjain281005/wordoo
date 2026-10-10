@@ -6,7 +6,7 @@ import 'levels.dart';
 /// Builds practice items for any skill at any step (1–10) from the language's content pack.
 /// Selection prefers: the right difficulty → the child's current error focus → items seen least.
 class ItemGen {
-  final GameContentPack c;
+  GameContentPack c; // temporarily the Hindi Sound Forest content while a Sound Forest item is built (see _phonoScope)
   final Random rng;
   final Map<String, int> seen;
   ItemGen(this.c, {Random? rng, Map<String, int>? seen})
@@ -16,7 +16,7 @@ class ItemGen {
   Item make(Skill skill, int step, {List<String> focus = const []}) {
     final s = step.clamp(1, 10);
     final it = switch (skill) {
-      Skill.phonological => _phon(s, focus),
+      Skill.phonological => _phonoScope(() => _phon(s, focus)),
       Skill.gpc => _gpc(s, focus),
       Skill.decoding => _decode(s, focus),
       Skill.wordRecognition => _recog(s, focus),
@@ -34,8 +34,8 @@ class ItemGen {
     final l = level.clamp(1, levelsPerGame);
     final st = levelStep(game, l, bump: bump);
     final it = switch (game) {
-      GameId.soundOrchestra => _phon(st, const [], fmt0: l == 1 ? 3 : 4, audio: l >= 3),
-      GameId.soundNinja => _beats(l),
+      GameId.soundOrchestra => _phonoScope(() => _phon(st, const [], fmt0: l == 1 ? 3 : 4, audio: l >= 3)),
+      GameId.soundNinja => _phonoScope(() => _beats(l)),
       GameId.letterArcher || GameId.soundPortal => _gpc(st.clamp(2, 10), const []),
       GameId.wordRocket => _decode(st, focus, pictures: l <= 3),
       GameId.wordBuilder => _decode(st, focus),
@@ -47,6 +47,22 @@ class ItemGen {
     seen[it.id] = (seen[it.id] ?? 0) + 1;
     return it;
   }
+
+  /// English: runs [f] as is. Hindi demo: runs it on the Hindi Sound Forest words and prompts.
+  T _phonoScope<T>(T Function() f) {
+    final p = c.phono;
+    if (identical(p, c)) return f();
+    final saved = c;
+    c = p;
+    try {
+      return f();
+    } finally {
+      c = saved;
+    }
+  }
+
+  /// A prompt/hint from the content pack when the language has one, else the original English text.
+  String _t(String key, String english, {String w = ''}) => c.prompts.containsKey(key) ? c.p(key, w: w) : english;
 
   /// Sound Ninja: how many pieces does the word slice into? Levels 1–3 count beats (syllables), level 4
   /// counts every sound in a short word.
@@ -62,10 +78,10 @@ class ItemGen {
     final t = _pick(pool.take(8).toList());
     final n = sounds ? t.units.length : t.syllables;
     final others = <int>{for (final d in [-1, 1, 2, -2]) if (n + d >= 1 && n + d <= 5) n + d}.take(2);
-    final p = sounds ? 'Slice “${t.text}” into its sounds!' : 'Slice “${t.text}” into its beats!';
+    final p = sounds ? _t('sliceSounds', 'Slice “${t.text}” into its sounds!', w: t.text) : _t('sliceBeats', 'Slice “${t.text}” into its beats!', w: t.text);
     return _choice('pc:${t.text}', Skill.phonological, level * 2, p, p,
         [Opt('$n', say: t.text), for (final o in others) Opt('$o', say: t.text, tag: sounds ? 'Failed blend' : 'Syllable count error')],
-        stimulus: t.text, emoji: t.emoji, replay: sounds ? t.units.map(c.sayUnit).join(',  ') : t.text, hint: sounds ? 'Say it very slowly. Each sound is one slice.' : 'Say it slowly and cut at every beat.', diff: level * 2.0);
+        stimulus: t.text, emoji: t.emoji, replay: sounds ? t.units.map(c.sayUnit).join(',  ') : t.text, hint: sounds ? _t('hintSounds', 'Say it very slowly. Each sound is one slice.') : _t('hintBeats', 'Say it slowly and cut at every beat.'), diff: level * 2.0);
   }
 
   // ---------------- helpers ----------------
@@ -149,7 +165,7 @@ class ItemGen {
       final p = c.p('clap', w: t.text);
       return _choice('pc:${t.text}', Skill.phonological, step, p, p,
           [Opt('${t.syllables}', say: t.text), for (var n = 1; n <= 3; n++) if (n != t.syllables) Opt('$n', say: t.text, tag: 'Syllable count error')],
-          stimulus: t.text, emoji: t.emoji, replay: t.text, hint: 'Say it slowly and tap for each beat.', diff: step.toDouble());
+          stimulus: t.text, emoji: t.emoji, replay: t.text, hint: _t('hintDrum', 'Say it slowly and tap for each beat.'), diff: step.toDouble());
     }
     if (fmt <= 2) {
       final t = pickT((w) => pics.any((o) => o.text != w.text && o.firstUnit == w.firstUnit), 'ps:');
@@ -160,7 +176,7 @@ class ItemGen {
       final p = c.p('firstSound', w: t.text);
       return _choice('ps:${t.text}', Skill.phonological, step, p, p,
           [Opt(match.text, emoji: match.emoji, say: match.text), for (final o in others2) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Wrong first sound')],
-          emoji: t.emoji, hint: 'Listen to the very first sound.', diff: fmt.toDouble());
+          emoji: t.emoji, hint: _t('hintFirst', 'Listen to the very first sound.'), diff: fmt.toDouble());
     }
     if (fmt <= 4) {
       // rhymes by sound: only words in a checked rhyme family (fall back to spelling only if a language has none)
@@ -176,7 +192,7 @@ class ItemGen {
       final p = c.p('rhyme', w: t.text);
       return _choice('pr:${t.text}', Skill.phonological, step, p, p,
           [Opt(match.text, emoji: match.emoji, say: match.text), for (final o in others2) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Rhyme confusion')],
-          emoji: t.emoji, hint: 'Listen to the end of the word.', diff: max(fmt, step).toDouble(), audio: audio);
+          emoji: t.emoji, hint: _t('hintRhyme', 'Listen to the end of the word.'), diff: max(fmt, step).toDouble(), audio: audio);
     }
     if (fmt <= 6) {
       final n = fmt == 5 ? 3 : 4;
@@ -185,7 +201,7 @@ class ItemGen {
       final sounds = t.units.map(c.sayUnit).join(',  ');
       return _choice('pb:${t.text}', Skill.phonological, step, c.p('blend'), '${c.p('blend')}  $sounds',
           [Opt(t.text, emoji: t.emoji, say: t.text), for (final o in others) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Failed blend')],
-          stimulus: List.filled(t.units.length, '•').join(' '), replay: sounds, hint: 'Say the sounds fast — they make one word.', diff: fmt.toDouble());
+          stimulus: List.filled(t.units.length, '•').join(' '), replay: sounds, hint: _t('hintBlend', 'Say the sounds fast — they make one word.'), diff: fmt.toDouble());
     }
     if (fmt == 7) {
       final t = pickT((w) => pics.any((o) => o.text != w.text && o.units.last == w.units.last && o.firstUnit != w.firstUnit), 'pe:');
@@ -194,7 +210,7 @@ class ItemGen {
       final p = c.p('endSound', w: t.text);
       return _choice('pe:${t.text}', Skill.phonological, step, p, p,
           [Opt(match.text, emoji: match.emoji, say: match.text), for (final o in others) Opt(o.text, emoji: o.emoji, say: o.text, tag: 'Wrong ending sound')],
-          emoji: t.emoji, hint: 'Listen to the very last sound.', diff: 7);
+          emoji: t.emoji, hint: _t('hintEnd', 'Listen to the very last sound.'), diff: 7);
     }
     bool cons(String u) => !'aeiouy'.contains(u[0]);
     if (fmt == 8) {

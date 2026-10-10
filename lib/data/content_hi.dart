@@ -10,9 +10,9 @@ class HindiPack extends LangPack {
   String get native => 'हिन्दी';
   @override
   String get tts => 'hi-IN';
-  // Hindi content is kept for phase 2; version 1 of the games is English-only.
+  // Hindi is a demo: prologue, map, Sound Forest and the screening only (see AppState.hindi).
   @override
-  bool get available => false;
+  bool get available => true;
 
   static List<Word> _build(List<List<Object>> rows) {
     final counts = <int, int>{};

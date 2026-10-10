@@ -4,6 +4,8 @@ import 'props.dart';
 import '../core/theme.dart';
 import '../data/skills.dart';
 import '../core/audio.dart';
+import '../core/loc.dart';
+import '../data/hi_text.dart';
 import '../engine/campaign.dart';
 import '../engine/meta.dart';
 import '../engine/levels.dart';
@@ -47,6 +49,8 @@ class _RewardDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final g = Skills.game(game);
+    final tr = Tr(Loc.hi && quest?.island == IslandId.forest); // Hindi demo: the Sound Forest reward screen
+    final gname = tr.hi ? (HiText.gameNames[game] ?? g.name) : g.name;
     final up = outcome.adapt.any((e) => e.up);
     final down = outcome.adapt.any((e) => e.down);
     return Center(
@@ -61,7 +65,7 @@ class _RewardDialog extends StatelessWidget {
                 color: const Color(0xFFFFF9E8),
                 padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  outlinedText('You Did It!', 46, fill: const Color(0xFFFFD34D), stroke: const Color(0xFF5B3DD8)),
+                  outlinedText(tr('You Did It!'), 46, fill: const Color(0xFFFFD34D), stroke: const Color(0xFF5B3DD8)),
                   const SizedBox(height: 4),
                   SizedBox(
                     height: 150,
@@ -88,12 +92,12 @@ class _RewardDialog extends StatelessWidget {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     _RewardCard('⭐', '+${outcome.stars * 10} XP', C.gold),
                     const SizedBox(width: 8),
-                    _RewardCard('🌟', '+${outcome.stars} stars', C.orange),
+                    _RewardCard('🌟', tr.f('+{n} stars', {'n': outcome.stars}), C.orange),
                     const SizedBox(width: 8),
-                    _RewardCard(outcome.newCollectibles.isNotEmpty ? outcome.newCollectibles.first.emoji : '🎁', outcome.newCollectibles.isNotEmpty ? 'New treasure' : 'Keep going', C.pink),
+                    _RewardCard(outcome.newCollectibles.isNotEmpty ? outcome.newCollectibles.first.emoji : '🎁', outcome.newCollectibles.isNotEmpty ? tr('New treasure') : tr('Keep going'), C.pink),
                   ]),
                   const SizedBox(height: 10),
-                  Companion(type: companion, size: 96, message: up ? 'You’re getting stronger!' : (down ? 'Great effort! We’ll practise this together.' : 'Great job, Explorer!')),
+                  Companion(type: companion, size: 96, message: up ? tr('You’re getting stronger!') : (down ? tr('Great effort! We’ll practise this together.') : tr('Great job, Explorer!'))),
                   if (up || down) ...[
                     const SizedBox(height: 12),
                     Container(
@@ -102,7 +106,7 @@ class _RewardDialog extends StatelessWidget {
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
                         Text(g.emoji, style: const TextStyle(fontSize: 26)),
                         const SizedBox(width: 8),
-                        Flexible(child: Text(up ? '${g.name} got stronger!' : '${g.name}: a friendly warm-up next time', style: ts(17))),
+                        Flexible(child: Text(up ? tr.f('{game} got stronger!', {'game': gname}) : tr.f('{game}: a friendly warm-up next time', {'game': gname}), style: ts(17))),
                         const SizedBox(width: 8),
                         PowerPips(level: level),
                       ]),
@@ -121,18 +125,18 @@ class _RewardDialog extends StatelessWidget {
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
                           Text(c.emoji, style: const TextStyle(fontSize: 46)),
                           const SizedBox(width: 12),
-                          Flexible(child: Text('You found a new treasure!\n${c.name}', style: ts(18, h: 1.25))),
+                          Flexible(child: Text('${tr('You found a new treasure!')}\n${c.name}', style: ts(18, h: 1.25))),
                         ]),
                       ),
                     ),
                   ],
                   if (quest != null) ...[
                     const SizedBox(height: 10),
-                    _LevelResult(outcome: outcome, game: game),
+                    _LevelResult(outcome: outcome, game: game, tr: tr),
                   ],
                   if (outcome.unlockedGame != null) ...[
                     const SizedBox(height: 10),
-                    _Moment(Skills.game(outcome.unlockedGame!).emoji, 'New game unlocked!', '${Skills.game(outcome.unlockedGame!).name} is open on this island', const Color(0xFFE3F6E5)),
+                    _Moment(Skills.game(outcome.unlockedGame!).emoji, tr('New game unlocked!'), tr.f('{game} is open on this island', {'game': tr.hi ? (HiText.gameNames[outcome.unlockedGame!] ?? Skills.game(outcome.unlockedGame!).name) : Skills.game(outcome.unlockedGame!).name}), const Color(0xFFE3F6E5)),
                   ],
                   for (final b in outcome.newBadges) ...[
                     const SizedBox(height: 10),
@@ -140,7 +144,7 @@ class _RewardDialog extends StatelessWidget {
                   ],
                   if (quest != null) ...[
                     const SizedBox(height: 12),
-                    Text('${Campaign.islandName(quest!.island)} restored', style: ts(15, color: C.inkSoft)),
+                    Text(tr.f('{island} restored', {'island': tr.hi ? HiText.islands[quest!.island]! : Campaign.islandName(quest!.island)}), style: ts(15, color: C.inkSoft)),
                     const SizedBox(height: 4),
                     TweenAnimationBuilder<double>(
                       tween: Tween(begin: outcome.restorationBefore / 100, end: outcome.restorationAfter / 100),
@@ -155,15 +159,15 @@ class _RewardDialog extends StatelessWidget {
                   ],
                   if (outcome.chapterComplete) ...[
                     const SizedBox(height: 10),
-                    Text('🏆 Every level on this island is cleared! +5 stars', textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
+                    Text(tr('🏆 Every level on this island is cleared! +5 stars'), textAlign: TextAlign.center, style: ts(18, color: C.greenDark)),
                   ],
                   if (outcome.gem != null) ...[
                     const SizedBox(height: 12),
-                    _Moment(islandGem[outcome.gem]!.$1, 'Story Gem!', islandGem[outcome.gem]!.$2, const Color(0xFFEDE4FF)),
+                    _Moment(islandGem[outcome.gem]!.$1, tr('Story Gem!'), tr(islandGem[outcome.gem]!.$2), const Color(0xFFEDE4FF)),
                   ],
                   if (outcome.gift != null) ...[
                     const SizedBox(height: 10),
-                    _Moment(outcome.gift!.$1, 'Milo found a gift!', 'A ${outcome.gift!.$2}, for trying so hard', const Color(0xFFFFF1C2)),
+                    _Moment(outcome.gift!.$1, tr('Milo found a gift!'), tr.hi ? '${outcome.gift!.$2}, इतनी मेहनत के लिए' : 'A ${outcome.gift!.$2}, for trying so hard', const Color(0xFFFFF1C2)),
                   ],
                   if (outcome.newItems.isNotEmpty) ...[
                     const SizedBox(height: 10),
@@ -185,7 +189,7 @@ class _RewardDialog extends StatelessWidget {
                     Text('🌉 The Star Bridge has appeared! Gumsum is waiting on the map.', textAlign: TextAlign.center, style: ts(17, color: C.purple)),
                   ],
                   const SizedBox(height: 20),
-                  BigButton(label: 'Continue', style: BtnStyle.primary, onTap: () => Navigator.of(context).pop(), width: 240),
+                  BigButton(label: tr('Continue'), style: BtnStyle.primary, onTap: () => Navigator.of(context).pop(), width: 240),
                 ]),
               ),
             ),
@@ -200,7 +204,8 @@ class _RewardDialog extends StatelessWidget {
 class _LevelResult extends StatelessWidget {
   final SessionOutcome outcome;
   final GameId game;
-  const _LevelResult({required this.outcome, required this.game});
+  final Tr tr;
+  const _LevelResult({required this.outcome, required this.game, this.tr = Tr.en});
   @override
   Widget build(BuildContext context) {
     final l = outcome.level;
@@ -210,11 +215,11 @@ class _LevelResult extends StatelessWidget {
       decoration: BoxDecoration(color: ok ? const Color(0xFFE3F6E5) : const Color(0xFFFFF1C2), borderRadius: BorderRadius.circular(18)),
       child: Column(children: [
         Text(
-          ok ? (outcome.levelNew ? 'Level $l cleared! ⭐' : 'Level $l played again ⭐') : 'Almost! Play level $l again to clear it',
+          ok ? (outcome.levelNew ? tr.f('Level {l} cleared! ⭐', {'l': l}) : tr.f('Level {l} played again ⭐', {'l': l})) : tr.f('Almost! Play level {l} again to clear it', {'l': l}),
           textAlign: TextAlign.center,
           style: ts(19, color: ok ? C.greenDark : C.orangeDark),
         ),
-        if (!ok) Text('Get at least half right the first time.', textAlign: TextAlign.center, style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+        if (!ok) Text(tr('Get at least half right the first time.'), textAlign: TextAlign.center, style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
         if (outcome.islandKeysMax > 0) ...[
           const SizedBox(height: 6),
           // v3 keys: this play, best ever, and what is still to win
@@ -230,14 +235,14 @@ class _LevelResult extends StatelessWidget {
           ]),
           Text(
             outcome.keysBest >= outcome.keysMax
-                ? 'All ${outcome.keysMax} keys on this level!'
-                : '${outcome.keysWon} ${outcome.keysWon == 1 ? 'key' : 'keys'} · get every answer right for all ${outcome.keysMax}',
+                ? tr.f('All {n} keys on this level!', {'n': outcome.keysMax})
+                : (tr.hi ? tr.f('{won} key · get every answer right for all {n}', {'won': outcome.keysWon, 'n': outcome.keysMax}) : '${outcome.keysWon} ${outcome.keysWon == 1 ? 'key' : 'keys'} · get every answer right for all ${outcome.keysMax}'),
             textAlign: TextAlign.center,
             style: ts(14, color: C.inkSoft, w: FontWeight.w600),
           ),
-          Text('Island: 🔑 ${outcome.islandKeys} / ${outcome.islandKeysMax}', style: ts(15, color: const Color(0xFF8A6100))),
+          Text(tr.f('Island: 🔑 {a} / {b}', {'a': outcome.islandKeys, 'b': outcome.islandKeysMax}), style: ts(15, color: const Color(0xFF8A6100))),
         ],
-        if (ok && outcome.levelNew && l < levelsPerGame) Text('Level ${l + 1} is open!', style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
+        if (ok && outcome.levelNew && l < levelsPerGame) Text(tr.f('Level {n} is open!', {'n': l + 1}), style: ts(14, color: C.inkSoft, w: FontWeight.w600)),
         const SizedBox(height: 6),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           for (var k = 1; k <= levelsPerGame; k++)
@@ -253,7 +258,7 @@ class _LevelResult extends StatelessWidget {
               child: Text('$k', style: ts(15, color: Colors.white)),
             ),
         ]),
-        Text(Skills.game(game).name, style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
+        Text(tr.hi ? (HiText.gameNames[game] ?? Skills.game(game).name) : Skills.game(game).name, style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
       ]),
     );
   }

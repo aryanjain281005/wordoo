@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
+import '../../core/loc.dart';
+import '../../data/hi_text.dart';
 import '../../core/theme.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
@@ -60,6 +62,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
 
   Item get it => widget.ctx.item;
   String get lang => widget.ctx.pack.code;
+  Tr get tr => Tr(lang == 'hi'); // Hindi demo
   bool get demo => widget.ctx.demo;
   String get tts => widget.ctx.pack.tts;
   bool get clap => it.id.startsWith('pc:');
@@ -278,13 +281,13 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(it.prompt, style: ts(19, color: C.ink)),
-            if (listenOnly && !clap) Text('Tap a band member to hear their word, then ✓', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+            if (listenOnly && !clap) Text(tr('Tap a band member to hear their word, then ✓'), style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
             if (blend) ...[const SizedBox(height: 6), _chorusDots()],
           ]),
         ),
         if (it.emoji != null && !blend) Text(it.emoji!, style: const TextStyle(fontSize: 46)),
         const SizedBox(width: 4),
-        RoundIconButton(icon: Icons.volume_up_rounded, label: 'Sing it again', color: C.gold, size: 44, onTap: demo ? () {} : _sing),
+        RoundIconButton(icon: Icons.volume_up_rounded, label: tr('Sing it again'), color: C.gold, size: 44, onTap: demo ? () {} : _sing),
       ]),
     );
   }
@@ -386,7 +389,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
                       builder: (_, child) => Transform.scale(scale: 1 + .08 * sin(_beat.value * 2 * pi), child: child),
                       child: BigButton(label: '✓', style: BtnStyle.go, width: 86, height: 48, fontSize: 28, onTap: () => _choose(i)),
                     )
-                  : Text(m.name, style: ts(14, color: Colors.white, w: FontWeight.w600).copyWith(shadows: const [Shadow(color: Color(0x99000000), blurRadius: 4)])),
+                  : Text(tr.hi ? (HiText.characters[m.id] ?? m.name) : m.name, style: ts(14, color: Colors.white, w: FontWeight.w600).copyWith(shadows: const [Shadow(color: Color(0x99000000), blurRadius: 4)])),
             ),
           ]),
         ),
@@ -434,7 +437,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
       const SizedBox(height: 8),
       if (!demo && !_resolved)
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          RoundIconButton(icon: Icons.refresh_rounded, label: 'Count again', size: 46, onTap: () => setState(() => _taps = 0)),
+          RoundIconButton(icon: Icons.refresh_rounded, label: tr('Count again'), size: 46, onTap: () => setState(() => _taps = 0)),
           const SizedBox(width: 14),
           Opacity(opacity: _taps == 0 ? .4 : 1, child: BigButton(label: '✓', style: BtnStyle.go, width: 90, height: 52, fontSize: 26, onTap: _clapDone)),
         ]),

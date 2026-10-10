@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../core/loc.dart';
+import '../data/hi_text.dart';
 import '../core/theme.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
@@ -68,8 +70,10 @@ class _GameScreenState extends State<GameScreen> {
   late final Quest quest = widget.quest;
   late final GameMeta meta = Skills.game(quest.game);
   late final AppState st = context.read<AppState>();
-  late final LangPack pack = st.pack;
-  late final ItemGen gen = ItemGen(st.content, seen: st.itemSeen);
+  late final LangPack pack = st.packFor(quest.island); // Hindi demo: only Sound Forest uses the Hindi pack
+  late final bool hi = st.hindiIsland(quest.island);
+  late final Tr tr = Tr(hi);
+  late final ItemGen gen = ItemGen(st.contentFor(quest.island), seen: st.itemSeen);
   late final bool dev = widget.devStep != null;
   late final Map<Skill, SkillModel> devModels = {
     for (final s in quest.skills.toSet()) s: SkillModel(theta: (widget.devStep ?? 1) + 1.27, calibrationLeft: 0),
@@ -92,7 +96,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     final s0 = quest.skills.first;
-    demoItem = ItemGen(st.content, seen: Map.of(st.itemSeen)).forLevel(_gameForSkill(s0), quest.level, bump: _bump);
+    demoItem = ItemGen(st.contentFor(quest.island), seen: Map.of(st.itemSeen)).forLevel(_gameForSkill(s0), quest.level, bump: _bump);
     msg = Str.t(pack.code, 'tryDemo');
     startedAt = DateTime.now();
     beatId = beatLineFor(quest, st.campaign);
@@ -131,7 +135,7 @@ class _GameScreenState extends State<GameScreen> {
         const SizedBox(width: 8),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            if (who != null) Text(who.name, style: ts(15, color: who.color, w: FontWeight.w700)),
+            if (who != null) Text(StoryLines.instance.isHindi(beatId) ? (HiText.characters[beat.who] ?? who.name) : who.name, style: ts(15, color: who.color, w: FontWeight.w700)),
             Text(beat.text, style: ts(17, color: C.ink)),
           ]),
         ),
@@ -287,12 +291,12 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _topBar({bool play = false}) {
-    final region = Campaign.islandName(quest.island);
+    final region = hi ? HiText.islands[quest.island]! : Campaign.islandName(quest.island);
     final m = model(play ? skillNow : quest.skills.first);
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        RoundIconButton(icon: Icons.close_rounded, label: 'Back to the map', onTap: () => Navigator.of(context).pop(), size: 48),
+        RoundIconButton(icon: Icons.close_rounded, label: tr('Back to the map'), onTap: () => Navigator.of(context).pop(), size: 48),
         const SizedBox(width: 10),
         Expanded(
           child: Container(
@@ -305,7 +309,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Expanded(child: Text('$region · Level ${quest.level} of $levelsPerGame${quest.kind == QuestKind.boss ? ' · Boss' : (quest.kind == QuestKind.bonus ? ' · Replay' : '')}', style: ts(14, color: const Color(0xFFFFE17A)))),
+                Expanded(child: Text('$region · ${tr.f('Level {n} of {m}', {'n': quest.level, 'm': levelsPerGame})}${quest.kind == QuestKind.boss ? tr(' · Boss') : (quest.kind == QuestKind.bonus ? tr(' · Replay') : '')}', style: ts(14, color: const Color(0xFFFFE17A)))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: .18), borderRadius: BorderRadius.circular(10)),
@@ -315,7 +319,7 @@ class _GameScreenState extends State<GameScreen> {
                   ]),
                 ),
               ]),
-              Text(quest.title, style: ts(17, color: Colors.white), maxLines: 2),
+              Text(hi ? (HiText.levelNames[quest.game]?[quest.level - 1] ?? quest.title) : quest.title, style: ts(17, color: Colors.white), maxLines: 2),
               if (play) ...[
                 const SizedBox(height: 8),
                 Row(children: [
@@ -343,8 +347,8 @@ class _GameScreenState extends State<GameScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 640),
               child: Column(children: [
-                Text('${meta.emoji}  ${meta.name}', textAlign: TextAlign.center, style: ts(32, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 8)])),
-                Text(meta.tagline, style: ts(18, color: Colors.white, w: FontWeight.w600)),
+                Text('${meta.emoji}  ${hi ? (HiText.gameNames[quest.game] ?? meta.name) : meta.name}', textAlign: TextAlign.center, style: ts(32, color: Colors.white).copyWith(shadows: const [Shadow(color: Color(0x88000000), blurRadius: 8)])),
+                Text(hi ? (HiText.gameTaglines[quest.game] ?? meta.tagline) : meta.tagline, style: ts(18, color: Colors.white, w: FontWeight.w600)),
                 const SizedBox(height: 10),
                 _beatCard(),
                 // The demo only shows how to play. It never takes taps or scrolls (that used to trap children:
@@ -371,13 +375,13 @@ class _GameScreenState extends State<GameScreen> {
                       child: Center(child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                         decoration: BoxDecoration(color: const Color(0xE61E2753), borderRadius: BorderRadius.circular(14)),
-                        child: Text('👀  Watch how to play · tap to start', style: ts(14, color: Colors.white)),
+                        child: Text(tr('👀  Watch how to play · tap to start'), style: ts(14, color: Colors.white)),
                       )),
                     ),
                   ]),
                 ),
                 const SizedBox(height: 10),
-                Companion(type: st.avatar.companion, size: 80, message: meta.how, speakLocale: null),
+                Companion(type: st.avatar.companion, size: 80, message: hi ? (HiText.gameHow[quest.game] ?? meta.how) : meta.how, speakLocale: null),
               ]),
             ),
           ),

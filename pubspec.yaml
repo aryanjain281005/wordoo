@@ -69,6 +69,8 @@ flutter:
     - assets/sfx/
     - assets/vo/en/
     - assets/vo/en/say/
+    - assets/vo/hi/
+    - assets/vo/hi/say/
     - assets/art/
     - assets/music/
     - assets/cutscenes/

@@ -7,6 +7,8 @@ import '../engine/levels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
+import '../core/loc.dart';
+import '../story/story_lines.dart';
 import '../core/config.dart';
 import '../core/tts.dart';
 import '../data/lang.dart';
@@ -65,7 +67,18 @@ class AppState extends ChangeNotifier {
   String explorerName = '';
   int age = 6;
   String grade = 'Class 1';
-  String langCode = 'en';
+  String _langCode = 'en';
+  String get langCode => _langCode;
+  set langCode(String v) {
+    _langCode = v;
+    Loc.code = v; // the Hindi demo switches (interface text, story lines, recorded voices) all follow this one value
+    AudioManager.instance.lang = v;
+    StoryLines.instance.lang = v;
+  }
+
+  /// Hindi is a demo: only the prologue, the map, Sound Forest and the screening are Hindi. Everything else stays English.
+  bool get hindi => _langCode == 'hi';
+  bool hindiIsland(IslandId i) => hindi && i == IslandId.forest;
   bool consent = false;
   Avatar avatar = Avatar();
 
@@ -130,6 +143,8 @@ class AppState extends ChangeNotifier {
 
   LangPack get pack => LangRegistry.byCode(langCode);
   GameContentPack get content => GameContent.of(langCode);
+  GameContentPack contentFor(IslandId i) => hindiIsland(i) ? GameContent.forHindiDemo('hi') : content;
+  LangPack packFor(IslandId i) => hindiIsland(i) ? pack : LangRegistry.byCode('en');
 
   bool get hasBaseline => history.isNotEmpty;
   int get cycle => max(0, history.length - 1); // number of completed check-ins
@@ -162,7 +177,7 @@ class AppState extends ChangeNotifier {
     } catch (e) {
       debugPrint('load failed: $e');
     }
-    if (!GameContent.enabledLanguages.contains(langCode)) langCode = 'en'; // v1 is English-only
+    langCode = GameContent.enabledLanguages.contains(_langCode) ? _langCode : 'en'; // also re-applies the saved language to the voices and texts
     Speaker.instance.enabled = voiceOn;
     AudioManager.instance.sfxOn = sfxOn;
     AudioManager.instance.musicOn = musicOn;

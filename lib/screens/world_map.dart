@@ -23,6 +23,8 @@ import '../state/app_state.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/props.dart';
+import '../core/loc.dart';
+import '../data/hi_text.dart';
 import 'collection.dart';
 import 'game_screen.dart';
 import 'parent_gate.dart';
@@ -108,7 +110,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     final island = _regionIsland[r.id]!;
     if (island == IslandId.observatory) {
       if (!st.campaign.observatoryUnlocked) {
-        _toast('Free all six Story Keepers to reach Gumsum’s Storm Citadel! (${st.campaign.keepersFreed}/6 free)');
+        _toast(Tr(st.hindi).f('Free all six Story Keepers to reach Gumsum’s Storm Citadel! ({n}/6 free)', {'n': st.campaign.keepersFreed}));
       } else {
         _openTrial();
       }
@@ -134,6 +136,9 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
       ),
     );
   }
+
+  String _regionName(_Region r) => Loc.hi ? (HiText.islands[_regionIsland[r.id]] ?? r.name) : r.name;
+  String _regionTag(_Region r) => Loc.hi ? (HiText.islandTags[_regionIsland[r.id]] ?? r.tag) : r.tag;
 
   void _toast(String m) => ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
@@ -231,7 +236,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                     color: const Color(0xFFFFF9E8),
                     padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
                     child: Text(
-                      '⚡ All six Keepers are free! Gumsum’s Storm Citadel has appeared!',
+                      Tr(Loc.hi).call('⚡ All six Keepers are free! Gumsum’s Storm Citadel has appeared!'),
                       textAlign: TextAlign.center,
                       style: ts(22, color: C.purple),
                     ),
@@ -272,7 +277,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
           index: _regions.indexOf(r),
           child: Semantics(
             button: true,
-            label: '${r.name}, ${r.tag}',
+            label: '${_regionName(r)}, ${_regionTag(r)}',
             child: GestureDetector(
               onTap: () => _openRegion(r),
               child: Column(
@@ -336,7 +341,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: Colors.white, width: 2),
                                 ),
-                                child: Text('Start here!', style: ts(12, color: C.ink)),
+                                child: Text(Tr(Loc.hi)('Start here!'), style: ts(12, color: C.ink)),
                               ),
                             ),
                           ),
@@ -357,7 +362,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                                   const SizedBox(width: 4),
                                   Text('${restoration.round()}%', style: ts(11, color: C.greenDark)),
                                   const SizedBox(width: 6),
-                                  Text(island == IslandId.observatory ? (st.campaign.trialPassed ? '⚡ won' : '⚡ trial') : '${st.campaign.chapterDone(island) ? '🎉' : '🔒'} ${st.campaign.islandKeys(island)}/${st.campaign.maxIslandKeys(island)}🔑', style: ts(11, color: C.purple)),
+                                  Text(island == IslandId.observatory ? (st.campaign.trialPassed ? Tr(Loc.hi)('⚡ won') : Tr(Loc.hi)('⚡ trial')) : '${st.campaign.chapterDone(island) ? '🎉' : '🔒'} ${st.campaign.islandKeys(island)}/${st.campaign.maxIslandKeys(island)}🔑', style: ts(11, color: C.purple)),
                                 ],
                               ),
                             ),
@@ -409,12 +414,12 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
               children: [
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(r.name, style: ts(15, color: Colors.white)),
+                  child: Text(_regionName(r), style: ts(15, color: Colors.white)),
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    done ? '✓ chapter complete' : r.tag,
+                    done ? Tr(Loc.hi)('✓ chapter complete') : _regionTag(r),
                     style: ts(11, color: Colors.white70, w: FontWeight.w600),
                   ),
                 ),
@@ -478,19 +483,19 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
           const SizedBox(width: 2),
           RoundIconButton(
             icon: Icons.menu_book_rounded,
-            label: 'Explorer’s Journal',
+            label: Tr(Loc.hi)('Explorer’s Journal'),
             size: 42,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JournalScreen())),
           ),
           RoundIconButton(
             icon: Icons.backpack_rounded,
-            label: 'My treasures',
+            label: Tr(Loc.hi)('My treasures'),
             size: 42,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen())),
           ),
           RoundIconButton(
             icon: Icons.settings_rounded,
-            label: 'Grown-up area',
+            label: Tr(Loc.hi)('Grown-up area'),
             size: 42,
             onTap: () async {
               if (await askParentGate(context)) {
@@ -515,15 +520,15 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('🌉 The Star Bridge has appeared!', style: ts(18, color: Colors.white)),
+                Text(Tr(Loc.hi)('🌉 The Star Bridge has appeared!'), style: ts(18, color: Colors.white)),
                 Text(
-                  'All seven islands played — Gumsum is waiting.',
+                  Tr(Loc.hi)('All seven islands played — Gumsum is waiting.'),
                   style: ts(13, color: Colors.white70, w: FontWeight.w600),
                 ),
               ],
             ),
           ),
-          BigButton(label: 'Let’s Go!', style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => playScene(context, 'star_bridge').then((_) => st.go(AppScreen.intro))),
+          BigButton(label: Tr(Loc.hi)('Let’s Go!'), style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => playScene(context, 'star_bridge').then((_) => st.go(AppScreen.intro))),
         ],
       );
     } else {
@@ -531,7 +536,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('${seasonName(st.campaign.season)} · Quest board', style: ts(15, color: Colors.white)),
+          Text(Tr(Loc.hi).f('{season} · Quest board', {'season': Loc.hi ? (HiText.seasons[seasonName(st.campaign.season)] ?? seasonName(st.campaign.season)) : seasonName(st.campaign.season)}), style: ts(15, color: Colors.white)),
           const SizedBox(height: 6),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -552,6 +557,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
 
   Widget _questChip(Quest q) {
     final g = Skills.game(q.game);
+    final hiQ = Loc.hi && q.island == IslandId.forest; // only Sound Forest quests are in Hindi
     final color = switch (q.kind) {
       QuestKind.boss => const Color(0xFFE5483F),
       QuestKind.challenge => C.purple,
@@ -582,13 +588,15 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${g.name} · Level ${q.level}${q.kind == QuestKind.boss ? ' · Boss' : ''}'.toUpperCase(),
+                      hiQ
+                          ? const Tr(true).f(q.kind == QuestKind.boss ? '{game} · Level {n} · Boss' : '{game} · Level {n}', {'game': HiText.gameNames[q.game] ?? g.name, 'n': q.level})
+                          : '${g.name} · Level ${q.level}${q.kind == QuestKind.boss ? ' · Boss' : ''}'.toUpperCase(),
                       style: ts(10, color: color),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      q.title,
+                      hiQ ? (HiText.levelNames[q.game]?[q.level - 1] ?? q.title) : q.title,
                       style: ts(14, color: C.ink),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -646,6 +654,7 @@ class _RegionSheet extends StatelessWidget {
     final need = camp.nodesNeeded(island);
     final restoration = camp.restoration(island, st.models);
     final emoji = skill == null ? '🔭' : Skills.of(skill).emoji;
+    final tr = Tr(st.hindiIsland(island)); // the Sound Forest sheet is Hindi when Hindi was chosen
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .88),
       child: Container(
@@ -666,7 +675,7 @@ class _RegionSheet extends StatelessWidget {
                   decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(3)),
                 ),
                 const SizedBox(height: 12),
-                Text('$emoji  ${Campaign.islandName(island)}', style: ts(28)),
+                Text('$emoji  ${tr.hi ? HiText.islands[island]! : Campaign.islandName(island)}', style: ts(28)),
                 if (island == IslandId.observatory)
                   Text('${tierName(ist.tier)} · ${ist.nodes.clamp(0, need)} of $need levels cleared', style: ts(15, color: C.inkSoft))
                 else
@@ -678,7 +687,7 @@ class _RegionSheet extends StatelessWidget {
                       child: GameProgressBar(value: restoration / 100, color: C.green, height: 14),
                     ),
                     const SizedBox(width: 8),
-                    Text('${restoration.round()}% restored', style: ts(14, color: C.greenDark)),
+                    Text(tr.f('{n}% restored', {'n': restoration.round()}), style: ts(14, color: C.greenDark)),
                   ],
                 ),
                 const SizedBox(height: 14),
@@ -710,6 +719,7 @@ class _GameLevels extends StatelessWidget {
     final next = camp.nextLevel(island, game);
     final main = islandGame[island]!;
     final mainDone = ist.count(main);
+    final tr = Tr(st.hindiIsland(island));
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Container(
@@ -730,9 +740,9 @@ class _GameLevels extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(meta.name, style: ts(20, color: unlocked ? C.ink : C.inkSoft)),
+                      Text(tr.hi ? (HiText.gameNames[game] ?? meta.name) : meta.name, style: ts(20, color: unlocked ? C.ink : C.inkSoft)),
                       Text(
-                        lv.concept,
+                        tr.hi ? (HiText.gameConcepts[game] ?? lv.concept) : lv.concept,
                         style: ts(13, color: C.inkSoft, w: FontWeight.w600),
                       ),
                     ],
@@ -752,7 +762,7 @@ class _GameLevels extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(color: Colors.white.withValues(alpha: .7), borderRadius: BorderRadius.circular(16)),
                 child: Text(
-                  'Clear $unlockSecondAfter levels of ${Skills.game(main).name} to unlock  ·  $mainDone/$unlockSecondAfter done',
+                  tr.f('Clear {k} levels of {game} to unlock  ·  {done}/{k} done', {'k': unlockSecondAfter, 'game': tr.hi ? (HiText.gameNames[main] ?? Skills.game(main).name) : Skills.game(main).name, 'done': mainDone}),
                   textAlign: TextAlign.center,
                   style: ts(15, color: C.purpleDark),
                 ),
@@ -764,7 +774,8 @@ class _GameLevels extends StatelessWidget {
                     Expanded(
                       child: _LevelTile(
                         level: l,
-                        name: lv.names[l - 1],
+                        name: tr.hi ? (HiText.levelNames[game]?[l - 1] ?? lv.names[l - 1]) : lv.names[l - 1],
+                        hindi: tr.hi,
                         state: _state(camp, ist, l, next),
                         color: meta.color,
                         keys: ist.keysOf(game, l),
@@ -789,7 +800,7 @@ class _GameLevels extends StatelessWidget {
 
   void _tap(BuildContext context, Campaign camp, AppState st, int l, int? next) {
     if (!camp.levelOpen(island, game, l)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Clear level ${l - 1} first to open level $l!'), duration: const Duration(seconds: 2)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(Tr(st.hindiIsland(island)).f('Clear level {a} first to open level {b}!', {'a': l - 1, 'b': l})), duration: const Duration(seconds: 2)));
       return;
     }
     onPlay(camp.questFor(island, st.models, game: game, level: l));
@@ -804,17 +815,20 @@ class _LevelTile extends StatelessWidget {
   final _LevelState state;
   final Color color;
   final int keys, maxKeys;
+  final bool hindi;
   final VoidCallback onTap;
-  const _LevelTile({required this.level, required this.name, required this.state, required this.color, required this.onTap, this.keys = 0, this.maxKeys = 3});
+  const _LevelTile({required this.level, required this.name, required this.state, required this.color, required this.onTap, this.keys = 0, this.maxKeys = 3, this.hindi = false});
 
   @override
   Widget build(BuildContext context) {
-    final (bg, border, badge, label) = switch (state) {
+    final tr = Tr(hindi);
+    final (bg, border, badge, rawLabel) = switch (state) {
       _LevelState.cleared => keys >= maxKeys ? (const Color(0xFFE3F6E5), C.green, '✓', 'All keys!') : (const Color(0xFFFFF7E0), C.gold, '↻', 'Replay'),
       _LevelState.skipped => (const Color(0xFFE8F1FF), const Color(0xFF6A9BE0), '⏩', 'Play for keys'),
       _LevelState.next => (const Color(0xFFFFF1C2), C.orange, '▶', 'Play'),
       _LevelState.locked => (const Color(0xFFEDEBF5), Colors.black12, '🔒', 'Locked'),
     };
+    final label = tr(rawLabel);
     return Semantics(
       button: true,
       label: 'Level $level, $name, $label, $keys of $maxKeys keys',
@@ -831,7 +845,7 @@ class _LevelTile extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Text('Level $level', style: ts(13, color: state == _LevelState.locked ? C.inkSoft : C.ink)),
+              Text(tr.f('Level {n}', {'n': level}), style: ts(13, color: state == _LevelState.locked ? C.inkSoft : C.ink)),
               const SizedBox(height: 2),
               Text(badge, style: TextStyle(fontSize: 22, color: state == _LevelState.cleared ? C.greenDark : null)),
               const SizedBox(height: 2),
@@ -931,7 +945,8 @@ class _KeeperCage extends StatelessWidget {
     final st = context.watch<AppState>();
     final camp = st.campaign;
     final keeper = islandGuardian[island]!;
-    final name = storyCast[keeper]?.name ?? keeper;
+    final tr = Tr(st.hindiIsland(island));
+    final name = tr.hi ? (HiText.keepers[island] ?? keeper) : (storyCast[keeper]?.name ?? keeper);
     final have = camp.islandKeys(island), max = camp.maxIslandKeys(island);
     final free = camp.chapterDone(island);
     return Container(
@@ -953,8 +968,8 @@ class _KeeperCage extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(free ? '$name is free! 🎉' : 'Free $name!', style: ts(18, color: free ? C.greenDark : C.ink)),
-            Text(free ? 'Every key won on this island.' : 'Win every key on this island to open the cage.', style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+            Text(free ? tr.f('{name} is free! 🎉', {'name': name}) : tr.f('Free {name}!', {'name': name}), style: ts(18, color: free ? C.greenDark : C.ink)),
+            Text(free ? tr('Every key won on this island.') : tr('Win every key on this island to open the cage.'), style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
             const SizedBox(height: 6),
             Row(children: [
               Expanded(child: GameProgressBar(value: max == 0 ? 0 : have / max, color: C.gold, height: 14)),

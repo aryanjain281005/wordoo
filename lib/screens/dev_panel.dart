@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../state/app_state.dart';
 import '../core/assets.dart';
 import '../core/audio.dart';
 import '../core/frame_stats.dart';
@@ -57,6 +59,12 @@ class _DevPanelState extends State<DevPanel> {
       body: ListView(padding: const EdgeInsets.all(16), children: [
         Text('Nothing here changes the child’s progress, levels or check-in gate.', style: ts(13, color: Colors.white70, w: FontWeight.w500)),
         const SizedBox(height: 12),
+        Text('Language (Hindi demo: prologue, map, Sound Forest, screening)', style: ts(14, color: Colors.white70, w: FontWeight.w500)),
+        Wrap(spacing: 8, children: [
+          for (final l in const [('en', 'English'), ('hi', 'हिन्दी')])
+            ChoiceChip(label: Text(l.$2), selected: context.watch<AppState>().langCode == l.$1, onSelected: (_) => context.read<AppState>().setLang(l.$1)),
+        ]),
+        const SizedBox(height: 8),
         Text('Level: $level of $levelsPerGame', style: ts(18, color: Colors.white)),
         Slider(value: level.toDouble(), min: 1, max: 4, divisions: 3, label: '$level', onChanged: (v) => setState(() => level = v.round())),
         for (final (g, i, s) in _games)

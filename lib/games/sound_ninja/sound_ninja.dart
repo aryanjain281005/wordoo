@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../core/assets.dart';
 import '../../core/audio.dart';
+import '../../core/loc.dart';
+import '../../data/hi_text.dart';
 import '../../core/theme.dart';
 import '../../data/strings.dart';
 import '../../models/models.dart';
@@ -10,9 +12,10 @@ import '../../widgets/common.dart';
 import '../game_module.dart';
 
 /// Ninja belt from all sounds heard right (white → black).
-String ninjaBelt(int n) {
+String ninjaBelt(int n, {bool hindi = false}) {
   const belts = ['White', 'Yellow', 'Orange', 'Green', 'Blue', 'Purple', 'Brown', 'Black'];
-  return '${belts[min(belts.length - 1, n ~/ 12)]} Belt';
+  final i = min(belts.length - 1, n ~/ 12);
+  return hindi ? '${HiText.belts[i]}${const Tr(true)(' Belt')}' : '${belts[i]} Belt';
 }
 
 const _fruitColors = [Color(0xFFFF7A59), Color(0xFFFFC93C), Color(0xFF8BD450), Color(0xFFB98CFF)];
@@ -52,6 +55,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
 
   Item get it => widget.ctx.item;
   String get lang => widget.ctx.pack.code;
+  Tr get tr => Tr(lang == 'hi'); // Hindi demo
   bool get demo => widget.ctx.demo;
   bool get clap => it.id.startsWith('pc:');
   int get n => it.options.length;
@@ -191,7 +195,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
       _say(it.options[i].say ?? it.options[i].label);
       AudioManager.instance.sfx('bamboo_clack', volume: .55);
       AudioManager.instance.sfx('firefly_chime', volume: .3);
-      widget.ctx.feedback(first ? (NinjaCombo.value >= 3 ? 'Combo ×${NinjaCombo.value}! Ninja!' : Str.good(lang)) : Str.t(lang, 'good3'), true);
+      widget.ctx.feedback(first ? (NinjaCombo.value >= 3 ? tr.f('Combo ×{n}! Ninja!', {'n': NinjaCombo.value}) : Str.good(lang)) : Str.t(lang, 'good3'), true);
       _finish(first, 1700);
       return;
     }
@@ -231,7 +235,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
     AudioManager.instance.sfx('miss_soft');
     if (_attempts < 2) {
       setState(_cuts.clear);
-      widget.ctx.feedback('${it.hint} Say “${it.stimulus}” slowly.', false);
+      widget.ctx.feedback(tr.f('{hint} Say “{w}” slowly.', {'hint': it.hint, 'w': '${it.stimulus}'}), false);
       Future.delayed(const Duration(milliseconds: 700), () {
         if (!_disposed) _say(it.stimulus ?? it.say);
       });
@@ -289,13 +293,13 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
                   left: 0,
                   right: 0,
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    RoundIconButton(icon: Icons.refresh_rounded, label: 'Start again', size: 46, onTap: () => setState(_cuts.clear)),
+                    RoundIconButton(icon: Icons.refresh_rounded, label: tr('Start again'), size: 46, onTap: () => setState(_cuts.clear)),
                     const SizedBox(width: 12),
                     Opacity(opacity: 1, child: BigButton(label: '✓', style: BtnStyle.go, width: 90, height: 52, fontSize: 26, onTap: _clapDone)),
                   ]),
                 ),
               if (!clap && !demo && !_resolved)
-                Positioned(bottom: 10, left: 0, right: 0, child: Center(child: Text('Tap to hear · swipe through to slice', style: ts(14, color: Colors.white, w: FontWeight.w600).copyWith(shadows: const [Shadow(color: Color(0x99000000), blurRadius: 4)])))),
+                Positioned(bottom: 10, left: 0, right: 0, child: Center(child: Text(tr('Tap to hear · swipe through to slice'), style: ts(14, color: Colors.white, w: FontWeight.w600).copyWith(shadows: const [Shadow(color: Color(0x99000000), blurRadius: 4)])))),
             ]),
           ),
         ),
@@ -311,12 +315,12 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
           const SizedBox(width: 6),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(clap ? 'Slice “${it.stimulus}” into its beats!' : it.prompt, style: ts(17, color: C.ink)),
-              if (!demo) Text('🥋 ${ninjaBelt(widget.heardRight)}${NinjaCombo.value >= 2 ? '  ·  combo ×${NinjaCombo.value}' : ''}', style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
+              Text(clap ? tr.f('Slice “{w}” into its beats!', {'w': '${it.stimulus}'}) : it.prompt, style: ts(17, color: C.ink)),
+              if (!demo) Text('🥋 ${ninjaBelt(widget.heardRight, hindi: tr.hi)}${NinjaCombo.value >= 2 ? '  ·  ${tr.f('combo ×{n}', {'n': NinjaCombo.value})}' : ''}', style: ts(12, color: C.inkSoft, w: FontWeight.w600)),
             ]),
           ),
           if (it.emoji != null && !clap) Text(it.emoji!, style: const TextStyle(fontSize: 36)),
-          RoundIconButton(icon: Icons.volume_up_rounded, label: 'Hear it again', color: C.gold, size: 44, onTap: demo ? () {} : () => _say(clap ? (it.stimulus ?? it.say) : it.say)),
+          RoundIconButton(icon: Icons.volume_up_rounded, label: tr('Hear it again'), color: C.gold, size: 44, onTap: demo ? () {} : () => _say(clap ? (it.stimulus ?? it.say) : it.say)),
         ]),
       );
 
@@ -379,7 +383,7 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
       width: r * 2,
       height: r * 2,
       child: CustomPaint(
-        painter: _BigFruitPainter(cuts: List.of(_cuts), done: done),
+        painter: _BigFruitPainter(cuts: List.of(_cuts), done: done, hindi: tr.hi),
         child: Center(child: it.emoji != null ? Text(it.emoji!, style: TextStyle(fontSize: r * .7)) : null),
       ),
     );
@@ -389,7 +393,8 @@ class _SoundNinjaItemState extends State<SoundNinjaItem> with TickerProviderStat
 class _BigFruitPainter extends CustomPainter {
   final List<double> cuts;
   final bool done;
-  _BigFruitPainter({required this.cuts, required this.done});
+  final bool hindi; // Hindi demo
+  _BigFruitPainter({required this.cuts, required this.done, this.hindi = false});
   @override
   void paint(Canvas canvas, Size size) {
     final c = size.center(Offset.zero);
@@ -408,7 +413,7 @@ class _BigFruitPainter extends CustomPainter {
         ..strokeWidth = 7
         ..strokeCap = StrokeCap.round);
     }
-    final tp = TextPainter(text: TextSpan(text: '${cuts.length + 1} ${cuts.isEmpty ? 'piece' : 'pieces'}', style: const TextStyle(fontFamily: 'Fredoka', fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)), textDirection: TextDirection.ltr)..layout();
+    final tp = TextPainter(text: TextSpan(text: hindi ? '${cuts.length + 1} ${cuts.isEmpty ? 'टुकड़ा' : 'टुकड़े'}' : '${cuts.length + 1} ${cuts.isEmpty ? 'piece' : 'pieces'}', style: const TextStyle(fontFamily: 'Fredoka', fontFamilyFallback: ['NotoSansDevanagari'], fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white)), textDirection: TextDirection.ltr)..layout();
     tp.paint(canvas, c + Offset(-tp.width / 2, r + 8));
   }
 

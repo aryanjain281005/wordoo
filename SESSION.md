@@ -58,3 +58,11 @@ team's Vivo V2130 (USB, adb). Everything is committed and pushed (HEAD `1c0755b`
 1. Re-run frame stats for Sound Ninja, Word Flash, Word Detective, Sound Orchestra on the phone (dev panel → play a quest → close; read the snackbar / `adb logcat -s flutter | grep FRAMESTATS`) and look at the `hitches` lines for what is left.
 2. Watch every scene in the dev panel (chips) on the phone; tune shot lengths/positions in `tool/build_scenes.py`.
 3. Upgrade ElevenLabs to Starter (commercial use) before release; optionally re-cast with Indian-English voices.
+
+## 8. Hindi demo (11 Oct) — see HINDI_DEMO.md
+Bilingual build: when the child picks हिन्दी at set-up, the **prologue, the map page, the Sound Forest island (island sheet, both games, start + rescue animations, reward screen) and the screening** are Hindi; everything else stays English. **English is unchanged** (all English tests pass; English map/game checked on the phone).
+* Gate: `AppState.langCode` → `Loc.code`, `AudioManager.lang`, `StoryLines.lang`. `AppState.hindiIsland(i)`/`contentFor(i)`/`packFor(i)` keep other islands English. Interface text via `Tr` + `lib/data/hi_text.dart`.
+* Content: `lib/content/hi/hi_pack.dart` (picture words, rhyme families, beats), `assets/story/lines_hi.json` (37 story lines), `assets/story/say_hi.json` (589 words/sounds/instructions).
+* Voices: story lines = ElevenLabs (`VOLANG=hi ENGINE=eleven`), words/instructions = Kokoro Hindi (`VOLANG=hi`), files in `assets/vo/hi/`. Phone TTS (hi-IN) speaks the screening and the bridge screen.
+* Verified: phone (prologue, map, island sheet, Orchestra + Ninja in Hindi, Hindi clips confirmed loading via frame-stat marks), browser build (fresh set-up → Hindi prologue → bridge → first screening station). Not heard by ear: the Hindi voices.
+* Dev panel: English / हिन्दी switch.

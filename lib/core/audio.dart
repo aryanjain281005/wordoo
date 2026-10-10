@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'assets.dart';
 import 'frame_stats.dart';
 import 'speech_key.dart';
+import '../story/story_lines.dart';
 import 'tts.dart';
 
 /// One place for every sound in the game.
@@ -37,6 +38,11 @@ class AudioManager {
   String? _musicId;
   Map<String, String> _sayIndex = {}; // speech key → recorded clip id (assets/story/say_en.json)
   Map<String, List<int>> _envelopes = {}; // per voice line: loudness 0..9 every 50 ms
+  Map<String, List<int>> _envelopesHi = {}; // the same for the Hindi voices (assets/vo/hi)
+  Map<String, String> _sayIndexHi = {}; // Hindi demo: speech key → recorded clip id (assets/story/say_hi.json)
+
+  /// 'en' or 'hi' (set by AppState). Hindi clips are used only when the child chose Hindi AND a Hindi clip exists for that id.
+  String lang = 'en';
   Timer? _lip;
   Completer<void>? _voiceDone;
   bool _ready = false;
@@ -56,6 +62,14 @@ class AudioManager {
       try {
         final raw = jsonDecode(await rootBundle.loadString('assets/story/say_en.json')) as Map<String, dynamic>;
         _sayIndex = {for (final e in raw.entries) speechKey((e.value as Map)['text'] as String): e.key};
+      } catch (_) {}
+      try {
+        final raw = jsonDecode(await rootBundle.loadString('assets/vo/hi/envelopes.json')) as Map<String, dynamic>;
+        _envelopesHi = raw.map((k, v) => MapEntry(k, List<int>.from(v as List)));
+      } catch (_) {}
+      try {
+        final raw = jsonDecode(await rootBundle.loadString('assets/story/say_hi.json')) as Map<String, dynamic>;
+        _sayIndexHi = {for (final e in raw.entries) speechKey((e.value as Map)['text'] as String): e.key};
       } catch (_) {}
       // every sound effect is loaded up-front, so the first tap on anything sounds instantly
       final all = ReadleAssets.instance.bundledUnder('assets/sfx/').where((p) => p.endsWith('.ogg'));
@@ -170,15 +184,22 @@ class AudioManager {
     } catch (_) {}
   }
 
-  bool hasVoice(String id) => ReadleAssets.instance.bundled('assets/vo/en/$id.ogg');
+  bool _hiClip(String id) => lang == 'hi' && ReadleAssets.instance.bundled('assets/vo/hi/$id.ogg');
+  bool hasVoice(String id) => _hiClip(id) || ReadleAssets.instance.bundled('assets/vo/en/$id.ogg');
+  String _voicePath(String id) => _hiClip(id) ? 'assets/vo/hi/$id.ogg' : 'assets/vo/en/$id.ogg';
+  List<int>? _envelope(String id) => _hiClip(id) ? _envelopesHi[id] : _envelopes[id];
 
   /// Length of a generated voice line (from its lip-sync envelope); null when only TTS is available.
-  Duration? voiceLength(String id) => hasVoice(id) && _envelopes[id] != null ? Duration(milliseconds: _envelopes[id]!.length * 50) : null;
+  Duration? voiceLength(String id) => hasVoice(id) && _envelope(id) != null ? Duration(milliseconds: _envelope(id)!.length * 50) : null;
 
   /// Recorded clip for a phrase (word, sound, instruction, story sentence), if one was generated.
   String? sayId(String text) {
+    if (lang == 'hi') {
+      final h = _sayIndexHi[speechKey(text)];
+      if (h != null && _hiClip(h)) return h;
+    }
     final id = _sayIndex[speechKey(text)];
-    return id != null && hasVoice(id) ? id : null;
+    return id != null && ReadleAssets.instance.bundled('assets/vo/en/$id.ogg') ? id : null;
   }
 
   /// Say a word / sound / instruction in the narrator's recorded voice (falls back to device TTS).
@@ -201,7 +222,6 @@ class AudioManager {
 
   /// Speak a character line. Completes when the line has finished (approximately, for TTS).
   Future<void> voice(String id, String text, {String character = 'milo', String ttsLocale = 'en-IN'}) async {
-    FrameStats.mark('voice:$id');
     await stopVoice();
     speaking.value = character;
     _duck(true);
@@ -209,7 +229,11 @@ class AudioManager {
     _voiceDone = done;
     var played = false;
     if (kDebugMode || const bool.fromEnvironment('VOICE_LOG')) debugPrint('VOICE ${DateTime.now().millisecondsSinceEpoch % 100000} $id');
-    if (enabled && hasVoice(id)) {
+    // a line shown in Hindi must never be spoken by its English recording: with no Hindi clip it uses the phone's Hindi voice
+    final hindiLine = lang == 'hi' && StoryLines.instance.isHindi(id) && !_hiClip(id);
+    if (hindiLine) ttsLocale = 'hi-IN';
+    FrameStats.mark('voice:${hindiLine ? 'phone-hindi-voice' : (hasVoice(id) ? _voicePath(id) : 'phone-voice')}');
+    if (enabled && hasVoice(id) && !hindiLine) {
       try {
         // one reused player for every line (creating a player per line caused small stutters)
         final p = _voicePlayer ??= (AudioPlayer()..onPlayerComplete.listen((_) {
@@ -217,9 +241,9 @@ class AudioManager {
               if (d != null && !d.isCompleted) d.complete();
             }));
         _voice = p;
-        await p.play(AssetSource('assets/vo/en/$id.ogg'));
+        await p.play(AssetSource(_voicePath(id)));
         played = true;
-        final env = _envelopes[id];
+        final env = _envelope(id);
         final sw = Stopwatch()..start();
         _lip = Timer.periodic(const Duration(milliseconds: 50), (_) {
           final i = sw.elapsedMilliseconds ~/ 50;

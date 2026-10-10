@@ -9,6 +9,7 @@ import '../core/audio.dart';
 import '../core/theme.dart';
 import '../widgets/art.dart';
 import '../widgets/hero.dart';
+import '../data/hi_text.dart';
 import 'puppets.dart';
 import 'story_lines.dart';
 
@@ -66,8 +67,9 @@ class Shot {
   final double panXFrom, panXTo; // sideways camera move (fraction of the screen width)
   final bool bars; // cinematic black bars
   final String? title; // place name that glides in at the top ("Sound Forest")
+  final String? titleHi, cardHi; // Hindi demo: the same title / card in Hindi (used only when the line is Hindi)
   final double shake; // camera shake strength (0 = none), e.g. thunder
-  const Shot({this.fxList = const [], this.cues = const [], this.panXFrom = 0, this.panXTo = 0, this.bars = false, this.title, this.shake = 0, this.bg = 'tree', this.fx = 'none', this.cast = const [], this.line, this.sfx, this.zoomFrom = 1, this.zoomTo = 1.06, this.panFrom = 0, this.panTo = 0, this.minMs = 2500, this.video, this.card});
+  const Shot({this.titleHi, this.cardHi, this.fxList = const [], this.cues = const [], this.panXFrom = 0, this.panXTo = 0, this.bars = false, this.title, this.shake = 0, this.bg = 'tree', this.fx = 'none', this.cast = const [], this.line, this.sfx, this.zoomFrom = 1, this.zoomTo = 1.06, this.panFrom = 0, this.panTo = 0, this.minMs = 2500, this.video, this.card});
   factory Shot.fromJson(Map<String, dynamic> j) {
     final cam = (j['camera'] as Map?) ?? const {};
     List<double> pair(dynamic v, List<double> d) => v == null ? d : [for (final x in v as List) (x as num).toDouble()];
@@ -87,6 +89,8 @@ class Shot {
       panXTo: px[1],
       bars: j['bars'] as bool? ?? false,
       title: j['title'] as String?,
+      titleHi: j['title_hi'] as String?,
+      cardHi: j['card_hi'] as String?,
       shake: (j['shake'] as num?)?.toDouble() ?? 0,
       bg: j['bg'] as String? ?? 'tree',
       fx: j['fx'] as String? ?? 'none',
@@ -296,8 +300,8 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
             for (final c in shot.cast) _castMember(c, box, i),
             ],
             if (shot.bars) ..._bars(box),
-            if (shot.title != null) _placeTitle(shot.title!, i),
-            if (shot.card != null) _card(shot.card!),
+            if (shot.title != null) _placeTitle(_hindiShot(shot) && shot.titleHi != null ? shot.titleHi! : shot.title!, i),
+            if (shot.card != null) _card(_hindiShot(shot) && shot.cardHi != null ? shot.cardHi! : shot.card!),
             if (line != null)
               Positioned(
                 left: 14,
@@ -310,7 +314,7 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
                     padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
                     decoration: BoxDecoration(color: const Color(0xEE1B1F4B), borderRadius: BorderRadius.circular(20), border: Border.all(color: const Color(0xFFE8C46A), width: 2)),
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                      Text(storyCast[line.who]?.name ?? line.who, style: ts(14, color: const Color(0xFFFFE17A))),
+                      Text(StoryLines.instance.isHindi(shot.line!) ? (HiText.characters[line.who] ?? line.who) : (storyCast[line.who]?.name ?? line.who), style: ts(14, color: const Color(0xFFFFE17A))),
                       const SizedBox(height: 4),
                       Text(line.text, style: ts(19, color: Colors.white, h: 1.3)),
                     ]),
@@ -332,6 +336,9 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
       ),
     );
   }
+
+  /// A shot is shown in Hindi when its voice line is a Hindi line (so scenes of other islands stay English).
+  bool _hindiShot(Shot s) => s.line != null && StoryLines.instance.isHindi(s.line!);
 
   List<String> _warmPrefixes(Cutscene sc) => {
         for (final sh in sc.shots) ...[
