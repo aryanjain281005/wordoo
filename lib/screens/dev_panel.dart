@@ -7,6 +7,7 @@ import '../engine/campaign.dart';
 import '../models/models.dart';
 import '../widgets/common.dart';
 import '../story/cutscene.dart';
+import '../screening/ui/screening_screen.dart';
 import 'game_screen.dart';
 
 /// Developer-only test bench (opened by long-pressing the Grown-up Dashboard title).
@@ -62,6 +63,16 @@ class _DevPanelState extends State<DevPanel> {
             title: const Text('Star Observatory (mixed)'),
             trailing: const Icon(Icons.play_arrow_rounded),
             onTap: () => _play(GameId.starObservatory, IslandId.observatory, Skill.values.toList()),
+          ),
+        ),
+        Card(
+          color: const Color(0xFFFFF3D0),
+          child: ListTile(
+            leading: const Text('🌉', style: TextStyle(fontSize: 28)),
+            title: const Text('DALI Screening Battery (Judge Demo)', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF4A3200))),
+            subtitle: const Text('Includes DEV SKIP button to jump parameters quickly', style: TextStyle(color: Color(0xFF7A5C00), fontSize: 12)),
+            trailing: const Icon(Icons.skip_next_rounded, color: Color(0xFF4A3200), size: 30),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScreeningScreen(isDev: true))),
           ),
         ),
         const SizedBox(height: 16),
