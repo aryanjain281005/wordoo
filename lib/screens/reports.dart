@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/cloud.dart';
 import '../core/theme.dart';
 import '../data/lang.dart';
 import '../data/skills.dart';
@@ -209,12 +210,14 @@ class ParentDashboard extends StatelessWidget {
               const SizedBox(height: 14),
               Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [sectionTitle('What we observed'), ObservedCard(Report.observations(st))])),
               const SizedBox(height: 14),
+              _emailReport(context, st),
+              const SizedBox(height: 14),
               _settings(context, st),
               const SizedBox(height: 14),
               _demo(context, st),
               const SizedBox(height: 14),
               Panel(
-                child: Text('🔒 Privacy: only a nickname, age/class, language and practice results are stored — on this device. No phone number, location, photo or ID is collected.', style: ts(14, color: C.inkSoft, w: FontWeight.w600, h: 1.35)),
+                child: Text('🔒 Privacy: only a nickname, age/class, language and practice results are stored on this device. No phone number, location, photo or ID is collected. If you choose the emailed report, your email address stays on this device and is used only to send it; practice results (no name beyond the nickname) are sent to our server to write the report.', style: ts(14, color: C.inkSoft, w: FontWeight.w600, h: 1.35)),
               ),
               const SizedBox(height: 24),
             ])),
@@ -244,6 +247,12 @@ class ParentDashboard extends StatelessWidget {
           ]),
         ),
       ]),
+    );
+  }
+
+  Widget _emailReport(BuildContext context, AppState st) {
+    return Panel(
+      child: _EmailReportCard(st: st),
     );
   }
 
@@ -297,5 +306,65 @@ class ParentDashboard extends StatelessWidget {
         ]),
       ]),
     );
+  }
+}
+
+
+/// "Email the full report to the parent": address, consent tick, send button and the result of the last send.
+class _EmailReportCard extends StatefulWidget {
+  final AppState st;
+  const _EmailReportCard({required this.st});
+  @override
+  State<_EmailReportCard> createState() => _EmailReportCardState();
+}
+
+class _EmailReportCardState extends State<_EmailReportCard> {
+  late final TextEditingController _c = TextEditingController(text: widget.st.parentEmail);
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final st = widget.st;
+    final ok = Cloud.validEmail(_c.text.trim());
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      sectionTitle('Email the full report', sub: 'A detailed progress report, written by Gemini, sent to the parent’s inbox after every check-in'),
+      TextField(
+        controller: _c,
+        keyboardType: TextInputType.emailAddress,
+        autocorrect: false,
+        enableSuggestions: false,
+        style: ts(16),
+        decoration: InputDecoration(
+          labelText: 'Parent’s email',
+          errorText: _c.text.isNotEmpty && !ok ? 'Check the email address' : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+        ),
+        onChanged: (v) {
+          setState(() {});
+          st.setParentEmail(v, st.parentReportConsent);
+        },
+      ),
+      CheckboxListTile(
+        contentPadding: EdgeInsets.zero,
+        controlAffinity: ListTileControlAffinity.leading,
+        value: st.parentReportConsent,
+        onChanged: (v) => st.setParentEmail(_c.text, v ?? false),
+        title: Text('I am the parent/guardian. I agree that my child’s practice results are sent to Wordoo’s server to write this report, and emailed to me.', style: ts(13, color: C.inkSoft, w: FontWeight.w600, h: 1.3)),
+      ),
+      const SizedBox(height: 6),
+      BigButton(
+        label: st.reportSending ? 'Sending…' : 'Send report now',
+        icon: Icons.mail_rounded,
+        style: BtnStyle.go,
+        height: 52,
+        fontSize: 17,
+        onTap: st.reportSending ? () {} : st.sendParentReport,
+      ),
+      if (st.reportStatus.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text(st.reportStatus, style: ts(14, color: C.inkSoft, w: FontWeight.w600, h: 1.3))),
+    ]);
   }
 }

@@ -31,5 +31,8 @@ export function config(env = loadEnv()) {
     agentMinIntervalMs: Number(env.AGENT_MIN_INTERVAL_MS ?? 0),
     dataDir: env.DATA_DIR || join(root, 'server', 'data'),
     apiToken: env.API_TOKEN || '',
+    resendKey: env.RESEND_API_KEY || '',
+    mailFrom: env.MAIL_FROM || '',
+    outboxDir: env.OUTBOX_DIR || join(root, 'server', 'outbox'),
   };
 }

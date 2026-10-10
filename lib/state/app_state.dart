@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
 import '../core/cloud.dart';
+import '../engine/parent_report.dart';
 import '../screening/adaptive.dart';
 import '../screening/history_doc.dart';
 import '../core/loc.dart';
@@ -92,6 +93,10 @@ class AppState extends ChangeNotifier {
   bool get hindi => _langCode == 'hi';
   bool hindiIsland(IslandId i) => hindi && i == IslandId.forest;
   bool consent = false;
+  String parentEmail = ''; // where the emailed progress report goes (only with the parent's tick)
+  bool parentReportConsent = false;
+  String reportStatus = ''; // last result shown in the Grown-up area
+  bool reportSending = false;
   Avatar avatar = Avatar();
 
   // screening
@@ -229,6 +234,8 @@ class AppState extends ChangeNotifier {
         'grade': grade,
         'lang': langCode,
         'consent': consent,
+        'parentEmail': parentEmail,
+        'parentReportConsent': parentReportConsent,
         'avatar': avatar.toJson(),
         'skills': skills.map((k, v) => MapEntry(k.index.toString(), v.toJson())),
         'models': models.map((k, v) => MapEntry(k.index.toString(), v.toJson())),
@@ -273,6 +280,8 @@ class AppState extends ChangeNotifier {
     grade = j['grade'] as String;
     langCode = j['lang'] as String;
     consent = j['consent'] as bool;
+    parentEmail = j['parentEmail'] as String? ?? '';
+    parentReportConsent = j['parentReportConsent'] as bool? ?? false;
     avatar = Avatar.fromJson(Map<String, dynamic>.from(j['avatar'] as Map));
     skills = (j['skills'] as Map).map((k, v) => MapEntry(Skill.values[int.parse(k as String)], SkillState.fromJson(Map<String, dynamic>.from(v as Map))));
     for (final s in Skill.values) {
@@ -340,6 +349,9 @@ class AppState extends ChangeNotifier {
     grade = 'Class 1';
     langCode = 'en';
     consent = false;
+    parentEmail = '';
+    parentReportConsent = false;
+    reportStatus = '';
     avatar = Avatar();
     background = scr.Background();
     _resetLearning();
@@ -396,6 +408,28 @@ class AppState extends ChangeNotifier {
   void setLang(String code) {
     if (!GameContent.enabledLanguages.contains(code)) return;
     langCode = code;
+    changed();
+  }
+
+  void setParentEmail(String email, bool agreed) {
+    parentEmail = email.trim();
+    parentReportConsent = agreed && parentEmail.isNotEmpty;
+    changed();
+  }
+
+  /// Asks the server to write (Gemini) and email the parent report. Needs the parent's email and consent tick.
+  Future<void> sendParentReport() async {
+    if (reportSending) return;
+    if (!parentReportConsent || !Cloud.validEmail(parentEmail)) {
+      reportStatus = 'Please enter a valid email and tick the consent box first.';
+      return changed();
+    }
+    reportSending = true;
+    reportStatus = 'Writing the report… this can take up to a minute.';
+    changed();
+    final r = await Cloud.instance.sendParentReport(email: parentEmail, studentId: cloudStudentId, data: parentReportData(this));
+    reportSending = false;
+    reportStatus = r.message;
     changed();
   }
 
@@ -530,6 +564,7 @@ class AppState extends ChangeNotifier {
       badges.add(Badges.first.id);
     } else {
       _applyCheckIn(scores, unmeasured);
+      if (parentReportConsent) Future.microtask(sendParentReport); // each check-in: the parent's email gets the new report
     }
     for (final list in responses.values) {
       for (final r in list) {

@@ -4,6 +4,7 @@
 //   POST /telemetry                   one answer → stored in `responses`, then the Question Agent writes 10 new questions
 //   POST /screenings                  one finished screening → `screenings` (the longitudinal history)
 //   GET  /screenings?student_id=…     a child's history, newest first
+//   POST /report/email                parent report: Gemini writes it, the server checks it, then emails it (or writes it to server/outbox/)
 //   GET  /bank/stats?lang=en          counts per station and difficulty pool, and by source
 //   GET  /agent/runs                  the latest Question Agent runs
 import http from 'node:http';
@@ -13,8 +14,10 @@ import { geminiClient } from './gemini.js';
 import { QuestionAgent } from './agent.js';
 import { seedBank } from './seed.js';
 import { createWhisper } from './whisper.js';
+import { cleanData, generateReport, renderEmail, createMailer, validEmail } from './report.js';
 
-export function createApp({ store, agent, cfg, whisper }) {
+export function createApp({ store, agent, cfg, whisper, gemini, mailer }) {
+  const lastMail = new Map(); // parent email → time of the last report (one per minute)
   const json = (res, code, body) => {
     res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type,x-readle-key', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS' });
     res.end(JSON.stringify(body));
@@ -100,6 +103,30 @@ export function createApp({ store, agent, cfg, whisper }) {
         await store.insertOne('screenings', d);
         return json(res, 200, { ok: true, stored: true });
       }
+      if (req.method === 'POST' && url.pathname === '/report/email') {
+        const b = await readBody(req);
+        if (!validEmail(b.parent_email)) return json(res, 400, { error: 'invalid parent_email' });
+        if (b.consent !== true) return json(res, 400, { error: 'parent consent is required' });
+        if (!gemini) return json(res, 503, { error: 'report writer is not configured' });
+        const to = b.parent_email.trim().toLowerCase();
+        if (Date.now() - (lastMail.get(to) ?? 0) < 60000) return json(res, 429, { error: 'a report was just sent; try again in a minute' });
+        lastMail.set(to, Date.now());
+        const data = cleanData(b.report_data);
+        if (!data.skills.length) return json(res, 400, { error: 'report_data.skills is empty' });
+        const { report, source, problems } = await generateReport(gemini, data);
+        const { html, text } = renderEmail(report, data);
+        let sent;
+        try {
+          sent = await (mailer ?? createMailer({ outboxDir: cfg.outboxDir })).send({ to, subject: report.subject, html, text });
+        } catch (e) {
+          lastMail.delete(to);
+          await store.insertOne('reports', { ts: new Date().toISOString(), student_id: String(b.student_id ?? ''), to_domain: to.split('@')[1], source, status: 'failed', error: String(e.message).slice(0, 200) });
+          return json(res, 502, { error: 'could not send the email', detail: String(e.message).slice(0, 200) });
+        }
+        // the address itself is not stored: only its domain, the text of the report and how it was sent
+        await store.insertOne('reports', { ts: new Date().toISOString(), student_id: String(b.student_id ?? ''), to_domain: to.split('@')[1], source, status: sent.sent ? 'sent' : 'outbox', mode: sent.mode, data, report });
+        return json(res, 200, { ok: true, sent: sent.sent, mode: sent.mode, written_by: source, model: source === 'gemini' ? gemini.lastModel : null, ...(problems.length ? { notes: problems } : {}) });
+      }
       return json(res, 404, { error: 'not found' });
     } catch (e) {
       return json(res, 500, { error: String(e.message ?? e) });
@@ -116,6 +143,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const whisper = createWhisper({ apiKey: cfg.openaiKey });
   whisper.probe().then((ok) => console.log(ok ? 'Whisper probe: OK' : `Whisper probe FAILED: ${whisper.error}`));
   setInterval(() => whisper.probe(), 10 * 60 * 1000).unref(); // credits added later → the app starts using Whisper by itself
-  const app = createApp({ store, agent, cfg, whisper });
-  app.listen(cfg.port, cfg.host, () => console.log(`Wordoo server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
+  const mailer = createMailer({ resendKey: cfg.resendKey, from: cfg.mailFrom, outboxDir: cfg.outboxDir });
+  const app = createApp({ store, agent, cfg, whisper, gemini, mailer });
+  app.listen(cfg.port, cfg.host, () => console.log(`Wordoo server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · mail: ${mailer.mode} · bank seeded +${n}`));
 }

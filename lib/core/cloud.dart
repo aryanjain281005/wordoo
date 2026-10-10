@@ -130,6 +130,28 @@ class Cloud {
     }
   }
 
+  // ---- parent report email (Gemini writes it on the server, the server sends it) ----
+  static bool validEmail(String e) => RegExp(r'^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$').hasMatch(e) && e.length <= 120;
+
+  Future<({bool ok, String message})> sendParentReport({required String email, required String studentId, required Map<String, dynamic> data}) async {
+    if (!enabled) return (ok: false, message: 'The report service is switched off in this build.');
+    try {
+      final r = await _client
+          .post(_u('/report/email'), headers: {'content-type': 'application/json'}, body: jsonEncode({'parent_email': email, 'consent': true, 'student_id': studentId, 'report_data': data}))
+          .timeout(const Duration(seconds: 120));
+      final j = jsonDecode(utf8.decode(r.bodyBytes)) as Map<String, dynamic>;
+      if (r.statusCode == 200) {
+        return j['sent'] == true
+            ? (ok: true, message: 'Report sent to $email ✓')
+            : (ok: true, message: 'Report written. Email sending is not set up on the server yet — it was saved there (server/outbox).');
+      }
+      if (r.statusCode == 429) return (ok: false, message: 'A report was just sent. Please try again in a minute.');
+      return (ok: false, message: 'Could not send the report: ${j['error'] ?? r.statusCode}');
+    } catch (_) {
+      return (ok: false, message: 'Could not reach the Wordoo server. Check the connection and try again.');
+    }
+  }
+
   // ---- screening history (screenings collection) ----
   static const _pendingKey = 'cloud_pending_screenings';
 

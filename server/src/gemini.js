@@ -6,19 +6,19 @@ export function geminiClient({ apiKey, models, model, fetchImpl = fetch, firstTi
   const client = {
     model: list[0],
     lastModel: list[0],
-    async generateJson(prompt, schema) {
+    async generateJson(prompt, schema, opts = {}) {
       if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
       let lastErr;
       for (let i = 0; i < list.length; i++) {
         const m = list[i];
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
-        const generationConfig = { responseMimeType: 'application/json', responseSchema: schema, temperature: 0.9 };
+        const generationConfig = { responseMimeType: 'application/json', responseSchema: schema, temperature: opts.temperature ?? 0.9 };
         // no hidden "thinking" on the full models: much faster, and the checks in subtests.js verify the result (lite models have none)
         if (!/lite/.test(m)) generationConfig.thinkingConfig = { thinkingBudget: 0 };
         const ctl = new AbortController();
         const t = setTimeout(() => ctl.abort(), i === list.length - 1 ? lastTimeoutMs : firstTimeoutMs);
         try {
-          const res = await fetchImpl(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig }), signal: ctl.signal });
+          const res = await fetchImpl(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-goog-api-key': apiKey }, body: JSON.stringify({ ...(opts.system ? { systemInstruction: { parts: [{ text: opts.system }] } } : {}), contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig }), signal: ctl.signal });
           const text = await res.text();
           if (!res.ok) throw new Error(`Gemini ${m} ${res.status}: ${text.slice(0, 200).replace(/AQ\.[A-Za-z0-9_-]+/g, '[key]')}`);
           const data = JSON.parse(text);

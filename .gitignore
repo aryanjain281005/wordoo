@@ -57,3 +57,4 @@ runtheflutter.txt
 # Readle server
 server/node_modules/
 server/data/
+server/outbox/
