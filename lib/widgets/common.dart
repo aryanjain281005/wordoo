@@ -139,7 +139,8 @@ class SpeechBubble extends StatelessWidget {
   final bool tailLeft;
   final double maxWidth;
   final double fontSize;
-  const SpeechBubble({super.key, required this.text, this.tailLeft = true, this.maxWidth = 320, this.fontSize = 20});
+  final bool scene; // blends into the artwork: warm translucent paper, golden edge, soft warm shadow
+  const SpeechBubble({super.key, required this.text, this.tailLeft = true, this.maxWidth = 320, this.fontSize = 20, this.scene = false});
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -147,14 +148,15 @@ class SpeechBubble extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: scene ? const Color(0xE8FFF4DA) : Colors.white,
+          border: scene ? Border.all(color: const Color(0xFFE8C46A), width: 2) : null,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(24),
             topRight: const Radius.circular(24),
             bottomRight: Radius.circular(tailLeft ? 24 : 6),
             bottomLeft: Radius.circular(tailLeft ? 6 : 24),
           ),
-          boxShadow: [softShadow(const Color(0x33101840), 16, 6)],
+          boxShadow: [softShadow(scene ? const Color(0x55A5601B) : const Color(0x33101840), 16, 6)],
         ),
         child: Text(text, style: ts(fontSize, color: C.ink, h: 1.25)),
       ),
@@ -171,8 +173,12 @@ class Companion extends StatefulWidget {
   final bool vertical;
   final String? speakLocale; // when set, speaks the message
   final bool happy;
+  final bool scene; // sits in the picture: warm bubble + a ground shadow under the creature
+  final int hop; // change this number to make the creature jump for joy
   const Companion({
     super.key,
+    this.scene = false,
+    this.hop = 0,
     this.type = 0,
     this.size = 120,
     this.message,
@@ -185,8 +191,10 @@ class Companion extends StatefulWidget {
   State<Companion> createState() => _CompanionState();
 }
 
-class _CompanionState extends State<Companion> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 2400))..repeat(reverse: true);
+class _CompanionState extends State<Companion> with TickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 2400), value: .5);
+  late final AnimationController _hop = AnimationController(vsync: this, duration: const Duration(milliseconds: 620));
+  bool _started = false;
   bool _blink = false;
   Timer? _timer;
 
@@ -205,6 +213,7 @@ class _CompanionState extends State<Companion> with SingleTickerProviderStateMix
   @override
   void didUpdateWidget(Companion old) {
     super.didUpdateWidget(old);
+    if (old.hop != widget.hop && !_still) _hop.forward(from: 0);
     if (old.message != widget.message) _maybeSpeak();
   }
 
@@ -218,29 +227,57 @@ class _CompanionState extends State<Companion> with SingleTickerProviderStateMix
   void dispose() {
     _timer?.cancel();
     _c.dispose();
+    _hop.dispose();
     super.dispose();
+  }
+
+  bool _still = false; // reduced-motion setting: the creature stays put
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _still = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (_still) {
+      _c.stop();
+      _c.value = .5;
+    } else if (!_started) {
+      _started = true;
+      _c.repeat(reverse: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final creature = AnimatedBuilder(
-      animation: _c,
-      builder: (_, __) => Transform.translate(
-        offset: Offset(0, sin(_c.value * pi) * -4),
-        child: SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: CustomPaint(painter: CreaturePainter(widget.type, wag: _c.value * 2 - 1, blink: _blink, happy: widget.happy)),
-        ),
-      ),
-    );
+      animation: Listenable.merge([_c, _hop]),
+      builder: (_, __) {
+        final jump = sin(_hop.value * pi) * widget.size * .28;
+        final squash = 1 + sin(_hop.value * pi) * .06;
+        return Stack(alignment: Alignment.bottomCenter, clipBehavior: Clip.none, children: [
+          if (widget.scene)
+            Positioned(bottom: 0, child: Container(width: widget.size * .62, height: widget.size * .09, decoration: BoxDecoration(borderRadius: BorderRadius.circular(40), color: const Color(0x44301A0A)))),
+          Transform.translate(
+            offset: Offset(0, sin(_c.value * pi) * -4 - jump),
+            child: Transform.scale(
+              scaleY: _hop.isAnimating ? squash : 1,
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: widget.size,
+                height: widget.size,
+                child: CustomPaint(painter: CreaturePainter(widget.type, wag: _c.value * 2 - 1, blink: _blink, happy: widget.happy || _hop.isAnimating)),
+              ),
+            ),
+          ),
+        ]);
+      },
+    ).wrapSize(widget.size);
     final bubble = widget.message == null
         ? null
         : GestureDetector(
             onTap: widget.speakLocale == null ? null : _maybeSpeak,
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: KeyedSubtree(key: ValueKey(widget.message), child: SpeechBubble(text: widget.message!, tailLeft: widget.bubbleRight && !widget.vertical)),
+              child: KeyedSubtree(key: ValueKey(widget.message), child: SpeechBubble(text: widget.message!, tailLeft: widget.bubbleRight && !widget.vertical, scene: widget.scene)),
             ),
           );
     if (bubble == null) return creature;
@@ -371,13 +408,15 @@ class Pop extends StatelessWidget {
   final int index;
   const Pop({super.key, required this.child, this.index = 0});
   @override
-  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: 1),
-        duration: Duration(milliseconds: 420 + index * 90),
-        curve: Curves.easeOutBack,
-        builder: (_, v, ch) => Opacity(opacity: v.clamp(0, 1), child: Transform.translate(offset: Offset(0, (1 - v) * 24), child: ch)),
-        child: child,
-      );
+  Widget build(BuildContext context) => (MediaQuery.maybeOf(context)?.disableAnimations ?? false)
+      ? child
+      : TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: Duration(milliseconds: 420 + index * 90),
+          curve: Curves.easeOutBack,
+          builder: (_, v, ch) => Opacity(opacity: v.clamp(0, 1), child: Transform.translate(offset: Offset(0, (1 - v) * 24), child: ch)),
+          child: child,
+        );
 }
 
 Widget bandPill(String label, Color color, {double size = 15}) => Container(
@@ -385,3 +424,7 @@ Widget bandPill(String label, Color color, {double size = 15}) => Container(
       decoration: BoxDecoration(color: color.withValues(alpha: .16), borderRadius: BorderRadius.circular(20), border: Border.all(color: color, width: 1.8)),
       child: Text(label, style: ts(size, color: Color.lerp(color, Colors.black, .35)!, w: FontWeight.w800)),
     );
+
+extension _SizedWrap on Widget {
+  Widget wrapSize(double size) => SizedBox(width: size, height: size, child: this);
+}

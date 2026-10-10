@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import '../story/play_scene.dart';
 import '../story/puppets.dart';
 import '../story/beats.dart';
 import '../core/assets.dart';
+import '../core/audio.dart';
 import '../engine/meta.dart';
 import '../engine/levels.dart';
 import 'journal.dart';
@@ -69,11 +71,20 @@ class WorldMapScreen extends StatefulWidget {
 class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStateMixin {
   late final AmbientController _sea = AmbientController(this); // the living sea behind the islands (see widgets/ambient.dart)
   bool _skyToast = false;
+  int _miloHop = 0; // Milo jumps when tapped or when something good happens
+  String? _hint; // small contextual speech bubble by Milo (appears, then fades away)
+  String? _pressed; // island that was just tapped (spring + golden glow before its sheet opens)
+  Timer? _hintTimer;
+  final _rng = Random();
+  bool get _still => MediaQuery.of(context).disableAnimations;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 1400), () {
+        if (mounted) _say(Str.t(context.read<AppState>().langCode, 'whereToday'));
+      });
       WordooAssets.instance.precache(context, ['island.', 'bg.day', 'char.milo.happy']);
       final st = context.read<AppState>();
       if (st.campaign.observatoryUnlocked && !st.badges.contains('obs-s${st.campaign.season}')) {
@@ -87,15 +98,49 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
     });
   }
 
+  /// A short line from Milo that fades after a few seconds.
+  void _say(String text) {
+    _hintTimer?.cancel();
+    setState(() => _hint = text);
+    _hintTimer = Timer(const Duration(seconds: 4), () {
+      if (mounted) setState(() => _hint = null);
+    });
+  }
+
+  void _miloTap(AppState st) {
+    setState(() => _miloHop++);
+    AudioManager.instance.sfx('pop', volume: .5);
+    final next = st.board.isEmpty ? null : st.board.first;
+    final tr = Tr(Loc.hi);
+    final lines = [
+      if (st.retestReady) tr('The Star Bridge is ready — let’s cross it!') else if (next != null) tr('Let’s try ${Campaign.islandName(next.island)} next!') else tr('Where shall we go today?'),
+      tr('Tap a glowing island to play!'),
+      tr('I love exploring with you!'),
+    ];
+    _say(lines[_rng.nextInt(lines.length)]);
+  }
+
+  /// Spring + golden flash on the tapped island, then its sheet opens.
+  Future<void> _tapIsland(_Region r) async {
+    if (_still) return _openRegion(r);
+    setState(() => _pressed = r.id);
+    AudioManager.instance.sfx('pop', volume: .5);
+    await Future.delayed(const Duration(milliseconds: 190));
+    if (!mounted) return;
+    setState(() => _pressed = null);
+    _openRegion(r);
+  }
+
   @override
   void dispose() {
+    _hintTimer?.cancel();
     _sea.dispose();
     super.dispose();
   }
 
   Future<void> _play(Quest q) async {
     if (q.island == IslandId.observatory) return _openTrial();
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameScreen(quest: q)));
+    await Navigator.of(context).push(_fadeRoute(GameScreen(quest: q)));
   }
 
   /// Story v3: the Storm Trial on the 7th island (warning scene the first time, then the test).
@@ -188,36 +233,51 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
                               ),
                             ),
                           ),
-                          // explorer + companion waiting on the shore
+                          // explorer + Milo waiting on the shore: small, never over the islands' labels, Milo reacts to taps
                           Positioned(
                             left: 6,
-                            bottom: 0,
-                            child: IgnorePointer(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 18, bottom: 2),
-                                    child: SpeechBubble(text: Str.t(st.langCode, 'whereToday'), fontSize: 14, maxWidth: 200),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: 112, hatEmoji: st.avatar.hat >= 0 ? Collectibles.all[st.avatar.hat].emoji : null),
-                                      Companion(type: st.avatar.companion, size: 72),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            bottom: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 260),
+                                  switchInCurve: Curves.easeOutBack,
+                                  transitionBuilder: (c, a) => ScaleTransition(alignment: Alignment.bottomLeft, scale: a, child: FadeTransition(opacity: a, child: c)),
+                                  child: _hint == null
+                                      ? const SizedBox(key: ValueKey('nohint'), height: 0)
+                                      : Padding(
+                                          key: ValueKey(_hint),
+                                          padding: const EdgeInsets.only(left: 70, bottom: 2),
+                                          child: SpeechBubble(text: _hint!, fontSize: 12, maxWidth: 150, scene: true),
+                                        ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    IgnorePointer(child: AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: 92, hatEmoji: st.avatar.hat >= 0 ? Collectibles.all[st.avatar.hat].emoji : null)),
+                                    Semantics(
+                                      button: true,
+                                      label: 'Milo',
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () => _miloTap(st),
+                                        child: Companion(type: st.avatar.companion, size: 60, hop: _miloHop, scene: true),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
+                          // quests: one small floating button instead of a permanent board
+                          Positioned(right: 12, bottom: 12, child: _questButton(st)),
                         ],
                       );
                     },
                   ),
                 ),
-                _bottom(st),
               ],
             ),
           ),
@@ -271,14 +331,19 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
       child: SizedBox(
         width: size,
         height: totalH,
-        child: Pop(
+        child: _Rise(
           index: _regions.indexOf(r),
+          still: _still,
           child: Semantics(
             button: true,
             label: '${_regionName(r)}, ${_regionTag(r)}',
             child: GestureDetector(
-              onTap: () => _openRegion(r),
-              child: Column(
+              onTap: () => _tapIsland(r),
+              child: AnimatedScale(
+                scale: _pressed == r.id ? 1.12 : 1,
+                duration: Duration(milliseconds: _pressed == r.id ? 160 : 520),
+                curve: _pressed == r.id ? Curves.easeOut : Curves.elasticOut,
+                child: Column(
                 children: [
                   _label(r, order, done, locked, isNext),
                   const SizedBox(height: 2),
@@ -288,17 +353,24 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
                       clipBehavior: Clip.none,
                       children: [
                         if (isNext) _PulseRing(size: size),
+                        if (_pressed == r.id)
+                          Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [BoxShadow(color: C.gold.withValues(alpha: .85), blurRadius: 40, spreadRadius: 6)]))),
                         // colour returns as the island is restored (Gumsum's grey fades); painted island art when available
                         Positioned.fill(
-                          // cached on its own layer: scrolling and the pulsing ring never re-filter the picture
-                          child: RepaintBoundary(child: ColorFiltered(
+                          // cached on its own layer: scrolling and the pulsing ring never re-filter the picture; the island floats gently
+                          child: _Float(
+                            sea: _sea,
+                            phase: _regions.indexOf(r) * 1.3,
+                            still: _still,
+                            sparkle: !locked,
+                            child: RepaintBoundary(child: ColorFiltered(
                             colorFilter: ColorFilter.matrix(_saturation(locked ? 1 : .35 + .65 * (restoration / 100).clamp(0.0, 1.0))),
                             child: ArtImage(
                               // v3: the 7th island is Gumsum's Storm Citadel until the Trial is won
                               island == IslandId.observatory && !st.campaign.trialPassed && WordooAssets.instance.art('island.citadel') != null ? 'island.citadel' : 'island.${island.name}',
                               fallback: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked)),
                             ),
-                          )),
+                          ))),
                         ),
                         // the island grows a tier every season
                         if (!locked && tier >= 2)
@@ -352,8 +424,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(tier > 1 ? '${tierName(tier)} ' : '', style: ts(11, color: C.purple)),
-                                  SizedBox(
+                                                                    SizedBox(
                                     width: size * .32,
                                     child: GameProgressBar(value: restoration / 100, color: C.green, height: 8),
                                   ),
@@ -372,6 +443,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
               ),
             ),
           ),
+        ),
         ),
       ),
     );
@@ -404,8 +476,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
                 colors: locked ? [const Color(0xFF8A92B2), const Color(0xFF6C7494)] : [const Color(0xFF2F7A57), const Color(0xFF1B4A37)],
               ),
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: isNext ? C.gold : const Color(0xFFE8C46A), width: 2.5),
-              boxShadow: [softShadow(const Color(0x44000000), 8, 4)],
+              border: Border.all(color: locked ? const Color(0xFFB9BFD6) : (isNext || done) ? C.gold : const Color(0xFF9FD3B4), width: (isNext || done) ? 3 : 2),
+              boxShadow: [softShadow(isNext || done ? const Color(0x99FFB02E) : const Color(0x44000000), isNext || done ? 14 : 8, 4)],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -431,129 +503,152 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
 
   Widget _hud(AppState st) {
     final hat = st.avatar.hat >= 0 ? Collectibles.all[st.avatar.hat].emoji : null;
+    // one compact capsule: explorer, stars, and three round buttons (the name shrinks first on narrow phones)
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-      // on narrow phones the name shrinks (…) so the buttons always stay fully on screen
-      child: Row(
-        children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
-              decoration: BoxDecoration(
-                color: C.ink.withValues(alpha: .85),
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.white54, width: 2),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipOval(
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      color: const Color(0xFFBEE7FF),
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        alignment: const Alignment(0, -.85),
-                        child: SizedBox(
-                          width: 60,
-                          height: 130,
-                          child: AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: 130, hatEmoji: hat),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      st.explorerName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: ts(18, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
-          StarChip(st.stars),
-          const SizedBox(width: 2),
-          RoundIconButton(
-            icon: Icons.menu_book_rounded,
-            label: Tr(Loc.hi)('Explorer’s Journal'),
-            size: 42,
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JournalScreen())),
-          ),
-          RoundIconButton(
-            icon: Icons.backpack_rounded,
-            label: Tr(Loc.hi)('My treasures'),
-            size: 42,
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen())),
-          ),
-          RoundIconButton(
-            icon: Icons.settings_rounded,
-            label: Tr(Loc.hi)('Grown-up area'),
-            size: 42,
-            onTap: () async {
-              if (await askParentGate(context)) {
-                if (mounted) context.read<AppState>().go(AppScreen.dashboard);
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _bottom(AppState st) {
-    final board = st.board;
-    Widget content;
-    if (st.retestReady) {
-      content = Row(
-        children: [
-          Companion(type: st.avatar.companion, size: 70),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Tr(Loc.hi)('🌉 The Star Bridge has appeared!'), style: ts(18, color: Colors.white)),
-                Text(
-                  Tr(Loc.hi)('All seven islands played — Gumsum is waiting.'),
-                  style: ts(13, color: Colors.white70, w: FontWeight.w600),
+      padding: const EdgeInsets.fromLTRB(10, 6, 10, 2),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(4, 3, 4, 3),
+        decoration: BoxDecoration(
+          color: C.ink.withValues(alpha: .8),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: const Color(0xFFE8C46A), width: 2),
+          boxShadow: [softShadow(const Color(0x44000000), 8, 3)],
+        ),
+        child: Row(
+          children: [
+            ClipOval(
+              child: Container(
+                width: 38,
+                height: 38,
+                color: const Color(0xFFBEE7FF),
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, -.85),
+                  child: SizedBox(width: 60, height: 130, child: AvatarView(hair: st.avatar.hair, outfit: st.avatar.outfit, height: 130, hatEmoji: hat)),
                 ),
-              ],
+              ),
             ),
-          ),
-          BigButton(label: Tr(Loc.hi)('Let’s Go!'), style: BtnStyle.go, height: 52, fontSize: 18, onTap: () => playScene(context, 'star_bridge').then((_) => st.go(AppScreen.intro))),
-        ],
-      );
-    } else {
-      content = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(Tr(Loc.hi).f('{season} · Quest board', {'season': Loc.hi ? (HiText.seasons[seasonName(st.campaign.season)] ?? seasonName(st.campaign.season)) : seasonName(st.campaign.season)}), style: ts(15, color: Colors.white)),
-          const SizedBox(height: 6),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(children: [for (final q in board) _questChip(q)]),
-          ),
-        ],
-      );
-    }
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
-      decoration: BoxDecoration(
-        color: C.night.withValues(alpha: .86),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            const SizedBox(width: 8),
+            Flexible(child: Text(st.explorerName, maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(17, color: Colors.white))),
+            const SizedBox(width: 8),
+            const Text('⭐', style: TextStyle(fontSize: 18)),
+            const SizedBox(width: 3),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              transitionBuilder: (c, a) => ScaleTransition(scale: CurvedAnimation(parent: a, curve: Curves.elasticOut), child: c),
+              child: Text('${st.stars}', key: ValueKey(st.stars), style: ts(17, color: C.gold)),
+            ),
+            const Spacer(),
+            RoundIconButton(icon: Icons.menu_book_rounded, label: Tr(Loc.hi)('Explorer’s Journal'), size: 36, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const JournalScreen()))),
+            RoundIconButton(icon: Icons.backpack_rounded, label: Tr(Loc.hi)('My treasures'), size: 36, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CollectionScreen()))),
+            RoundIconButton(
+              icon: Icons.settings_rounded,
+              label: Tr(Loc.hi)('Grown-up area'),
+              size: 36,
+              onTap: () async {
+                if (await askParentGate(context)) {
+                  if (mounted) context.read<AppState>().go(AppScreen.dashboard);
+                }
+              },
+            ),
+          ],
+        ),
       ),
-      child: SafeArea(top: false, child: content),
     );
   }
 
-  Widget _questChip(Quest q) {
+  /// Small floating button (bottom-right) that opens today's quests.
+  Widget _questButton(AppState st) {
+    final tr = Tr(Loc.hi);
+    final bridge = st.retestReady;
+    final label = bridge ? tr('🌉 Star Bridge') : '🗺️ ${tr('Quests')}';
+    final btn = Semantics(
+      button: true,
+      label: bridge ? 'Star Bridge' : 'Quests',
+      child: GestureDetector(
+        onTap: () {
+          AudioManager.instance.sfx('pop', volume: .5);
+          _openQuests(st);
+        },
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFFFE07A), Color(0xFFFFB02E)]),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.white, width: 2.5),
+            boxShadow: [softShadow(const Color(0x66A5601B), 12, 5)],
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(label, style: ts(15, color: C.ink)),
+            if (!bridge && st.board.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              Container(
+                width: 24,
+                height: 24,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(color: Color(0xFF1B4A37), shape: BoxShape.circle),
+                child: Text('${st.board.length}', style: ts(13, color: Colors.white)),
+              ),
+            ],
+          ]),
+        ),
+      ),
+    );
+    return Pop(index: 6, child: _still ? btn : _Bounce(child: btn));
+  }
+
+  void _openQuests(AppState st) {
+    final tr = Tr(Loc.hi);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      sheetAnimationStyle: _still ? AnimationStyle.noAnimation : AnimationStyle(duration: const Duration(milliseconds: 520), reverseDuration: const Duration(milliseconds: 260), curve: Curves.easeOutBack, reverseCurve: Curves.easeIn),
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(ctx).height * .75),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
+          decoration: const BoxDecoration(color: Color(0xFFFFF9E8), borderRadius: BorderRadius.vertical(top: Radius.circular(34))),
+          child: SafeArea(
+            top: false,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Container(width: 48, height: 5, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(3))),
+              const SizedBox(height: 10),
+              Text(tr.f('{season} · Quest board', {'season': Loc.hi ? (HiText.seasons[seasonName(st.campaign.season)] ?? seasonName(st.campaign.season)) : seasonName(st.campaign.season)}), style: ts(22, color: C.ink)),
+              const SizedBox(height: 10),
+              Flexible(
+                child: st.retestReady
+                    ? Row(children: [
+                        Companion(type: st.avatar.companion, size: 64),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                            Text(tr('🌉 The Star Bridge has appeared!'), style: ts(18, color: C.ink)),
+                            Text(tr('All seven islands played — Gumsum is waiting.'), style: ts(13, color: C.inkSoft, w: FontWeight.w600)),
+                          ]),
+                        ),
+                        BigButton(label: tr('Let’s Go!'), style: BtnStyle.go, height: 52, fontSize: 18, onTap: () {
+                          Navigator.of(ctx).pop();
+                          playScene(context, 'star_bridge').then((_) => st.go(AppScreen.intro));
+                        }),
+                      ])
+                    : ListView(shrinkWrap: true, children: [
+                        for (var i = 0; i < st.board.length; i++)
+                          Pop(index: i, child: _questChip(st.board[i], wide: true, onPick: () {
+                            Navigator.of(ctx).pop();
+                            _play(st.board[i]);
+                          })),
+                      ]),
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _questChip(Quest q, {bool wide = false, VoidCallback? onPick}) {
     final g = Skills.game(q.game);
     final hiQ = Loc.hi && q.island == IslandId.forest; // only Sound Forest quests are in Hindi
     final color = switch (q.kind) {
@@ -564,11 +659,11 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
       _ => C.orange,
     };
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: EdgeInsets.only(right: wide ? 0 : 8, bottom: wide ? 10 : 0),
       child: GestureDetector(
-        onTap: () => _play(q),
+        onTap: onPick ?? () => _play(q),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 240),
+          constraints: BoxConstraints(maxWidth: wide ? double.infinity : 240),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -981,3 +1076,71 @@ class _KeeperCage extends StatelessWidget {
   }
 }
 
+
+/// An island rising out of the sea when the map opens: fade, lift and a springy grow, one after another.
+class _Rise extends StatelessWidget {
+  final int index;
+  final bool still;
+  final Widget child;
+  const _Rise({required this.index, required this.still, required this.child});
+  @override
+  Widget build(BuildContext context) {
+    if (still) return child;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 700 + index * 140),
+      curve: Curves.elasticOut,
+      builder: (_, v, ch) => Opacity(
+        opacity: (v * 2).clamp(0.0, 1.0),
+        child: Transform.translate(offset: Offset(0, (1 - v) * 40), child: Transform.scale(scale: .55 + .45 * v, child: ch)),
+      ),
+      child: child,
+    );
+  }
+}
+
+/// Gentle floating of an island (and a few twinkling sparkles) driven by the sea's clock; one cached picture, only moved.
+class _Float extends StatelessWidget {
+  final AmbientController sea;
+  final double phase;
+  final bool still, sparkle;
+  final Widget child;
+  const _Float({required this.sea, required this.phase, required this.still, required this.sparkle, required this.child});
+  @override
+  Widget build(BuildContext context) {
+    if (still) return child;
+    return AnimatedBuilder(
+      animation: sea,
+      child: child,
+      builder: (_, ch) {
+        final t = sea.time;
+        final dy = sin(t * .9 + phase) * 5, tilt = sin(t * .6 + phase) * .012;
+        return Stack(clipBehavior: Clip.none, children: [
+          Positioned.fill(child: Transform.translate(offset: Offset(0, dy), child: Transform.rotate(angle: tilt, child: ch))),
+          if (sparkle)
+            for (var k = 0; k < 3; k++)
+              Positioned(
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment(sin(phase * 3 + k * 2.1) * .85, -.7 + k * .45),
+                  child: Opacity(opacity: (sin(t * 2.2 + k * 1.9 + phase) * .5 + .5).clamp(0.0, 1.0), child: Text('✦', style: TextStyle(color: const Color(0xFFFFE68A), fontSize: 11 + k * 2, shadows: const [Shadow(color: Color(0xFFFFB02E), blurRadius: 8)]))),
+                ),
+              ),
+        ]);
+      },
+    );
+  }
+}
+
+/// Opening or leaving a game: a soft fade with a tiny zoom (plain cut when the phone asks for reduced motion).
+Route<T> _fadeRoute<T>(Widget page) => PageRouteBuilder<T>(
+      pageBuilder: (_, _, _) => page,
+      transitionDuration: const Duration(milliseconds: 380),
+      reverseTransitionDuration: const Duration(milliseconds: 260),
+      transitionsBuilder: (ctx, a, _, child) => MediaQuery.of(ctx).disableAnimations
+          ? child
+          : FadeTransition(opacity: CurvedAnimation(parent: a, curve: Curves.easeOut), child: ScaleTransition(scale: Tween(begin: .96, end: 1.0).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)), child: child)),
+    );

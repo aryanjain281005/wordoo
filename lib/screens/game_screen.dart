@@ -87,6 +87,7 @@ class _GameScreenState extends State<GameScreen> {
   int index = 0;
   late String msg;
   bool happy = true;
+  int _hop = 0; // bumps on every right answer: Milo jumps for joy
   String? banner;
   late final DateTime startedAt;
 
@@ -201,6 +202,7 @@ class _GameScreenState extends State<GameScreen> {
       setState(() {
         msg = m;
         happy = good;
+        if (good) _hop++;
       });
     }
 
@@ -293,47 +295,63 @@ class _GameScreenState extends State<GameScreen> {
   Widget _topBar({bool play = false}) {
     final region = hi ? HiText.islands[quest.island]! : Campaign.islandName(quest.island);
     final m = model(play ? skillNow : quest.skills.first);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
+    final still = MediaQuery.of(context).disableAnimations;
+    final panel = Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(6, 6, 12, 10),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF3B3F8F), Color(0xFF262A66)]),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE8C46A), width: 2.5),
+        boxShadow: [softShadow(const Color(0x55000000), 10, 5)],
+      ),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        RoundIconButton(icon: Icons.close_rounded, label: tr('Back to the map'), onTap: () => Navigator.of(context).pop(), size: 48),
-        const SizedBox(width: 10),
+        // the close button lives inside the panel, top-left (the touch area stays 48 dp)
+        RoundIconButton(icon: Icons.close_rounded, label: tr('Back to the map'), onTap: () => Navigator.of(context).pop(), size: 36),
+        const SizedBox(width: 4),
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(14, 8, 12, 10),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF3B3F8F), Color(0xFF262A66)]),
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(color: const Color(0xFFE8C46A), width: 2.5),
-              boxShadow: [softShadow(const Color(0x55000000), 10, 5)],
-            ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('$region · ${tr.f('Level {n} of {m}', {'n': quest.level, 'm': levelsPerGame})}${quest.kind == QuestKind.boss ? tr(' · Boss') : (quest.kind == QuestKind.bonus ? tr(' · Replay') : '')}', style: ts(13, color: const Color(0xFFFFE17A)), maxLines: 1, overflow: TextOverflow.ellipsis),
+              Text(hi ? (HiText.levelNames[quest.game]?[quest.level - 1] ?? quest.title) : quest.title, style: ts(16, color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 6),
               Row(children: [
-                Expanded(child: Text('$region · ${tr.f('Level {n} of {m}', {'n': quest.level, 'm': levelsPerGame})}${quest.kind == QuestKind.boss ? tr(' · Boss') : (quest.kind == QuestKind.bonus ? tr(' · Replay') : '')}', style: ts(14, color: const Color(0xFFFFE17A)))),
+                if (play) Expanded(child: GameProgressBar(value: index / quest.items, color: C.gold, height: 12)) else const Spacer(),
+                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                   decoration: BoxDecoration(color: Colors.white.withValues(alpha: .18), borderRadius: BorderRadius.circular(10)),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    if (quest.mixed) Text('${Skills.of(skillNow).emoji} ', style: const TextStyle(fontSize: 14)),
+                    if (quest.mixed) Text('${Skills.of(skillNow).emoji} ', style: const TextStyle(fontSize: 13)),
                     PowerPips(level: m.band),
                   ]),
                 ),
-              ]),
-              Text(hi ? (HiText.levelNames[quest.game]?[quest.level - 1] ?? quest.title) : quest.title, style: ts(17, color: Colors.white), maxLines: 2),
-              if (play) ...[
-                const SizedBox(height: 8),
-                Row(children: [
-                  Expanded(child: GameProgressBar(value: index / quest.items, color: C.gold, height: 14)),
+                if (play) ...[
                   const SizedBox(width: 8),
-                  const Text('⭐', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 3),
-                  Text('$index/${quest.items}', style: ts(15, color: Colors.white)),
-                ]),
-              ],
+                  const Text('⭐', style: TextStyle(fontSize: 17)),
+                  const SizedBox(width: 2),
+                  Text('$index/${quest.items}', style: ts(14, color: Colors.white)),
+                ],
+              ]),
             ]),
           ),
         ),
       ]),
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
+      // the panel drops in once when the game opens
+      child: still
+          ? panel
+          : TweenAnimationBuilder<double>(
+              key: ValueKey(play),
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 480),
+              curve: Curves.easeOutBack,
+              builder: (_, v, ch) => Opacity(opacity: v.clamp(0, 1), child: Transform.translate(offset: Offset(0, (1 - v) * -26), child: ch)),
+              child: panel,
+            ),
     );
   }
 
@@ -423,8 +441,9 @@ class _GameScreenState extends State<GameScreen> {
           Positioned(
             left: 8,
             right: 8,
-            bottom: 4,
-            child: Align(alignment: Alignment.bottomLeft, child: Companion(type: st.avatar.companion, size: 84, message: msg, happy: happy)),
+            bottom: quest.island == IslandId.valley ? 0 : 4,
+            // Symbol Valley: Milo stands in the foreground of the painted scene and his words are on warm, see-through paper
+            child: Align(alignment: Alignment.bottomLeft, child: Companion(type: st.avatar.companion, size: 84, message: msg, happy: happy, hop: _hop, scene: quest.island == IslandId.valley)),
           ),
           if (banner != null)
             Positioned(
