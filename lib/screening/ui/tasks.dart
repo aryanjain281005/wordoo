@@ -533,6 +533,11 @@ class _ReadAloudTaskState extends TaskState<ReadAloudTask> {
       locale: bank.asr,
       listenFor: const Duration(seconds: 7),
       pauseFor: const Duration(milliseconds: 1800),
+      hint: switch (widget.def.id) {
+        'nonwordReading' => 'A young child reads one made-up word aloud. It is not a real word.',
+        'pictureNaming' => 'A young child says the name of one picture.',
+        _ => 'A young child reads one word aloud.',
+      },
       onLevel: (l) {
         if (mounted) setState(() => level = l);
       },
@@ -621,6 +626,7 @@ mixin LongCapture<T extends StatefulWidget> on TaskState<T> {
         listenFor: left,
         pauseFor: const Duration(seconds: 4),
         dictation: dictation,
+        hint: 'A young child speaking: reading a short story aloud, or naming pictures and animals one after another.',
         onLevel: (l) {
           if (mounted) setState(() => level = l);
         },

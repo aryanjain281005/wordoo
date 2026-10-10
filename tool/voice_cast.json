@@ -25,9 +25,7 @@
    "stability": 0.55,
    "style": 0.3,
    "speed": 0.92,
-   "fx": {
-    "reverb": true
-   }
+   "fx": {}
   },
   "hi_voice": "hf_alpha"
  },
@@ -42,8 +40,7 @@
    "stability": 0.35,
    "style": 0.6,
    "fx": {
-    "pitch": 0.86,
-    "echo": true
+    "pitch": 0.86
    }
   },
   "hi_voice": "hm_omega"
@@ -263,8 +260,7 @@
    "style": 0.5,
    "speed": 0.95,
    "fx": {
-    "pitch": 1.3,
-    "echo": true
+    "pitch": 1.3
    }
   },
   "hi_voice": "hf_alpha"
@@ -280,8 +276,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.2,
-    "echo": true
+    "pitch": 1.2
    }
   },
   "hi_voice": "hm_psi"
@@ -297,8 +292,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.25,
-    "echo": true
+    "pitch": 1.25
    }
   },
   "hi_voice": "hf_beta"
@@ -314,8 +308,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.15,
-    "echo": true
+    "pitch": 1.15
    }
   },
   "hi_voice": "hm_omega"
@@ -331,8 +324,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.25,
-    "echo": true
+    "pitch": 1.25
    }
   },
   "hi_voice": "hm_psi"
@@ -348,8 +340,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.2,
-    "echo": true
+    "pitch": 1.2
    }
   },
   "hi_voice": "hf_alpha"
@@ -365,8 +356,7 @@
    "stability": 0.35,
    "style": 0.55,
    "fx": {
-    "pitch": 1.25,
-    "echo": true
+    "pitch": 1.25
    }
   },
   "hi_voice": "hf_beta"

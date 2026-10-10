@@ -52,7 +52,7 @@ void main() {
     for (var l = 1; l <= levelsPerGame; l++) {
       for (var b = 0; b <= 2; b++) {
         final gen = ItemGen(c, rng: Random(g.index * 100 + l * 10 + b));
-        for (var k = 0; k < 500; k++) {
+        for (var k = 0; k < 1500; k++) {
           addItem(gen.forLevel(g, l, bump: b));
         }
       }
@@ -93,6 +93,32 @@ void main() {
   }
   for (final k in Str.keys) {
     add(Str.t('en', k));
+  }
+  // tapping a word of a story reads that word: every word of every story the app can show
+  void addWords(String text) {
+    for (final w in text.split(RegExp(r'\s+'))) {
+      add(w.replaceAll(RegExp(r"[^\w’\x27-]"), ''));
+    }
+  }
+
+  for (final st in enStories) {
+    addWords(st.text);
+  }
+  for (var step = 1; step <= 10; step++) {
+    for (var seed = 0; seed < 400; seed++) {
+      addWords(c.storyFromTemplate(step, seed).text);
+    }
+  }
+  // Milo reads out the bridge screen
+  for (final k in ['bridge', 'skyBridge']) {
+    add('Milo says: ${Str.t('en', k)}');
+  }
+  // every sound unit exactly as a game sends it (tiles, blocks), not only as spoken
+  for (final w in c.words) {
+    for (final u in w.units) {
+      add(u);
+      add(c.sayUnit(u));
+    }
   }
 
   final out = <String, Map<String, String>>{};

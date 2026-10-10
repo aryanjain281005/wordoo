@@ -25,6 +25,7 @@ import '../widgets/common.dart';
 import '../widgets/props.dart';
 import '../core/loc.dart';
 import '../data/hi_text.dart';
+import '../widgets/ambient.dart';
 import 'collection.dart';
 import 'game_screen.dart';
 import 'parent_gate.dart';
@@ -65,8 +66,8 @@ class WorldMapScreen extends StatefulWidget {
   State<WorldMapScreen> createState() => _WorldMapScreenState();
 }
 
-class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProviderStateMixin {
-  late final AnimationController _wave = AnimationController(vsync: this, duration: const Duration(seconds: 8))..repeat();
+class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStateMixin {
+  late final AmbientController _sea = AmbientController(this); // the living sea behind the islands (see widgets/ambient.dart)
   bool _skyToast = false;
 
   @override
@@ -88,7 +89,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
 
   @override
   void dispose() {
-    _wave.dispose();
+    _sea.dispose();
     super.dispose();
   }
 
@@ -159,12 +160,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
     return Scaffold(
       body: Stack(
         children: [
-          Positioned.fill(
-            child: AnimatedBuilder(
-              animation: _wave,
-              builder: (_, __) => CustomPaint(painter: WavesPainter(_wave.value)),
-            ),
-          ),
+          Positioned.fill(child: SeaBackground(_sea)),
           SafeArea(
             child: Column(
               children: [
@@ -244,6 +240,8 @@ class _WorldMapScreenState extends State<WorldMapScreen> with SingleTickerProvid
                 ),
               ),
             ),
+          // taps on the water: ripples, and the dolphin / balloon / boat / gulls answer with a sound (never blocks the islands)
+          Positioned.fill(child: AmbientTapLayer(onTap: (p) => seaTap(_sea, p))),
         ],
       ),
     );

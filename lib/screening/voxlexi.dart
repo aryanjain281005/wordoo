@@ -54,6 +54,31 @@ class VoxLexi {
     );
   }
 
+  /// Speech metrics from Whisper's word timestamps (all times in ms from the moment the microphone opened):
+  /// onset = when the first word started, duration = first word start → last word end, pauses = silences between words.
+  /// Same fields, same meaning as [analyzeLevels], so the scorer and the adaptive screening are unaffected.
+  static SpeechMetrics analyzeWords(List<({String word, int startMs, int endMs})> words, {required String transcript, double confidence = 0, int minPauseMs = 300, List<String> alternates = const []}) {
+    if (words.isEmpty) return SpeechMetrics(transcript: transcript, alternates: alternates, confidence: confidence);
+    final w = [...words]..sort((a, b) => a.startMs.compareTo(b.startMs));
+    var pauses = 0, pauseMs = 0;
+    for (var i = 1; i < w.length; i++) {
+      final gap = w[i].startMs - w[i - 1].endMs;
+      if (gap >= minPauseMs) {
+        pauses++;
+        pauseMs += gap;
+      }
+    }
+    return SpeechMetrics(
+      transcript: transcript,
+      alternates: alternates,
+      confidence: confidence,
+      durationMs: max(0, w.last.endMs - w.first.startMs),
+      latencyMs: w.first.startMs,
+      pauses: pauses,
+      pauseMs: pauseMs,
+    );
+  }
+
   /// VoxLexi `compute_fluency_risk_score`, with grade-based expected duration.
   static double fluencyRisk({required double actualSec, required double expectedSec, required int pauses, required double pauseSec}) {
     double c(double x) => x.isFinite ? x.clamp(0.0, 1.0) : 0.0;

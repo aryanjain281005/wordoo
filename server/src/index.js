@@ -12,12 +12,25 @@ import { openStore } from './store.js';
 import { geminiClient } from './gemini.js';
 import { QuestionAgent } from './agent.js';
 import { seedBank } from './seed.js';
+import { createWhisper } from './whisper.js';
 
-export function createApp({ store, agent, cfg }) {
+export function createApp({ store, agent, cfg, whisper }) {
   const json = (res, code, body) => {
     res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type,x-readle-key', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS' });
     res.end(JSON.stringify(body));
   };
+  const readRaw = (req, limit = 12e6) =>
+    new Promise((resolve, reject) => {
+      const chunks = [];
+      let n = 0;
+      req.on('data', (c) => {
+        n += c.length;
+        if (n > limit) reject(new Error('audio too large'));
+        else chunks.push(c);
+      });
+      req.on('end', () => resolve(Buffer.concat(chunks)));
+      req.on('error', reject);
+    });
   const readBody = (req) =>
     new Promise((resolve, reject) => {
       let b = '';
@@ -43,7 +56,7 @@ export function createApp({ store, agent, cfg }) {
       const lang = url.searchParams.get('lang') || 'en';
 
       if (req.method === 'GET' && url.pathname === '/health') {
-        return json(res, 200, { ok: true, database: store.kind, agent: cfg.agentEnabled && !!cfg.geminiKey ? cfg.geminiModels : 'off', bank: await store.count('questions', { lang, status: 'active' }) });
+        return json(res, 200, { ok: true, database: store.kind, agent: cfg.agentEnabled && !!cfg.geminiKey ? cfg.geminiModels : 'off', whisper: !!whisper?.enabled && whisper.healthy !== false, ...(whisper?.enabled && whisper.healthy === false ? { whisperError: whisper.error } : {}), bank: await store.count('questions', { lang, status: 'active' }) });
       }
       if (req.method === 'GET' && url.pathname === '/questions') {
         const qs = (await store.find('questions', { lang, status: 'active' })).map(({ _id, key, createdFor, ...q }) => q);
@@ -65,6 +78,13 @@ export function createApp({ store, agent, cfg }) {
       if (req.method === 'GET' && url.pathname === '/screenings') {
         const sid = url.searchParams.get('student_id');
         return json(res, 200, { screenings: await store.find('screenings', sid ? { student_id: sid } : {}, { sort: { test_date: -1 }, limit: 50 }) });
+      }
+      if (req.method === 'POST' && url.pathname === '/transcribe') {
+        if (!whisper?.enabled) return json(res, 503, { error: 'whisper is not configured (OPENAI_API_KEY)' });
+        if (whisper.healthy === false) return json(res, 503, { error: `whisper is unavailable: ${whisper.error}` });
+        const audio = await readRaw(req);
+        const r = await whisper.transcribe({ audio, mime: req.headers['content-type'] || 'audio/wav', lang: url.searchParams.get('lang') || 'en', prompt: url.searchParams.get('prompt') || '' });
+        return json(res, 200, { ok: true, model: whisper.model, ...r });
       }
       if (req.method === 'POST' && url.pathname === '/telemetry') {
         const t = await readBody(req);
@@ -93,6 +113,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const gemini = geminiClient({ apiKey: cfg.geminiKey, models: cfg.geminiModels });
   const agent = new QuestionAgent({ store, gemini, cfg });
   const n = await seedBank(store);
-  const app = createApp({ store, agent, cfg });
-  app.listen(cfg.port, cfg.host, () => console.log(`Readle server on :${cfg.port} · database: ${store.kind} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
+  const whisper = createWhisper({ apiKey: cfg.openaiKey });
+  whisper.probe().then((ok) => console.log(ok ? 'Whisper probe: OK' : `Whisper probe FAILED: ${whisper.error}`));
+  setInterval(() => whisper.probe(), 10 * 60 * 1000).unref(); // credits added later → the app starts using Whisper by itself
+  const app = createApp({ store, agent, cfg, whisper });
+  app.listen(cfg.port, cfg.host, () => console.log(`Readle server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
 }

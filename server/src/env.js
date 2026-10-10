@@ -24,6 +24,7 @@ export function config(env = loadEnv()) {
     mongoUri: env.MONGODB_URI || '',
     mongoDb: env.MONGODB_DB || 'readle',
     geminiKey: env.GEMINI_API_KEY || '',
+    openaiKey: env.OPENAI_API_KEY || '',
     geminiModels: (env.GEMINI_MODELS || env.GEMINI_MODEL || 'gemini-flash-latest,gemini-flash-lite-latest').split(',').map((x) => x.trim()).filter(Boolean),
     agentEnabled: (env.AGENT_ENABLED ?? '1') !== '0',
     agentBatch: Number(env.AGENT_BATCH ?? 10),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:math';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
@@ -180,7 +181,7 @@ class AudioManager {
 
   void _applyVolume() {
     try {
-      _music?.setVolume(musicVolume * _level * (_ducked ? .35 : 1));
+      _music?.setVolume(musicVolume * _level * (_ducked ? .16 : 1)); // the music steps well back while someone speaks
     } catch (_) {}
   }
 
@@ -236,10 +237,7 @@ class AudioManager {
     if (enabled && hasVoice(id) && !hindiLine) {
       try {
         // one reused player for every line (creating a player per line caused small stutters)
-        final p = _voicePlayer ??= (AudioPlayer()..onPlayerComplete.listen((_) {
-              final d = _voiceDone;
-              if (d != null && !d.isCompleted) d.complete();
-            }));
+        final p = _voicePlayer ??= _newVoicePlayer();
         _voice = p;
         await p.play(AssetSource(_voicePath(id)));
         played = true;
@@ -250,26 +248,49 @@ class AudioManager {
           mouth.value = env == null ? (sin(i * 1.3).abs()) : (i < env.length ? env[i] / 9 : 0);
         });
         final len = voiceLength(id);
-        await done.future.timeout(len == null ? const Duration(seconds: 30) : len + const Duration(seconds: 2), onTimeout: () {});
+        // The player's "finished" event is not reliable on every phone, so the wait is also capped at the clip's own length
+        // (+0.45 s of margin) instead of the old 2 s of silence after each line.
+        final cap = len == null ? const Duration(seconds: 30) : len + const Duration(milliseconds: 450);
+        await done.future.timeout(cap, onTimeout: () {});
+        if (kDebugMode || const bool.fromEnvironment('VOICE_LOG')) debugPrint('VOICEEND $id played ${sw.elapsedMilliseconds} ms of ${len?.inMilliseconds ?? -1} ms ${done.isCompleted ? '' : '(timeout)'}');
       } catch (e) {
         debugPrint('voice $id: $e');
       }
     }
     if (!played && !done.isCompleted) {
       // placeholder voice (or the file failed): device TTS + simulated mouth movement for an estimated duration
-      Speaker.instance.speak(text, ttsLocale);
-      final ms = 400 + text.length * 62;
+      final spoken = Speaker.instance.speak(text, ttsLocale, maxWait: Duration(milliseconds: 1500 + text.length * 120)); // completes when the sentence has really been said (or after a generous time for its length)
       final sw = Stopwatch()..start();
+      var speechDone = false;
+      spoken.whenComplete(() => speechDone = true);
       _lip = Timer.periodic(const Duration(milliseconds: 60), (_) {
-        mouth.value = sw.elapsedMilliseconds < ms ? (sin(sw.elapsedMilliseconds / 70).abs() * .9) : 0;
+        mouth.value = !speechDone ? (sin(sw.elapsedMilliseconds / 70).abs() * .9) : 0;
       });
-      await Future.any([Future.delayed(Duration(milliseconds: ms)), done.future]);
+      // wait for the whole sentence (never the old guess of 62 ms a letter, which cut long sentences off)
+      // the generous guard only matters if the phone never reports "finished"; under `flutter test` the voice plugin is a stub, so it is short
+      final guard = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST') ? Duration(milliseconds: 400 + text.length * 62) : Duration(milliseconds: 2500 + text.length * 140);
+      await Future.any([spoken, done.future, Future.delayed(guard)]);
     }
     if (_voiceDone != done) return; // a newer line took over; it owns the mouth and ducking now
     _lip?.cancel();
     mouth.value = 0;
     speaking.value = null;
     _duck(false);
+  }
+
+  AudioPlayer _newVoicePlayer() {
+    final p = AudioPlayer();
+    void finish() {
+      final d = _voiceDone;
+      if (d != null && !d.isCompleted) d.complete();
+    }
+
+    p.onPlayerComplete.listen((_) => finish());
+    p.onPlayerStateChanged.listen((s) {
+      if (s == PlayerState.completed) finish();
+    });
+    p.setVolume(1.0);
+    return p;
   }
 
   Future<void> stopVoice() async {

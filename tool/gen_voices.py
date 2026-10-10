@@ -116,6 +116,8 @@ mine_env, mine_hash = {}, {}
 order = list(lines.items())
 if ENGINE == "eleven":  # only character dialogue; v3 story scenes first so the most important lines are voiced if credits run short
     dialogue = json.load(open(os.path.join(ROOT, f"assets/story/lines_{VL}.json")))
+    if VL == "en" and os.environ.get("INCLUDE_BOOKS"):  # story narration (Dadi / Kitabu) too: INCLUDE_BOOKS=1
+        dialogue.update(json.load(open(os.path.join(ROOT, "assets/story/books_en.json"))))
     order = sorted(((k, v) for k, v in order if k in dialogue and "eleven" in cast.get(v.get("cast", v["who"]), {})), key=lambda kv: not kv[0].startswith("v3_"))
     need = sum(len(v["text"]) for k, v in order if hashes.get(k) != hashlib.md5(json.dumps([v, (lambda cc: cc if VL == "hi" else {kk: vv for kk, vv in cc.items() if kk != "hi_voice"})(cast.get(v.get("cast", v["who"])))], sort_keys=True).encode()).hexdigest())
     print(f"ElevenLabs: {len(order)} lines, {need} characters to generate (~{need // 2} credits on Flash v2.5, ~{need} on Multilingual v2)")

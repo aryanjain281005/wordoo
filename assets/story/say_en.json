@@ -1,4 +1,8 @@
 {
+ "say/a_e40c292c": {
+  "who": "say",
+  "text": "A"
+ },
  "say/a_big_dog_f480e414": {
   "who": "say",
   "text": "A big dog"
@@ -43,9 +47,17 @@
   "who": "say",
   "text": "A storm tore it"
  },
+ "say/after_1b6e7dc9": {
+  "who": "say",
+  "text": "After"
+ },
  "say/after_many_days_a_green_plant_ca_541c811f": {
   "who": "say",
   "text": "After many days, a green plant came up."
+ },
+ "say/aman_5a7cf708": {
+  "who": "say",
+  "text": "Aman"
  },
  "say/aman_went_to_school_d0a0ee19": {
   "who": "say",
@@ -83,6 +95,14 @@
   "who": "say",
   "text": "Angry and loud"
  },
+ "say/anu_2029dd69": {
+  "who": "say",
+  "text": "Anu"
+ },
+ "say/arjun_03d32fe3": {
+  "who": "say",
+  "text": "Arjun"
+ },
  "say/arjun_ran_home_found_his_best_pe_a55c3602": {
   "who": "say",
   "text": "Arjun ran home, found his best pencil, and began writing a long letter about his town."
@@ -110,6 +130,14 @@
  "say/arjun_went_to_the_zoo_fcecdf27": {
   "who": "say",
   "text": "Arjun went to the zoo."
+ },
+ "say/arya_s_79ccf10a": {
+  "who": "say",
+  "text": "Arya’s"
+ },
+ "say/at_57251588": {
+  "who": "say",
+  "text": "At"
  },
  "say/at_home_2d084d1f": {
   "who": "say",
@@ -150,6 +178,10 @@
  "say/boats_on_the_sea_bf8719f9": {
   "who": "say",
   "text": "Boats on the sea"
+ },
+ "say/bolt_ce96dd46": {
+  "who": "say",
+  "text": "Bolt"
  },
  "say/bolt_could_not_fix_ice_cream_so__d817cb71": {
   "who": "say",
@@ -211,6 +243,10 @@
   "who": "say",
   "text": "Eat it"
  },
+ "say/every_094ef704": {
+  "who": "say",
+  "text": "Every"
+ },
  "say/every_sunday_ceb51b00": {
   "who": "say",
   "text": "Every Sunday"
@@ -227,6 +263,10 @@
   "who": "say",
   "text": "Every night"
  },
+ "say/everyone_d378dd78": {
+  "who": "say",
+  "text": "Everyone"
+ },
  "say/everyone_looked_up_7a6fa173": {
   "who": "say",
   "text": "Everyone looked up"
@@ -242,6 +282,10 @@
  "say/families_reading_together_5051173d": {
   "who": "say",
   "text": "Families reading together"
+ },
+ "say/far_bcf819ee": {
+  "who": "say",
+  "text": "Far"
  },
  "say/far_above_the_islands_lived_a_sm_44064367": {
   "who": "say",
@@ -271,6 +315,10 @@
   "who": "say",
   "text": "Good try!"
  },
+ "say/grandfather_77688e8b": {
+  "who": "say",
+  "text": "Grandfather"
+ },
  "say/grandfather_forgot_his_bag_c34c5574": {
   "who": "say",
   "text": "Grandfather forgot his bag"
@@ -291,9 +339,17 @@
   "who": "say",
   "text": "Green and growing"
  },
+ "say/gumsum_a812cf1f": {
+  "who": "say",
+  "text": "Gumsum"
+ },
  "say/gumsum_listened_so_carefully_tha_8c895514": {
   "who": "say",
   "text": "Gumsum listened so carefully that he forgot to rain."
+ },
+ "say/he_5c3ae3b6": {
+  "who": "say",
+  "text": "He"
  },
  "say/he_ate_the_berries_5e8ec491": {
   "who": "say",
@@ -471,6 +527,10 @@
   "who": "say",
   "text": "How had Gumsum felt before that night?"
  },
+ "say/i_ec0c35c4": {
+  "who": "say",
+  "text": "I"
+ },
  "say/i_live_on_the_island_across_the__b8ee90a7": {
   "who": "say",
   "text": "I live on the island across the sea.”"
@@ -490,6 +550,10 @@
  "say/in_the_river_f9479067": {
   "who": "say",
   "text": "In the river"
+ },
+ "say/instead_44cdeaf1": {
+  "who": "say",
+  "text": "Instead"
  },
  "say/instead_of_crying_she_collected__6423d960": {
   "who": "say",
@@ -531,6 +595,10 @@
   "who": "say",
   "text": "Joyful"
  },
+ "say/kabir_352eddd6": {
+  "who": "say",
+  "text": "Kabir"
+ },
  "say/kabir_built_a_rocket_from_an_old_e8833ab6": {
   "who": "say",
   "text": "Kabir built a rocket from an old box."
@@ -570,6 +638,10 @@
  "say/lazy_6acc1ccf": {
   "who": "say",
   "text": "Lazy"
+ },
+ "say/leo_376adc9f": {
+  "who": "say",
+  "text": "Leo"
  },
  "say/leo_got_a_new_kite_c738e2bb": {
   "who": "say",
@@ -611,6 +683,10 @@
   "who": "say",
   "text": "Mean"
  },
+ "say/meera_a7ec61a7": {
+  "who": "say",
+  "text": "Meera"
+ },
  "say/meera_went_to_school_46de9afe": {
   "who": "say",
   "text": "Meera went to school."
@@ -634,6 +710,10 @@
  "say/meera_went_to_the_zoo_4299dacb": {
   "who": "say",
   "text": "Meera went to the zoo."
+ },
+ "say/milo_848e7456": {
+  "who": "say",
+  "text": "Milo"
  },
  "say/milo_lost_his_red_hat_in_the_par_7657b1f4": {
   "who": "say",
@@ -662,6 +742,10 @@
  "say/on_the_beach_2b003c94": {
   "who": "say",
   "text": "On the beach"
+ },
+ "say/one_ba2719ef": {
+  "who": "say",
+  "text": "One"
  },
  "say/one_day_a_bird_flew_in_through_t_703e0e9c": {
   "who": "say",
@@ -719,6 +803,10 @@
   "who": "say",
   "text": "Ready, Explorer?"
  },
+ "say/riya_0d3aca62": {
+  "who": "say",
+  "text": "Riya"
+ },
  "say/riya_went_to_school_97a6f303": {
   "who": "say",
   "text": "Riya went to school."
@@ -754,6 +842,10 @@
  "say/sad_e61cac07": {
   "who": "say",
   "text": "Sad"
+ },
+ "say/sam_dd1c9ddc": {
+  "who": "say",
+  "text": "Sam"
  },
  "say/sam_went_to_school_3bec939d": {
   "who": "say",
@@ -1314,6 +1406,10 @@
  "say/seeds_3cc8530d": {
   "who": "say",
   "text": "Seeds"
+ },
+ "say/she_e92df9e1": {
+  "who": "say",
+  "text": "She"
  },
  "say/she_dropped_her_ice_cream_91c7b2f1": {
   "who": "say",
@@ -2831,6 +2927,10 @@
   "who": "say",
   "text": "Stones"
  },
+ "say/sunday_a429a0d9": {
+  "who": "say",
+  "text": "Sunday"
+ },
  "say/tap_the_drum_for_every_beat_in_a_763347b4": {
   "who": "say",
   "text": "Tap the drum for every beat in ant!"
@@ -2895,6 +2995,10 @@
   "who": "say",
   "text": "Tap the drum for every beat in tomato!"
  },
+ "say/tara_1a44f2a7": {
+  "who": "say",
+  "text": "Tara"
+ },
  "say/tara_went_to_school_d3fd6bfe": {
   "who": "say",
   "text": "Tara went to school."
@@ -2918,6 +3022,10 @@
  "say/tara_went_to_the_zoo_6a1cddcb": {
   "who": "say",
   "text": "Tara went to the zoo."
+ },
+ "say/the_b40eb21c": {
+  "who": "say",
+  "text": "The"
  },
  "say/the_berries_were_too_high_to_rea_0d8fd56d": {
   "who": "say",
@@ -2994,6 +3102,10 @@
  "say/their_fields_needed_rain_e5a65c71": {
   "who": "say",
   "text": "Their fields needed rain"
+ },
+ "say/then_e522e976": {
+  "who": "say",
+  "text": "Then"
  },
  "say/then_he_ate_a_banana_44fefcdb": {
   "who": "say",
@@ -3123,6 +3235,10 @@
   "who": "say",
   "text": "Throw it away"
  },
+ "say/tia_cc0b064d": {
+  "who": "say",
+  "text": "Tia"
+ },
  "say/tia_gave_it_water_e54894f0": {
   "who": "say",
   "text": "Tia gave it water"
@@ -3159,9 +3275,17 @@
   "who": "say",
   "text": "To write a reply"
  },
+ "say/today_420372be": {
+  "who": "say",
+  "text": "Today"
+ },
  "say/today_he_forgot_his_bag_so_meera_56b1df10": {
   "who": "say",
   "text": "Today he forgot his bag, so Meera carried the mangoes in her skirt."
+ },
+ "say/tortu_99684f75": {
+  "who": "say",
+  "text": "Tortu"
  },
  "say/tortu_the_turtle_wanted_to_see_t_00c466a6": {
   "who": "say",
@@ -3266,6 +3390,10 @@
  "say/what_will_they_probably_do_next_5e77dacb": {
   "who": "say",
   "text": "What will they probably do next?"
+ },
+ "say/when_7f778519": {
+  "who": "say",
+  "text": "When"
  },
  "say/when_does_meera_go_to_the_market_54cd09c3": {
   "who": "say",
@@ -3835,6 +3963,10 @@
   "who": "say",
   "text": "Which word describes Arya best?"
  },
+ "say/while_0dc628ce": {
+  "who": "say",
+  "text": "While"
+ },
  "say/while_walking_on_the_beach_arjun_469bafa0": {
   "who": "say",
   "text": "While walking on the beach, Arjun found a glass bottle with a rolled-up note inside."
@@ -3842,6 +3974,10 @@
  "say/who_found_the_hat_6468757a": {
   "who": "say",
   "text": "Who found the hat?"
+ },
+ "say/whoever_d77362cf": {
+  "who": "say",
+  "text": "Whoever"
  },
  "say/why_did_arjun_run_home_21202215": {
   "who": "say",
@@ -3915,6 +4051,10 @@
   "who": "say",
   "text": "You’re getting stronger!"
  },
+ "say/zoya_e7c908c4": {
+  "who": "say",
+  "text": "Zoya"
+ },
  "say/zoya_loved_the_library_because_i_73bab14f": {
   "who": "say",
   "text": "Zoya loved the library because it was calm."
@@ -3947,10 +4087,6 @@
   "who": "say",
   "text": "Zoya went to the zoo."
  },
- "say/a_e40c292c": {
-  "who": "say",
-  "text": "a"
- },
  "say/a_like_in_apple_2ea2914a": {
   "who": "say",
   "text": "a, like in apple"
@@ -3971,6 +4107,10 @@
   "who": "say",
   "text": "about"
  },
+ "say/above_a4213c0a": {
+  "who": "say",
+  "text": "above"
+ },
  "say/abventure_4f12c965": {
   "who": "say",
   "text": "abventure"
@@ -3982,6 +4122,10 @@
  "say/acnhor_0d1beb12": {
   "who": "say",
   "text": "acnhor"
+ },
+ "say/across_b567c124": {
+  "who": "say",
+  "text": "across"
  },
  "say/adevnture_581ee185": {
   "who": "say",
@@ -4046,10 +4190,6 @@
  "say/advneturous_94180393": {
   "who": "say",
   "text": "advneturous"
- },
- "say/after_1b6e7dc9": {
-  "who": "say",
-  "text": "after"
  },
  "say/agaim_b43fe6e2": {
   "who": "say",
@@ -4171,6 +4311,10 @@
   "who": "say",
   "text": "amublance"
  },
+ "say/an_4124f2e6": {
+  "who": "say",
+  "text": "an"
+ },
  "say/anbulance_c483203e": {
   "who": "say",
   "text": "anbulance"
@@ -4259,6 +4403,10 @@
   "who": "say",
   "text": "ark"
  },
+ "say/asked_a87f8823": {
+  "who": "say",
+  "text": "asked"
+ },
  "say/asrtonaut_e0963a1c": {
   "who": "say",
   "text": "asrtonaut"
@@ -4291,9 +4439,9 @@
   "who": "say",
   "text": "astronuat"
  },
- "say/at_57251588": {
+ "say/ate_1c618417": {
   "who": "say",
-  "text": "at"
+  "text": "ate"
  },
  "say/atetntion_d6b3be07": {
   "who": "say",
@@ -4379,6 +4527,10 @@
   "who": "say",
   "text": "aw, like in saw"
  },
+ "say/away_54ea875b": {
+  "who": "say",
+  "text": "away"
+ },
  "say/axe_3c57291b": {
   "who": "say",
   "text": "axe"
@@ -4418,6 +4570,10 @@
  "say/badge_35648278": {
   "who": "say",
   "text": "badge"
+ },
+ "say/baetle_0c73ddc2": {
+  "who": "say",
+  "text": "baetle"
  },
  "say/baeutiful_2225fccc": {
   "who": "say",
@@ -4715,6 +4871,10 @@
   "who": "say",
   "text": "beg"
  },
+ "say/began_682102c6": {
+  "who": "say",
+  "text": "began"
+ },
  "say/begjad_56b98db0": {
   "who": "say",
   "text": "begjad"
@@ -4747,6 +4907,10 @@
   "who": "say",
   "text": "bem"
  },
+ "say/bench_626ebeb9": {
+  "who": "say",
+  "text": "bench"
+ },
  "say/bend_8e72a64a": {
   "who": "say",
   "text": "bend"
@@ -4763,9 +4927,17 @@
   "who": "say",
   "text": "beprag"
  },
+ "say/berries_f5268367": {
+  "who": "say",
+  "text": "berries"
+ },
  "say/besert_45974302": {
   "who": "say",
   "text": "besert"
+ },
+ "say/beside_270634cb": {
+  "who": "say",
+  "text": "beside"
  },
  "say/besk_817f5dc6": {
   "who": "say",
@@ -5183,6 +5355,10 @@
   "who": "say",
   "text": "book"
  },
+ "say/books_07d5b411": {
+  "who": "say",
+  "text": "books"
+ },
  "say/boot_d094a1d5": {
   "who": "say",
   "text": "boot"
@@ -5223,6 +5399,10 @@
   "who": "say",
   "text": "botter"
  },
+ "say/botterflies_5f101216": {
+  "who": "say",
+  "text": "botterflies"
+ },
  "say/botterfly_f6dbd9ce": {
   "who": "say",
   "text": "botterfly"
@@ -5246,6 +5426,10 @@
  "say/boxdox_22eddc9d": {
   "who": "say",
   "text": "boxdox"
+ },
+ "say/boxes_514c98f2": {
+  "who": "say",
+  "text": "boxes"
  },
  "say/boxzeg_0fe0fa20": {
   "who": "say",
@@ -5342,6 +5526,14 @@
  "say/brohter_f6ac5785": {
   "who": "say",
   "text": "brohter"
+ },
+ "say/broke_398ca88e": {
+  "who": "say",
+  "text": "broke"
+ },
+ "say/broken_786dd8a0": {
+  "who": "say",
+  "text": "broken"
  },
  "say/bron_4c77bdc0": {
   "who": "say",
@@ -5455,6 +5647,10 @@
   "who": "say",
   "text": "buh"
  },
+ "say/built_b39bd973": {
+  "who": "say",
+  "text": "built"
+ },
  "say/buk_77d593c1": {
   "who": "say",
   "text": "buk"
@@ -5522,6 +5718,10 @@
  "say/busk_6efb7cd6": {
   "who": "say",
   "text": "busk"
+ },
+ "say/but_60d56f8c": {
+  "who": "say",
+  "text": "but"
  },
  "say/butetr_ff00460d": {
   "who": "say",
@@ -5659,6 +5859,14 @@
   "who": "say",
   "text": "callection"
  },
+ "say/called_54f0dbc0": {
+  "who": "say",
+  "text": "called"
+ },
+ "say/calm_b2f18316": {
+  "who": "say",
+  "text": "calm"
+ },
  "say/calnedar_bd5af1f1": {
   "who": "say",
   "text": "calnedar"
@@ -5723,9 +5931,17 @@
   "who": "say",
   "text": "card"
  },
+ "say/carefully_b123cfb8": {
+  "who": "say",
+  "text": "carefully"
+ },
  "say/carort_a4a55d14": {
   "who": "say",
   "text": "carort"
+ },
+ "say/carried_e5243301": {
+  "who": "say",
+  "text": "carried"
  },
  "say/carrot_b720bb72": {
   "who": "say",
@@ -5734,6 +5950,10 @@
  "say/carrto_ae5a98d8": {
   "who": "say",
   "text": "carrto"
+ },
+ "say/carry_7013d630": {
+  "who": "say",
+  "text": "carry"
  },
  "say/castle_9ac2a459": {
   "who": "say",
@@ -5854,6 +6074,10 @@
  "say/celerbation_cc7eda1f": {
   "who": "say",
   "text": "celerbation"
+ },
+ "say/cellection_5bd32703": {
+  "who": "say",
+  "text": "cellection"
  },
  "say/ceokie_0d41c445": {
   "who": "say",
@@ -6211,6 +6435,10 @@
   "who": "say",
   "text": "clap"
  },
+ "say/clapped_9aaf36a0": {
+  "who": "say",
+  "text": "clapped"
+ },
  "say/claw_48250562": {
   "who": "say",
   "text": "claw"
@@ -6251,6 +6479,10 @@
   "who": "say",
   "text": "climb"
  },
+ "say/climbed_4b43da1b": {
+  "who": "say",
+  "text": "climbed"
+ },
  "say/clit_57119547": {
   "who": "say",
   "text": "clit"
@@ -6262,6 +6494,10 @@
  "say/clock_15a40f5d": {
   "who": "say",
   "text": "clock"
+ },
+ "say/clocks_3f43e56a": {
+  "who": "say",
+  "text": "clocks"
  },
  "say/clok_4415f48c": {
   "who": "say",
@@ -6286,6 +6522,10 @@
  "say/cloud_1ac6a97e": {
   "who": "say",
   "text": "cloud"
+ },
+ "say/clouds_33bc1f77": {
+  "who": "say",
+  "text": "clouds"
  },
  "say/clow_58161408": {
   "who": "say",
@@ -6386,6 +6626,10 @@
  "say/colleciton_5fd8453b": {
   "who": "say",
   "text": "colleciton"
+ },
+ "say/collected_57977488": {
+  "who": "say",
+  "text": "collected"
  },
  "say/collectino_9eab76c7": {
   "who": "say",
@@ -6591,6 +6835,10 @@
   "who": "say",
   "text": "cown"
  },
+ "say/cows_d7518b19": {
+  "who": "say",
+  "text": "cows"
+ },
  "say/cpucake_5301a6f5": {
   "who": "say",
   "text": "cpucake"
@@ -6622,6 +6870,10 @@
  "say/crcoodile_e96516b3": {
   "who": "say",
   "text": "crcoodile"
+ },
+ "say/cream_f5d7dd55": {
+  "who": "say",
+  "text": "cream"
  },
  "say/creatnre_ca589d2d": {
   "who": "say",
@@ -6707,6 +6959,14 @@
   "who": "say",
   "text": "crux"
  },
+ "say/cry_f944e95b": {
+  "who": "say",
+  "text": "cry"
+ },
+ "say/crying_487f2bbd": {
+  "who": "say",
+  "text": "crying"
+ },
  "say/ctaerpillar_07f32b02": {
   "who": "say",
   "text": "ctaerpillar"
@@ -6779,6 +7039,10 @@
   "who": "say",
   "text": "curl"
  },
+ "say/currot_5b70655e": {
+  "who": "say",
+  "text": "currot"
+ },
  "say/cute_6fa9dc52": {
   "who": "say",
   "text": "cute"
@@ -6847,6 +7111,10 @@
   "who": "say",
   "text": "danana"
  },
+ "say/danced_814f7e68": {
+  "who": "say",
+  "text": "danced"
+ },
  "say/dap_db4f13d2": {
   "who": "say",
   "text": "dap"
@@ -6894,6 +7162,10 @@
  "say/day_e44f21fd": {
   "who": "say",
   "text": "day"
+ },
+ "say/days_f691d28a": {
+  "who": "say",
+  "text": "days"
  },
  "say/dcitionary_525b2839": {
   "who": "say",
@@ -7399,6 +7671,10 @@
   "who": "say",
   "text": "dress"
  },
+ "say/drew_a896816f": {
+  "who": "say",
+  "text": "drew"
+ },
  "say/drgaon_c6c31ba2": {
   "who": "say",
   "text": "drgaon"
@@ -7431,6 +7707,14 @@
   "who": "say",
   "text": "drop"
  },
+ "say/dropped_c0784825": {
+  "who": "say",
+  "text": "dropped"
+ },
+ "say/drops_0e9e886d": {
+  "who": "say",
+  "text": "drops"
+ },
  "say/drother_0e0e55cf": {
   "who": "say",
   "text": "drother"
@@ -7446,6 +7730,10 @@
  "say/drum_c26f9aed": {
   "who": "say",
   "text": "drum"
+ },
+ "say/dry_dc25c75e": {
+  "who": "say",
+  "text": "dry"
  },
  "say/dseert_35e0d320": {
   "who": "say",
@@ -7598,6 +7886,10 @@
  "say/eart_0655ba45": {
   "who": "say",
   "text": "eart"
+ },
+ "say/eat_6c6e2525": {
+  "who": "say",
+  "text": "eat"
  },
  "say/ecnyclopedia_9a1d73bf": {
   "who": "say",
@@ -7875,9 +8167,9 @@
   "who": "say",
   "text": "evennig"
  },
- "say/every_094ef704": {
+ "say/ever_f6dc9f15": {
   "who": "say",
-  "text": "every"
+  "text": "ever"
  },
  "say/eveyr_025a24f2": {
   "who": "say",
@@ -8007,6 +8299,14 @@
   "who": "say",
   "text": "faimly"
  },
+ "say/fall_f85a0760": {
+  "who": "say",
+  "text": "fall"
+ },
+ "say/fallow_5968845e": {
+  "who": "say",
+  "text": "fallow"
+ },
  "say/falmingo_ba6ee87e": {
   "who": "say",
   "text": "falmingo"
@@ -8018,6 +8318,10 @@
  "say/fam_a7f7f8df": {
   "who": "say",
   "text": "fam"
+ },
+ "say/families_35e314a5": {
+  "who": "say",
+  "text": "families"
  },
  "say/family_521d0429": {
   "who": "say",
@@ -8099,6 +8403,10 @@
   "who": "say",
   "text": "farmer"
  },
+ "say/farmers_815d25f3": {
+  "who": "say",
+  "text": "farmers"
+ },
  "say/farmre_8b65499c": {
   "who": "say",
   "text": "farmre"
@@ -8166,6 +8474,10 @@
  "say/fatnastic_c2a6825e": {
   "who": "say",
   "text": "fatnastic"
+ },
+ "say/favourite_5cf37624": {
+  "who": "say",
+  "text": "favourite"
  },
  "say/fax_b2f80a30": {
   "who": "say",
@@ -8255,6 +8567,10 @@
   "who": "say",
   "text": "fern"
  },
+ "say/festival_e29c4bb5": {
+  "who": "say",
+  "text": "festival"
+ },
  "say/fetaher_4835fc3a": {
   "who": "say",
   "text": "fetaher"
@@ -8279,6 +8595,10 @@
   "who": "say",
   "text": "fexfon"
  },
+ "say/ff_6b22f66d": {
+  "who": "say",
+  "text": "ff"
+ },
  "say/fff_b3095351": {
   "who": "say",
   "text": "fff"
@@ -8290,6 +8610,10 @@
  "say/fiather_dfbb4d7c": {
   "who": "say",
   "text": "fiather"
+ },
+ "say/fields_0640657c": {
+  "who": "say",
+  "text": "fields"
  },
  "say/fierworks_0833c153": {
   "who": "say",
@@ -8342,6 +8666,10 @@
  "say/find_bdf0855a": {
   "who": "say",
   "text": "find"
+ },
+ "say/finds_2aa19f8b": {
+  "who": "say",
+  "text": "finds"
  },
  "say/fiotball_16ca137e": {
   "who": "say",
@@ -8418,6 +8746,10 @@
  "say/fither_d9d24fbb": {
   "who": "say",
   "text": "fither"
+ },
+ "say/five_aeb44395": {
+  "who": "say",
+  "text": "five"
  },
  "say/fix_b2e48278": {
   "who": "say",
@@ -8510,6 +8842,10 @@
  "say/flmaingo_724b453c": {
   "who": "say",
   "text": "flmaingo"
+ },
+ "say/floated_1b07798c": {
+  "who": "say",
+  "text": "floated"
  },
  "say/flog_adc7fd65": {
   "who": "say",
@@ -8670,6 +9006,10 @@
  "say/forf_3958bc42": {
   "who": "say",
   "text": "forf"
+ },
+ "say/forgot_3c4455ce": {
+  "who": "say",
+  "text": "forgot"
  },
  "say/fork_3e58c421": {
   "who": "say",
@@ -9059,6 +9399,10 @@
   "who": "say",
   "text": "gate"
  },
+ "say/gave_22657b24": {
+  "who": "say",
+  "text": "gave"
+ },
  "say/gaxdet_bafefe60": {
   "who": "say",
   "text": "gaxdet"
@@ -9314,6 +9658,10 @@
  "say/glad_695ab86b": {
   "who": "say",
   "text": "glad"
+ },
+ "say/glass_f203a92b": {
+  "who": "say",
+  "text": "glass"
  },
  "say/glib_7f475355": {
   "who": "say",
@@ -9595,10 +9943,6 @@
   "who": "say",
   "text": "grandfatehr"
  },
- "say/grandfather_77688e8b": {
-  "who": "say",
-  "text": "grandfather"
- },
  "say/grandfathre_6c4e39bd": {
   "who": "say",
   "text": "grandfathre"
@@ -9698,6 +10042,10 @@
  "say/grew_bc902964": {
   "who": "say",
   "text": "grew"
+ },
+ "say/grey_b29019a6": {
+  "who": "say",
+  "text": "grey"
  },
  "say/griaffe_c2963659": {
   "who": "say",
@@ -9911,6 +10259,10 @@
   "who": "say",
   "text": "hamronica"
  },
+ "say/hamsetr_91ca739b": {
+  "who": "say",
+  "text": "hamsetr"
+ },
  "say/hamster_fd67f4cd": {
   "who": "say",
   "text": "hamster"
@@ -9942,6 +10294,10 @@
  "say/hap_eebf1176": {
   "who": "say",
   "text": "hap"
+ },
+ "say/happopotamus_b8020f24": {
+  "who": "say",
+  "text": "happopotamus"
  },
  "say/happy_99863551": {
   "who": "say",
@@ -10015,10 +10371,6 @@
   "who": "say",
   "text": "have"
  },
- "say/he_5c3ae3b6": {
-  "who": "say",
-  "text": "he"
- },
  "say/hear_28693c05": {
   "who": "say",
   "text": "hear"
@@ -10026,6 +10378,10 @@
  "say/heart_0eaa25e3": {
   "who": "say",
   "text": "heart"
+ },
+ "say/heavy_119f9d40": {
+  "who": "say",
+  "text": "heavy"
  },
  "say/heb_04b4a6bc": {
   "who": "say",
@@ -10090,6 +10446,10 @@
  "say/help_3871a3fa": {
   "who": "say",
   "text": "help"
+ },
+ "say/helper_21d3cc2d": {
+  "who": "say",
+  "text": "helper"
  },
  "say/helt_34719dae": {
   "who": "say",
@@ -10191,6 +10551,10 @@
   "who": "say",
   "text": "hilt"
  },
+ "say/him_0bd2c6d5": {
+  "who": "say",
+  "text": "him"
+ },
  "say/himmer_7d5ea71f": {
   "who": "say",
   "text": "himmer"
@@ -10242,6 +10606,10 @@
  "say/hirricane_dbb25730": {
   "who": "say",
   "text": "hirricane"
+ },
+ "say/his_fdd2b0cb": {
+  "who": "say",
+  "text": "his"
  },
  "say/hisk_32ac0be0": {
   "who": "say",
@@ -10487,6 +10855,14 @@
   "who": "say",
   "text": "hun"
  },
+ "say/hungry_10f5d87c": {
+  "who": "say",
+  "text": "hungry"
+ },
+ "say/huppopotamus_9b5bca80": {
+  "who": "say",
+  "text": "huppopotamus"
+ },
  "say/hurircane_4d348cfa": {
   "who": "say",
   "text": "hurircane"
@@ -10539,10 +10915,6 @@
   "who": "say",
   "text": "hux"
  },
- "say/i_ec0c35c4": {
-  "who": "say",
-  "text": "i"
- },
  "say/i_like_in_insect_b27ec4c6": {
   "who": "say",
   "text": "i, like in insect"
@@ -10554,6 +10926,10 @@
  "say/iamgination_a7c980fd": {
   "who": "say",
   "text": "iamgination"
+ },
+ "say/ice_72e0f880": {
+  "who": "say",
+  "text": "ice"
  },
  "say/ich_7fe10cf7": {
   "who": "say",
@@ -10787,6 +11163,10 @@
   "who": "say",
   "text": "inportant"
  },
+ "say/inside_f749db6d": {
+  "who": "say",
+  "text": "inside"
+ },
  "say/inteersting_beb104f3": {
   "who": "say",
   "text": "inteersting"
@@ -10814,6 +11194,10 @@
  "say/interseting_d25b1cb9": {
   "who": "say",
   "text": "interseting"
+ },
+ "say/into_2f91a723": {
+  "who": "say",
+  "text": "into"
  },
  "say/intreesting_570c622b": {
   "who": "say",
@@ -10915,6 +11299,10 @@
   "who": "say",
   "text": "island"
  },
+ "say/islands_16e1404d": {
+  "who": "say",
+  "text": "islands"
+ },
  "say/islnad_c4dc83ca": {
   "who": "say",
   "text": "islnad"
@@ -10930,6 +11318,10 @@
  "say/itneresting_ad224af9": {
   "who": "say",
   "text": "itneresting"
+ },
+ "say/its_80f867d9": {
+  "who": "say",
+  "text": "its"
  },
  "say/ittention_af8c3151": {
   "who": "say",
@@ -11687,6 +12079,10 @@
   "who": "say",
   "text": "knee"
  },
+ "say/knew_465ad034": {
+  "who": "say",
+  "text": "knew"
+ },
  "say/knidergarten_fc548d4f": {
   "who": "say",
   "text": "knidergarten"
@@ -11999,6 +12395,10 @@
   "who": "say",
   "text": "lantern"
  },
+ "say/lanterns_7e90abd4": {
+  "who": "say",
+  "text": "lanterns"
+ },
  "say/lantren_7742ba59": {
   "who": "say",
   "text": "lantren"
@@ -12026,6 +12426,10 @@
  "say/laugh_b695ccbe": {
   "who": "say",
   "text": "laugh"
+ },
+ "say/laughed_46c737bf": {
+  "who": "say",
+  "text": "laughed"
  },
  "say/lauhg_e19e5f34": {
   "who": "say",
@@ -12090,6 +12494,10 @@
  "say/led_406aeaca": {
   "who": "say",
   "text": "led"
+ },
+ "say/ledder_6cdd68bd": {
+  "who": "say",
+  "text": "ledder"
  },
  "say/leed_3451ddbb": {
   "who": "say",
@@ -12191,6 +12599,10 @@
   "who": "say",
   "text": "lethub"
  },
+ "say/letter_0964bc5d": {
+  "who": "say",
+  "text": "letter"
+ },
  "say/lew_4f6b0267": {
   "who": "say",
   "text": "lew"
@@ -12214,6 +12626,10 @@
  "say/libarry_9de7d2aa": {
   "who": "say",
   "text": "libarry"
+ },
+ "say/librarian_e2d4d887": {
+  "who": "say",
+  "text": "librarian"
  },
  "say/library_90f6fbd0": {
   "who": "say",
@@ -12307,6 +12723,10 @@
   "who": "say",
   "text": "lightohuse"
  },
+ "say/lights_1956cad4": {
+  "who": "say",
+  "text": "lights"
+ },
  "say/ligjuk_1df97c13": {
   "who": "say",
   "text": "ligjuk"
@@ -12375,6 +12795,10 @@
   "who": "say",
   "text": "list"
  },
+ "say/listened_25821327": {
+  "who": "say",
+  "text": "listened"
+ },
  "say/lit_404cd5b6": {
   "who": "say",
   "text": "lit"
@@ -12386,6 +12810,10 @@
  "say/live_07f017af": {
   "who": "say",
   "text": "live"
+ },
+ "say/lived_49f57491": {
+  "who": "say",
+  "text": "lived"
  },
  "say/lix_4c4ce89a": {
   "who": "say",
@@ -12407,6 +12835,10 @@
   "who": "say",
   "text": "lixvun"
  },
+ "say/ll_4531c525": {
+  "who": "say",
+  "text": "ll"
+ },
  "say/llama_836e2c96": {
   "who": "say",
   "text": "llama"
@@ -12418,6 +12850,10 @@
  "say/lmeonade_0e411390": {
   "who": "say",
   "text": "lmeonade"
+ },
+ "say/lnatern_1fbb4009": {
+  "who": "say",
+  "text": "lnatern"
  },
  "say/loal_ee076681": {
   "who": "say",
@@ -12463,6 +12899,10 @@
   "who": "say",
   "text": "lod"
  },
+ "say/lodder_73564ce3": {
+  "who": "say",
+  "text": "lodder"
+ },
  "say/lodster_92087f74": {
   "who": "say",
   "text": "lodster"
@@ -12470,6 +12910,10 @@
  "say/log_3f515151": {
   "who": "say",
   "text": "log"
+ },
+ "say/logs_cf02b886": {
+  "who": "say",
+  "text": "logs"
  },
  "say/loiton_b5fd73fc": {
   "who": "say",
@@ -12495,6 +12939,10 @@
   "who": "say",
   "text": "look"
  },
+ "say/looked_eb811517": {
+  "who": "say",
+  "text": "looked"
+ },
  "say/lopmok_89698335": {
   "who": "say",
   "text": "lopmok"
@@ -12502,6 +12950,10 @@
  "say/losbter_4104eea8": {
   "who": "say",
   "text": "losbter"
+ },
+ "say/lost_e234733b": {
+  "who": "say",
+  "text": "lost"
  },
  "say/lot_4c5165c8": {
   "who": "say",
@@ -12546,6 +12998,10 @@
  "say/love_d52792d1": {
   "who": "say",
   "text": "love"
+ },
+ "say/loved_424bf2ef": {
+  "who": "say",
+  "text": "loved"
  },
  "say/low_4f516a81": {
   "who": "say",
@@ -12679,6 +13135,10 @@
   "who": "say",
   "text": "mad"
  },
+ "say/made_d1b10e58": {
+  "who": "say",
+  "text": "made"
+ },
  "say/maesure_f956aee7": {
   "who": "say",
   "text": "maesure"
@@ -12751,6 +13211,10 @@
   "who": "say",
   "text": "mango"
  },
+ "say/mangoes_223741d9": {
+  "who": "say",
+  "text": "mangoes"
+ },
  "say/mank_cf97734c": {
   "who": "say",
   "text": "mank"
@@ -12766,6 +13230,10 @@
  "say/marevllous_d736a615": {
   "who": "say",
   "text": "marevllous"
+ },
+ "say/market_b5f82e71": {
+  "who": "say",
+  "text": "market"
  },
  "say/marvellosu_66841837": {
   "who": "say",
@@ -13015,6 +13483,10 @@
   "who": "say",
   "text": "micrsocope"
  },
+ "say/midnight_05ba6b01": {
+  "who": "say",
+  "text": "midnight"
+ },
  "say/mig_c08f372c": {
   "who": "say",
   "text": "mig"
@@ -13058,6 +13530,10 @@
  "say/mircoscope_f5f783a3": {
   "who": "say",
   "text": "mircoscope"
+ },
+ "say/mirvellous_3c9cc633": {
+  "who": "say",
+  "text": "mirvellous"
  },
  "say/mist_69921b6c": {
   "who": "say",
@@ -13134,6 +13610,10 @@
  "say/mop_d39e5f9f": {
   "who": "say",
   "text": "mop"
+ },
+ "say/more_e85541e0": {
+  "who": "say",
+  "text": "more"
  },
  "say/morinng_8fb9ba15": {
   "who": "say",
@@ -13391,6 +13871,10 @@
   "who": "say",
   "text": "nagnificent"
  },
+ "say/naighbourhood_05427742": {
+  "who": "say",
+  "text": "naighbourhood"
+ },
  "say/naik_af2f6610": {
   "who": "say",
   "text": "naik"
@@ -13434,6 +13918,10 @@
  "say/name_8d39bde6": {
   "who": "say",
   "text": "name"
+ },
+ "say/named_d3e553a6": {
+  "who": "say",
+  "text": "named"
  },
  "say/namp_a239def5": {
   "who": "say",
@@ -13691,6 +14179,10 @@
   "who": "say",
   "text": "netfid"
  },
+ "say/never_0ac95089": {
+  "who": "say",
+  "text": "never"
+ },
  "say/new_28999611": {
   "who": "say",
   "text": "new"
@@ -13786,6 +14278,10 @@
  "say/nihgtingale_d976144f": {
   "who": "say",
   "text": "nihgtingale"
+ },
+ "say/niighbourhood_40d7e3aa": {
+  "who": "say",
+  "text": "niighbourhood"
  },
  "say/nik_0ca3f759": {
   "who": "say",
@@ -13959,6 +14455,10 @@
   "who": "say",
   "text": "nondop"
  },
+ "say/none_ada7afdb": {
+  "who": "say",
+  "text": "none"
+ },
  "say/noodels_70a852f9": {
   "who": "say",
   "text": "noodels"
@@ -14015,6 +14515,10 @@
   "who": "say",
   "text": "nother"
  },
+ "say/noticed_b5250e4f": {
+  "who": "say",
+  "text": "noticed"
+ },
  "say/nountain_13588d1d": {
   "who": "say",
   "text": "nountain"
@@ -14066,6 +14570,10 @@
  "say/nugtek_ace27dbf": {
   "who": "say",
   "text": "nugtek"
+ },
+ "say/nuighbourhood_2435fa66": {
+  "who": "say",
+  "text": "nuighbourhood"
  },
  "say/nukrum_f3ced517": {
   "who": "say",
@@ -14207,6 +14715,10 @@
   "who": "say",
   "text": "of"
  },
+ "say/offered_53e5a524": {
+  "who": "say",
+  "text": "offered"
+ },
  "say/oh_67343942": {
   "who": "say",
   "text": "oh"
@@ -14235,6 +14747,10 @@
   "who": "say",
   "text": "olectricity"
  },
+ "say/ombrella_fe135f17": {
+  "who": "say",
+  "text": "ombrella"
+ },
  "say/on_61342fd0": {
   "who": "say",
   "text": "on"
@@ -14242,10 +14758,6 @@
  "say/once_9188b0c4": {
   "who": "say",
   "text": "once"
- },
- "say/one_ba2719ef": {
-  "who": "say",
-  "text": "one"
  },
  "say/ong_bc271d15": {
   "who": "say",
@@ -14274,6 +14786,10 @@
  "say/open_d35ec4c9": {
   "who": "say",
   "text": "open"
+ },
+ "say/opened_c8f069e0": {
+  "who": "say",
+  "text": "opened"
  },
  "say/opoprtunity_571944e8": {
   "who": "say",
@@ -14379,6 +14895,10 @@
   "who": "say",
   "text": "outh"
  },
+ "say/outside_c38eecc4": {
+  "who": "say",
+  "text": "outside"
+ },
  "say/over_31f6520f": {
   "who": "say",
   "text": "over"
@@ -14450,6 +14970,10 @@
  "say/paint_64b8f933": {
   "who": "say",
   "text": "paint"
+ },
+ "say/painted_d15caf72": {
+  "who": "say",
+  "text": "painted"
  },
  "say/paip_7a44578b": {
   "who": "say",
@@ -14835,6 +15359,10 @@
   "who": "say",
   "text": "pie"
  },
+ "say/pieces_499d7942": {
+  "who": "say",
+  "text": "pieces"
+ },
  "say/pienapple_eba9a7f3": {
   "who": "say",
   "text": "pienapple"
@@ -14927,6 +15455,10 @@
   "who": "say",
   "text": "plante"
  },
+ "say/planted_09bdcfa3": {
+  "who": "say",
+  "text": "planted"
+ },
  "say/plap_c9cbe368": {
   "who": "say",
   "text": "plap"
@@ -14942,6 +15474,10 @@
  "say/play_c2cbd863": {
   "who": "say",
   "text": "play"
+ },
+ "say/played_4299e5a2": {
+  "who": "say",
+  "text": "played"
  },
  "say/pleas_812ee694": {
   "who": "say",
@@ -15235,6 +15771,10 @@
   "who": "say",
   "text": "puddle"
  },
+ "say/puddles_abd8fa7e": {
+  "who": "say",
+  "text": "puddles"
+ },
  "say/pudfod_8d9e6053": {
   "who": "say",
   "text": "pudfod"
@@ -15282,6 +15822,10 @@
  "say/pun_4f727100": {
   "who": "say",
   "text": "pun"
+ },
+ "say/puneapple_8a99aa55": {
+  "who": "say",
+  "text": "puneapple"
  },
  "say/pup_6d72a03a": {
   "who": "say",
@@ -15563,6 +16107,10 @@
   "who": "say",
   "text": "ram"
  },
+ "say/ran_4aff1df6": {
+  "who": "say",
+  "text": "ran"
+ },
  "say/rangag_7d5ed433": {
   "who": "say",
   "text": "rangag"
@@ -15647,9 +16195,17 @@
   "who": "say",
   "text": "rcoket"
  },
+ "say/reach_4cfd5078": {
+  "who": "say",
+  "text": "reach"
+ },
  "say/read_cedfa3c5": {
   "who": "say",
   "text": "read"
+ },
+ "say/reading_2e3e57fb": {
+  "who": "say",
+  "text": "reading"
  },
  "say/ream_d5dfaeca": {
   "who": "say",
@@ -16067,6 +16623,14 @@
   "who": "say",
   "text": "roktax"
  },
+ "say/rolled_f2f30e1f": {
+  "who": "say",
+  "text": "rolled"
+ },
+ "say/rolled_up_7b2da5ab": {
+  "who": "say",
+  "text": "rolled-up"
+ },
  "say/rolt_1eff49b6": {
   "who": "say",
   "text": "rolt"
@@ -16343,10 +16907,6 @@
   "who": "say",
   "text": "salad"
  },
- "say/sam_dd1c9ddc": {
-  "who": "say",
-  "text": "sam"
- },
  "say/samdwich_b294b8af": {
   "who": "say",
   "text": "samdwich"
@@ -16462,6 +17022,10 @@
  "say/sbumarine_abc25071": {
   "who": "say",
   "text": "sbumarine"
+ },
+ "say/scarf_7f5f6abe": {
+  "who": "say",
+  "text": "scarf"
  },
  "say/scassors_855c62de": {
   "who": "say",
@@ -16683,10 +17247,6 @@
   "who": "say",
   "text": "shdaow"
  },
- "say/she_e92df9e1": {
-  "who": "say",
-  "text": "she"
- },
  "say/shed_985fcc5f": {
   "who": "say",
   "text": "shed"
@@ -16758,6 +17318,10 @@
  "say/shirt_43e36503": {
   "who": "say",
   "text": "shirt"
+ },
+ "say/shivering_4c14daae": {
+  "who": "say",
+  "text": "shivering"
  },
  "say/shoe_9b47cc32": {
   "who": "say",
@@ -16915,6 +17479,10 @@
   "who": "say",
   "text": "sile"
  },
+ "say/silver_b554f920": {
+  "who": "say",
+  "text": "silver"
+ },
  "say/sim_dd302594": {
   "who": "say",
   "text": "sim"
@@ -16922,6 +17490,10 @@
  "say/simple_1666807f": {
   "who": "say",
   "text": "simple"
+ },
+ "say/simply_2a669ffb": {
+  "who": "say",
+  "text": "simply"
  },
  "say/sin_e0302a4d": {
   "who": "say",
@@ -16975,6 +17547,10 @@
   "who": "say",
   "text": "sitser"
  },
+ "say/sitting_89ec87af": {
+  "who": "say",
+  "text": "sitting"
+ },
  "say/six_ca3007ab": {
   "who": "say",
   "text": "six"
@@ -16994,6 +17570,14 @@
  "say/skip_416b7bc2": {
   "who": "say",
   "text": "skip"
+ },
+ "say/skirt_be2f5538": {
+  "who": "say",
+  "text": "skirt"
+ },
+ "say/sky_cd2b8f36": {
+  "who": "say",
+  "text": "sky"
  },
  "say/sl_435215aa": {
   "who": "say",
@@ -17047,6 +17631,10 @@
   "who": "say",
   "text": "slut"
  },
+ "say/small_a2c4f48c": {
+  "who": "say",
+  "text": "small"
+ },
  "say/smam_e085423b": {
   "who": "say",
   "text": "smam"
@@ -17094,6 +17682,14 @@
  "say/smile_5505928f": {
   "who": "say",
   "text": "smile"
+ },
+ "say/smiled_c2c647f1": {
+  "who": "say",
+  "text": "smiled"
+ },
+ "say/smiling_d67b4218": {
+  "who": "say",
+  "text": "smiling"
  },
  "say/smip_db71b2a4": {
   "who": "say",
@@ -17583,6 +18179,10 @@
   "who": "say",
   "text": "sqiurrel"
  },
+ "say/sqoirrel_9a1e0540": {
+  "who": "say",
+  "text": "sqoirrel"
+ },
  "say/squid_45d2fa39": {
   "who": "say",
   "text": "squid"
@@ -17615,6 +18215,10 @@
   "who": "say",
   "text": "srue"
  },
+ "say/ss_46521a63": {
+  "who": "say",
+  "text": "ss"
+ },
  "say/ssiter_2b6ff509": {
   "who": "say",
   "text": "ssiter"
@@ -17626,6 +18230,10 @@
  "say/st_4b522242": {
   "who": "say",
   "text": "st"
+ },
+ "say/stacked_5c0ca0be": {
+  "who": "say",
+  "text": "stacked"
  },
  "say/stafrish_dc298fff": {
   "who": "say",
@@ -17666,6 +18274,14 @@
  "say/starifsh_7b6dd8c9": {
   "who": "say",
   "text": "starifsh"
+ },
+ "say/stars_622b0026": {
+  "who": "say",
+  "text": "stars"
+ },
+ "say/started_80595b9e": {
+  "who": "say",
+  "text": "started"
  },
  "say/starwberry_bc2166e2": {
   "who": "say",
@@ -17751,6 +18367,10 @@
   "who": "say",
   "text": "stop"
  },
+ "say/stopped_6ee2f34e": {
+  "who": "say",
+  "text": "stopped"
+ },
  "say/stor_c95327bf": {
   "who": "say",
   "text": "stor"
@@ -17803,9 +18423,17 @@
   "who": "say",
   "text": "strewberry"
  },
+ "say/string_17c16538": {
+  "who": "say",
+  "text": "string"
+ },
  "say/striwberry_e0228404": {
   "who": "say",
   "text": "striwberry"
+ },
+ "say/strong_c51f5d7a": {
+  "who": "say",
+  "text": "strong"
  },
  "say/strowberry_7de1591e": {
   "who": "say",
@@ -17914,6 +18542,10 @@
  "say/sunny_494372ec": {
   "who": "say",
   "text": "sunny"
+ },
+ "say/sunrise_9779ec84": {
+  "who": "say",
+  "text": "sunrise"
  },
  "say/suns_2d2d4956": {
   "who": "say",
@@ -18267,6 +18899,10 @@
   "who": "say",
   "text": "thair"
  },
+ "say/than_e5185c1a": {
+  "who": "say",
+  "text": "than"
+ },
  "say/thank_165985e3": {
   "who": "say",
   "text": "thank"
@@ -18286,10 +18922,6 @@
  "say/that_cb18332c": {
   "who": "say",
   "text": "that"
- },
- "say/the_b40eb21c": {
-  "who": "say",
-  "text": "the"
  },
  "say/the_beach_21c164ef": {
   "who": "say",
@@ -18338,10 +18970,6 @@
  "say/themrometer_a84f83ad": {
   "who": "say",
   "text": "themrometer"
- },
- "say/then_e522e976": {
-  "who": "say",
-  "text": "then"
  },
  "say/there_b8ebd55d": {
   "who": "say",
@@ -18410,6 +19038,10 @@
  "say/thin_c52bb172": {
   "who": "say",
   "text": "thin"
+ },
+ "say/thirsty_652f2c70": {
+  "who": "say",
+  "text": "thirsty"
  },
  "say/this_da2bd281": {
   "who": "say",
@@ -18482,6 +19114,10 @@
  "say/thremometer_8fa08605": {
   "who": "say",
   "text": "thremometer"
+ },
+ "say/through_fd8fc87a": {
+  "who": "say",
+  "text": "through"
  },
  "say/thu_a40e98ec": {
   "who": "say",
@@ -18747,6 +19383,10 @@
   "who": "say",
   "text": "too"
  },
+ "say/took_4e750a0e": {
+  "who": "say",
+  "text": "took"
+ },
  "say/toomrrow_c58513be": {
   "who": "say",
   "text": "toomrrow"
@@ -18759,9 +19399,17 @@
   "who": "say",
   "text": "top"
  },
+ "say/tore_2c8f1805": {
+  "who": "say",
+  "text": "tore"
+ },
  "say/torm_348f249d": {
   "who": "say",
   "text": "torm"
+ },
+ "say/torn_318f1fe4": {
+  "who": "say",
+  "text": "torn"
  },
  "say/torphy_d2dbe959": {
   "who": "say",
@@ -19663,6 +20311,10 @@
   "who": "say",
   "text": "viktik"
  },
+ "say/village_471a1a63": {
+  "who": "say",
+  "text": "village"
+ },
  "say/vim_75123ef7": {
   "who": "say",
   "text": "vim"
@@ -19975,6 +20627,18 @@
   "who": "say",
   "text": "wait"
  },
+ "say/waited_881defa1": {
+  "who": "say",
+  "text": "waited"
+ },
+ "say/walking_10007ab8": {
+  "who": "say",
+  "text": "walking"
+ },
+ "say/wanted_cfe3bdee": {
+  "who": "say",
+  "text": "wanted"
+ },
  "say/was_16e2c1f2": {
   "who": "say",
   "text": "was"
@@ -19982,6 +20646,10 @@
  "say/watch_5fb7b228": {
   "who": "say",
   "text": "watch"
+ },
+ "say/watched_bbeaffa9": {
+  "who": "say",
+  "text": "watched"
  },
  "say/watefrall_af16d821": {
   "who": "say",
@@ -20059,6 +20727,10 @@
   "who": "say",
   "text": "week"
  },
+ "say/weeks_b59e6a6a": {
+  "who": "say",
+  "text": "weeks"
+ },
  "say/went_d8b9cf23": {
   "who": "say",
   "text": "went"
@@ -20091,10 +20763,6 @@
   "who": "say",
   "text": "what"
  },
- "say/when_7f778519": {
-  "who": "say",
-  "text": "when"
- },
  "say/where_056c1458": {
   "who": "say",
   "text": "where"
@@ -20110,10 +20778,6 @@
  "say/whil_7d596cdf": {
   "who": "say",
   "text": "whil"
- },
- "say/while_0dc628ce": {
-  "who": "say",
-  "text": "while"
  },
  "say/whipsering_41eee8e9": {
   "who": "say",
@@ -20159,6 +20823,10 @@
   "who": "say",
   "text": "whsipering"
  },
+ "say/wide_f723cdea": {
+  "who": "say",
+  "text": "wide"
+ },
  "say/widnow_acb22705": {
   "who": "say",
   "text": "widnow"
@@ -20178,6 +20846,10 @@
  "say/will_10106d8d": {
   "who": "say",
   "text": "will"
+ },
+ "say/wind_1414f107": {
+  "who": "say",
+  "text": "wind"
  },
  "say/window_a172b7dd": {
   "who": "say",
@@ -20279,6 +20951,10 @@
   "who": "say",
   "text": "wrap"
  },
+ "say/wrapped_aca4890e": {
+  "who": "say",
+  "text": "wrapped"
+ },
  "say/wren_71d1513f": {
   "who": "say",
   "text": "wren"
@@ -20294,6 +20970,10 @@
  "say/write_be269f5c": {
   "who": "say",
   "text": "write"
+ },
+ "say/writing_df66914f": {
+  "who": "say",
+  "text": "writing"
  },
  "say/wro_0ab4e3d9": {
   "who": "say",
@@ -20374,6 +21054,10 @@
  "say/yak_4ea9c2ec": {
   "who": "say",
   "text": "yak"
+ },
+ "say/yallow_da5f5155": {
+  "who": "say",
+  "text": "yallow"
  },
  "say/yell_c29e2d43": {
   "who": "say",
@@ -20862,6 +21546,10 @@
  "say/zux_9bb3f750": {
   "who": "say",
   "text": "zux"
+ },
+ "say/zz_5767fb75": {
+  "who": "say",
+  "text": "zz"
  },
  "say/zzz_a7b0389d": {
   "who": "say",

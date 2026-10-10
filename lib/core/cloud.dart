@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,6 +95,39 @@ class Cloud {
   AgentEvent _publish(AgentEvent e) {
     last.value = e;
     return e;
+  }
+
+  // ---- speech recognition (OpenAI Whisper, through the Readle server: the key never leaves the server) ----
+  DateTime _whisperChecked = DateTime.fromMillisecondsSinceEpoch(0);
+  bool _whisperOk = false;
+  DateTime _whisperPausedUntil = DateTime.fromMillisecondsSinceEpoch(0);
+
+  /// True when the server can transcribe with Whisper (asked at most every 90 s; after a failure the app uses the phone's own
+  /// recogniser for 2 minutes).
+  Future<bool> whisperAvailable() async {
+    if (!enabled || DateTime.now().isBefore(_whisperPausedUntil)) return false;
+    if (DateTime.now().difference(_whisperChecked).inSeconds < 90) return _whisperOk;
+    _whisperChecked = DateTime.now();
+    try {
+      final r = await _client.get(_u('/health')).timeout(const Duration(seconds: 3));
+      _whisperOk = r.statusCode == 200 && ((jsonDecode(utf8.decode(r.bodyBytes)) as Map)['whisper'] == true);
+    } catch (_) {
+      _whisperOk = false;
+    }
+    return _whisperOk;
+  }
+
+  /// Sends one recording; returns the server's transcript (text, words with times, confidence) or null on any failure.
+  Future<Map<String, dynamic>?> transcribe(Uint8List audio, {String lang = 'en', String prompt = ''}) async {
+    try {
+      final r = await _client.post(_u('/transcribe', {'lang': lang, if (prompt.isNotEmpty) 'prompt': prompt}), headers: {'content-type': 'audio/wav'}, body: audio).timeout(const Duration(seconds: 25));
+      if (r.statusCode != 200) throw Exception('server ${r.statusCode}');
+      return Map<String, dynamic>.from(jsonDecode(utf8.decode(r.bodyBytes)) as Map);
+    } catch (e) {
+      debugPrint('whisper: $e');
+      _whisperPausedUntil = DateTime.now().add(const Duration(minutes: 2));
+      return null;
+    }
   }
 
   // ---- screening history (screenings collection) ----

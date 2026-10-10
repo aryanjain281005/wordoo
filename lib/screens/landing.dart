@@ -1,21 +1,38 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme.dart';
 import '../data/strings.dart';
 import '../state/app_state.dart';
+import '../widgets/ambient.dart';
 import '../widgets/art.dart';
 import '../widgets/common.dart';
 import '../widgets/hero.dart';
 import 'parent_gate.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
+  @override
+  State<LandingScreen> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> with TickerProviderStateMixin {
+  late final AmbientController _sky = AmbientController(this); // balloons, birds, butterflies and tap fireworks
+
+  @override
+  void dispose() {
+    _sky.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();
     final returning = st.hasBaseline;
     return HeroScene(
-      child: SafeArea(
+      child: Stack(fit: StackFit.expand, children: [
+        SkyAmbience(_sky),
+        SafeArea(
         child: LayoutBuilder(builder: (context, c) {
           final h = c.maxHeight, w = c.maxWidth;
           return Stack(children: [
@@ -25,7 +42,7 @@ class LandingScreen extends StatelessWidget {
               left: 0,
               right: 0,
               child: Column(children: [
-                Pop(child: _Logo(size: (w * .22).clamp(60, 96))),
+                Pop(child: AnimatedBuilder(animation: _sky, builder: (_, child) => Transform.translate(offset: Offset(0, sin(_sky.time * 1.7) * 5), child: child), child: _Logo(size: (w * .22).clamp(60, 96)))),
                 const SizedBox(height: 4),
                 Pop(index: 1, child: _Ribbon(text: Brand.tagline.replaceAll('Just for You', 'Just for You!'))),
               ]),
@@ -86,6 +103,9 @@ class LandingScreen extends StatelessWidget {
           ]);
         }),
       ),
+        // taps on the scene: fireworks, balloons pop, birds chirp (buttons below still work normally)
+        Positioned.fill(child: AmbientTapLayer(onTap: (p) => skyTap(_sky, p))),
+      ]),
     );
   }
 
