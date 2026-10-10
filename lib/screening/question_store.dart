@@ -4,7 +4,7 @@ import 'models.dart';
 
 /// The screening question bank as the app sees it.
 ///
-/// The database (MongoDB, behind the Readle server) is the source of truth: seed questions plus the ones the Question Agent
+/// The database (MongoDB, behind the Wordoo server) is the source of truth: seed questions plus the ones the Question Agent
 /// (Gemini) has written. The app keeps a copy of the last download on the phone, and falls back to the questions bundled in
 /// the code ([ScreenBank.items]) for any station the database has nothing for, so the screening works fully offline.
 class QuestionStore {

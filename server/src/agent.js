@@ -137,7 +137,7 @@ export class QuestionAgent {
     if (q.lowConfidence) how.push('spoke unclearly');
     if (q.replayed) how.push('needed the instruction repeated');
     if (t.tag) how.push(`made this kind of mistake: "${t.tag}"`);
-    return `You write questions for "Readle", a reading-screening game for children aged 5-10 in India who learn English at school.
+    return `You write questions for "Wordoo", a reading-screening game for children aged 5-10 in India who learn English at school.
 Station: ${subtest}. ${spec.describe}
 Write exactly ${ask} NEW questions of ${TIER_NAMES[tier].toUpperCase()} difficulty (difficulty pool ${tier} of 3).
 Rules: ${spec.rules}

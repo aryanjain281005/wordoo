@@ -1,7 +1,7 @@
 import 'models.dart';
 import 'voxlexi.dart';
 
-/// Turns the Readle server's /transcribe answer (OpenAI Whisper) into the [SpeechMetrics] the screening already understands.
+/// Turns the Wordoo server's /transcribe answer (OpenAI Whisper) into the [SpeechMetrics] the screening already understands.
 class WhisperMapper {
   static SpeechMetrics toMetrics(Map<String, dynamic> j) {
     final text = (j['text'] as String? ?? '').trim();

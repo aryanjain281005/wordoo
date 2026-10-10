@@ -11,7 +11,7 @@ import 'whisper_mapper.dart';
 
 /// Speech recognition for the screening. Two engines, same result type:
 ///  • OpenAI Whisper (preferred, better with children's voices and mispronunciations): the microphone is recorded here, the
-///    recording is sent to the Readle server, and Whisper's word timestamps become the speech onset, duration and pauses.
+///    recording is sent to the Wordoo server, and Whisper's word timestamps become the speech onset, duration and pauses.
 ///  • the phone's own recogniser (Android: Google) when the server or Whisper is not available (offline, no key).
 /// Either way the answer is a [SpeechMetrics], analysed by [VoxLexi], so the scorer and the adaptive screening do not change.
 class SpeechEngine {

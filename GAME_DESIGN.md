@@ -1,4 +1,4 @@
-# Readle — Game Design Document
+# Wordoo — Game Design Document
 ## *The Quest for the Lost Words* · खोए शब्दों की खोज
 
 Version 2.0 · Covers: main story, 11 games, characters, cinematics, art & animation assets, voice casting,

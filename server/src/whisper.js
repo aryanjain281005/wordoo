@@ -1,4 +1,4 @@
-// OpenAI Whisper speech-to-text for Readle. The app records the child's voice and sends it here; this server holds the OpenAI key
+// OpenAI Whisper speech-to-text for Wordoo. The app records the child's voice and sends it here; this server holds the OpenAI key
 // (the app never does). Whisper returns the words AND when each word started and ended, which is what the app's VoxLexi analysis
 // needs for speech onset, duration and pauses.
 

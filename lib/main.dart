@@ -20,12 +20,12 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   AudioManager.instance.init();
   StoryLines.instance.load();
-  Cloud.instance.init('en'); // question bank copy + refresh from the Readle server (optional: the app works offline)
-  runApp(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
+  Cloud.instance.init('en'); // question bank copy + refresh from the Wordoo server (optional: the app works offline)
+  runApp(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const WordooApp()));
 }
 
-class ReadleApp extends StatelessWidget {
-  const ReadleApp({super.key});
+class WordooApp extends StatelessWidget {
+  const WordooApp({super.key});
   @override
   Widget build(BuildContext context) {
     final st = context.watch<AppState>();

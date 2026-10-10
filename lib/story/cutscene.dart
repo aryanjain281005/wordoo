@@ -151,7 +151,7 @@ class _CutsceneScreenState extends State<CutsceneScreen> with TickerProviderStat
     _video = null;
     old?.dispose();
     final v = s.video;
-    if (v == null || !ReadleAssets.instance.bundled(_videoPath(v))) return null;
+    if (v == null || !WordooAssets.instance.bundled(_videoPath(v))) return null;
     try {
       final c = VideoPlayerController.asset(_videoPath(v));
       await c.initialize();

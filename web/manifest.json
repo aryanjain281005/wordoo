@@ -1,6 +1,6 @@
 {
-    "name": "wordoo",
-    "short_name": "wordoo",
+    "name": "Wordoo",
+    "short_name": "Wordoo",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

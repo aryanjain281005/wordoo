@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Readle's asset manifest: every image / music track has a logical id (e.g. `char.milo.body`, `bg.forest`).
+/// Wordoo's asset manifest: every image / music track has a logical id (e.g. `char.milo.body`, `bg.forest`).
 /// If an id has no file yet, callers get `null` and use their built-in placeholder.
 /// This lets us build now and drop final art/audio in later without code changes.
-class ReadleAssets {
-  static final ReadleAssets instance = ReadleAssets._();
-  ReadleAssets._();
+class WordooAssets {
+  static final WordooAssets instance = WordooAssets._();
+  WordooAssets._();
 
   Map<String, String> _art = {};
   Map<String, String> _music = {};
@@ -83,8 +83,8 @@ class ArtImage extends StatelessWidget {
   const ArtImage(this.id, {super.key, required this.fallback, this.fit = BoxFit.contain});
   @override
   Widget build(BuildContext context) {
-    final p = ReadleAssets.instance.art(id);
+    final p = WordooAssets.instance.art(id);
     if (p == null) return fallback;
-    return Image(image: ReadleAssets.provider(p, id, MediaQuery.sizeOf(context).width), fit: fit, gaplessPlayback: true, filterQuality: FilterQuality.medium, errorBuilder: (_, _, _) => fallback);
+    return Image(image: WordooAssets.provider(p, id, MediaQuery.sizeOf(context).width), fit: fit, gaplessPlayback: true, filterQuality: FilterQuality.medium, errorBuilder: (_, _, _) => fallback);
   }
 }

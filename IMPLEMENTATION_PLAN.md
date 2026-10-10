@@ -1,4 +1,4 @@
-# Readle — Implementation Plan (remaining work)
+# Wordoo — Implementation Plan (remaining work)
 
 Primary reference: [`GAME_DESIGN.md`](GAME_DESIGN.md) v2. Newer requirements take priority: no daily limit, no
 endpoint, retest only after full seven-island progress, per-skill difficulty from the screening, English-only v1.
@@ -18,7 +18,7 @@ endpoint, retest only after full seven-island progress, per-skill difficulty fro
 | 4 | Start with Phase 0 → Phase 1 → Phase 2a | ✅ approved |
 
 ### Why not Unity (and no Unity MCP)
-Readle's screening, reports, state and personalisation are all Flutter. Unity would mean either a rewrite in C#, or
+Wordoo's screening, reports, state and personalisation are all Flutter. Unity would mean either a rewrite in C#, or
 embedding Unity inside Flutter through an unofficial bridge. Either way that brings two engines, two languages,
 +40–80 MB app size and harder debugging. The games are 2D, light-motion and text- and audio-heavy, so **Flame**, a game
 engine that runs inside Flutter, covers them while keeping one codebase in Dart.

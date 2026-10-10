@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate character voice lines for Readle (English v1).
+"""Generate character voice lines for Wordoo (English v1).
 
 Reads  assets/story/lines_en.json + books_en.json  (id -> who, text)  and  tool/voice_cast.json (who -> voice settings),
 speaks every line with the free open-source Kokoro model (Apache 2.0) and writes

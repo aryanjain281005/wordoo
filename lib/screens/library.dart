@@ -55,7 +55,7 @@ class _BookTile extends StatelessWidget {
   const _BookTile({required this.story, required this.open});
   @override
   Widget build(BuildContext context) {
-    final cover = ReadleAssets.instance.art('story.${story.id}');
+    final cover = WordooAssets.instance.art('story.${story.id}');
     return GestureDetector(
       onTap: open ? () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => BookReader(story: story))) : null,
       child: Semantics(

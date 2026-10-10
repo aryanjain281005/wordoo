@@ -1,8 +1,8 @@
-# Readle — A Reading Adventure Just for You
+# Wordoo — A Reading Adventure Just for You
 
-> Repository name: **wordoo** · App name: **Readle** · Built with **Flutter** (Android-first, also runs on web)
+> Repository name: **wordoo** · App name: **Wordoo** · Built with **Flutter** (Android-first, also runs on web)
 
-Readle is a gamified, multilingual (English + Hindi) literacy-support app for children aged roughly 5–10.
+Wordoo is a gamified, multilingual (English + Hindi) literacy-support app for children aged roughly 5–10.
 A child plays a story adventure; behind the scenes the app runs a **DALI-aligned literacy screening**,
 builds a **skill profile**, and then **personalises a long-term game world**: each skill has its own island,
 its own game and its own difficulty (10 steps), re-estimated after every answer. There is **no daily limit**.
@@ -11,7 +11,7 @@ and a new season begins with every island growing a tier. **Version 1 of the gam
 
 📘 Full game design: [GAME_DESIGN.md](GAME_DESIGN.md)
 
-> ⚠️ **Readle is an educational screening and practice tool. It is NOT a medical or clinical diagnostic tool.**
+> ⚠️ **Wordoo is an educational screening and practice tool. It is NOT a medical or clinical diagnostic tool.**
 > It never says a child "has dyslexia", never shows a "dyslexia probability", and always recommends
 > talking to a teacher or qualified professional when difficulties persist.
 
@@ -46,7 +46,7 @@ and a new season begins with every island growing a tier. **Version 1 of the gam
 
 ## 1. The idea in plain words
 
-Most reading apps give every child the same game. Readle first **understands how each child reads**,
+Most reading apps give every child the same game. Wordoo first **understands how each child reads**,
 then builds a **personal learning journey** that keeps adapting.
 
 ```
@@ -65,7 +65,7 @@ Two children with different skill profiles get **different maps, different missi
 
 | # | Screen | What happens | Code |
 |---|--------|--------------|------|
-| 1 | **Launch** | Painted fantasy scene (castle, forest, winding path), "Readle" logo, *Let's Start*, *Play · Learn · Grow*, *Parent / Grown-Up* link | `screens/landing.dart`, `widgets/hero.dart` |
+| 1 | **Launch** | Painted fantasy scene (castle, forest, winding path), "Wordoo" logo, *Let's Start*, *Play · Learn · Grow*, *Parent / Grown-Up* link | `screens/landing.dart`, `widgets/hero.dart` |
 | 2 | **Grown-up setup (4 steps)** | ① child nickname, age, class, language ② privacy + consent (guardian, data, **voice recording**) ③ background questions (home language, school medium, years in school, vision/hearing checked, speech delay, family history) ④ how it works | `screens/onboarding.dart` |
 | 3 | **Create your explorer** | Hairstyle, outfit, companion (fox / panda / dragon), explorer name | `screens/avatar_creator.dart` |
 | 4 | **Your First Adventure** | Story intro: the bridge is broken; a grown-up note explains this is a literacy screening | `screens/adventure.dart` |
@@ -90,9 +90,9 @@ Two children with different skill profiles get **different maps, different missi
 
 The constructs come from **DALI (Dyslexia Assessment for Languages of India)** by NBRC / UNESCO MGIEP,
 which groups tests into three domains: **phonological processing, literacy, and semantic retrieval / oral language**,
-plus processing automaticity (rapid naming). We map them to Readle's six practice skills plus two supporting skills.
+plus processing automaticity (rapid naming). We map them to Wordoo's six practice skills plus two supporting skills.
 
-| DALI domain | Readle construct | Used for games? |
+| DALI domain | Wordoo construct | Used for games? |
 |---|---|---|
 | Phonological processing | **Phonological Awareness** | ✅ Sound Forest |
 | Phonological processing | *Rapid Naming Speed* (supporting) | report only |
@@ -360,7 +360,7 @@ Everything is drawn in code (no image assets), styled after the project's refere
 | Backend | none — fully offline-capable, no API calls needed |
 | Platforms | Android (tested on Vivo V2130, Android 14), Web (Chrome). iOS/macOS need Xcode. |
 
-Android manifest adds `RECORD_AUDIO`, `INTERNET` (online recognition fallback) and `<queries>` for `RecognitionService` and `TTS_SERVICE`; app label **Readle**.
+Android manifest adds `RECORD_AUDIO`, `INTERNET` (online recognition fallback) and `<queries>` for `RecognitionService` and `TTS_SERVICE`; app label **Wordoo**.
 
 ---
 
@@ -547,5 +547,5 @@ Key references:
 
 - Fonts: **Fredoka** and **Noto Sans Devanagari** — SIL Open Font License 1.1.
 - All illustrations are original vector drawings made in code.
-- DALI is developed by the National Brain Research Centre (NBRC), India, with UNESCO MGIEP; Readle is **not affiliated** with DALI and does not use its proprietary items or norms.
+- DALI is developed by the National Brain Research Centre (NBRC), India, with UNESCO MGIEP; Wordoo is **not affiliated** with DALI and does not use its proprietary items or norms.
 - LexiScreen and VoxLexi are third-party open repositories used only as design inspiration; no code was copied — the VoxLexi analysis steps were re-implemented in Dart.

@@ -388,7 +388,7 @@ class _SpellingHiveItemState extends State<SpellingHiveItem> with TickerProvider
   }
 
   Widget _tileFace(String letter) {
-    if (ReadleAssets.instance.art('prop.hive.tile') != null) {
+    if (WordooAssets.instance.art('prop.hive.tile') != null) {
       // painted bee holding a blank wooden tile; the letter is written on the tile
       return SizedBox(
         width: 66,

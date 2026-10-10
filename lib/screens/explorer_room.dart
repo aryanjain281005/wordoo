@@ -266,4 +266,4 @@ class StreakChip extends StatelessWidget {
 }
 
 /// Whether painted room art exists (used by tests / dev panel).
-bool hasRoomArt() => ReadleAssets.instance.art('bg.room') != null;
+bool hasRoomArt() => WordooAssets.instance.art('bg.room') != null;

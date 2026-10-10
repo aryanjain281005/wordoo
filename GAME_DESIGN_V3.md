@@ -1,4 +1,4 @@
-# Readle — Game Design v3: *The Rescue of the Story Keepers*
+# Wordoo — Game Design v3: *The Rescue of the Story Keepers*
 
 > Status: **approved 10 Oct (decisions in §9); implementation in progress.** `GAME_DESIGN.md` (v2.1) still describes the app as it is built today.
 > This document re-tells the story and changes the progression rules with the **fewest possible changes**:

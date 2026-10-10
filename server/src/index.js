@@ -1,4 +1,4 @@
-// Readle cloud server. Start:  cd server && npm install && npm start      (settings in the repo's git-ignored .env)
+// Wordoo cloud server. Start:  cd server && npm install && npm start      (settings in the repo's git-ignored .env)
 //   GET  /health                      status, database kind, bank size
 //   GET  /questions?lang=en           the whole active question bank (seed + agent-written) for the app to cache
 //   POST /telemetry                   one answer → stored in `responses`, then the Question Agent writes 10 new questions
@@ -117,5 +117,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   whisper.probe().then((ok) => console.log(ok ? 'Whisper probe: OK' : `Whisper probe FAILED: ${whisper.error}`));
   setInterval(() => whisper.probe(), 10 * 60 * 1000).unref(); // credits added later → the app starts using Whisper by itself
   const app = createApp({ store, agent, cfg, whisper });
-  app.listen(cfg.port, cfg.host, () => console.log(`Readle server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
+  app.listen(cfg.port, cfg.host, () => console.log(`Wordoo server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
 }

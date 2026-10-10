@@ -19,7 +19,7 @@ child taps the mic
 → SpeechMetrics → VoxLexi.bestMatch / scoreFromMatch → ItemResponse → Scorer (unchanged) and the adaptive screening (unchanged)
 ```
 
-* The OpenAI key lives only in the server's `.env` (`OPENAI_API_KEY`). The app sends audio to the Readle server, never to OpenAI.
+* The OpenAI key lives only in the server's `.env` (`OPENAI_API_KEY`). The app sends audio to the Wordoo server, never to OpenAI.
 * The hint sent with each recording describes the kind of speech ("a young child reads one made-up word aloud"), never the expected
   answer, so Whisper does not "correct" a mispronunciation towards the target.
 * Whisper sometimes writes a stock phrase ("Thank you.") for near-silence; the server drops it when it was not sure there was speech.

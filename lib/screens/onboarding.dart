@@ -159,7 +159,7 @@ class _ParentOnboardingState extends State<ParentOnboarding> {
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(color: C.sky.withValues(alpha: .15), borderRadius: BorderRadius.circular(18)),
-          child: Text('Readle helps identify reading and writing skills that may need more practice. It does not diagnose learning disabilities.', style: ts(15, w: FontWeight.w600, h: 1.35)),
+          child: Text('Wordoo helps identify reading and writing skills that may need more practice. It does not diagnose learning disabilities.', style: ts(15, w: FontWeight.w600, h: 1.35)),
         ),
         const SizedBox(height: 10),
         _check('I am the parent / guardian', guardian, (v) => setState(() => guardian = v)),

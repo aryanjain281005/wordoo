@@ -104,7 +104,7 @@ class _GameScreenState extends State<GameScreen> {
     _startAmbience();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _tellBeat();
-      ReadleAssets.instance.precache(context, ['bg.island.${quest.island.name}', 'char.milo.', 'char.${guardian}.', ..._gameArt[quest.game] ?? const []]);
+      WordooAssets.instance.precache(context, ['bg.island.${quest.island.name}', 'char.milo.', 'char.${guardian}.', ..._gameArt[quest.game] ?? const []]);
     });
     // boss quests (the 10th of a chapter) get the exciting track; Story Castle reads to the calm library track
     AudioManager.instance.music(quest.kind == QuestKind.boss ? 'music.boss' : (quest.island == IslandId.castle ? 'music.library' : 'music.${quest.island.name}'));

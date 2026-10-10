@@ -65,7 +65,7 @@ class BookPanel extends StatelessWidget {
     final words = sentence.split(RegExp(r'\s+'));
     final scene = bookSceneFor(sentence, story: storyText);
     final cast = bookCastFor(sentence);
-    final cover = index == 0 ? ReadleAssets.instance.art('story.$storyId') : null;
+    final cover = index == 0 ? WordooAssets.instance.art('story.$storyId') : null;
     return Column(mainAxisSize: MainAxisSize.min, children: [
       AnimatedContainer(
         duration: const Duration(milliseconds: 300),

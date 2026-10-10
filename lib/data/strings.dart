@@ -3,7 +3,7 @@ import 'dart:math';
 /// App-level UI strings, separated from learning content.
 /// Add a language by adding a column here + a LangPack in data/.
 class Brand {
-  static const name = 'Readle';
+  static const name = 'Wordoo';
   static const tagline = 'A Reading Adventure Just for You';
   static const companion = 'Milo';
 }

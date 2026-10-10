@@ -17,7 +17,7 @@ class AgentEvent {
   const AgentEvent({required this.status, this.added = 0, this.bankBefore = 0, this.bankAfter = 0, this.subtest = '', this.tier = '', this.message = '', this.questions = const [], this.ms = 0});
 }
 
-/// The app's link to the Readle server (MongoDB + Question Agent). Everything here is optional: with no server the screening runs
+/// The app's link to the Wordoo server (MongoDB + Question Agent). Everything here is optional: with no server the screening runs
 /// exactly as before, from the questions bundled in the app.
 ///
 ///   --dart-define=READLE_API=https://your-server      (default http://127.0.0.1:8787, reachable on a phone via `adb reverse tcp:8787 tcp:8787`)
@@ -97,7 +97,7 @@ class Cloud {
     return e;
   }
 
-  // ---- speech recognition (OpenAI Whisper, through the Readle server: the key never leaves the server) ----
+  // ---- speech recognition (OpenAI Whisper, through the Wordoo server: the key never leaves the server) ----
   DateTime _whisperChecked = DateTime.fromMillisecondsSinceEpoch(0);
   bool _whisperOk = false;
   DateTime _whisperPausedUntil = DateTime.fromMillisecondsSinceEpoch(0);

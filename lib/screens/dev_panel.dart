@@ -53,7 +53,7 @@ class _DevPanelState extends State<DevPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final sfxCount = ['correct_1', 'miss_soft', 'power_up', 'reward_fanfare', 'tile_snap'].where((id) => ReadleAssets.instance.bundled('assets/sfx/$id.ogg')).length;
+    final sfxCount = ['correct_1', 'miss_soft', 'power_up', 'reward_fanfare', 'tile_snap'].where((id) => WordooAssets.instance.bundled('assets/sfx/$id.ogg')).length;
     return Scaffold(
       backgroundColor: const Color(0xFF1B1F3B),
       appBar: AppBar(title: const Text('Developer test bench'), backgroundColor: const Color(0xFF262A66), foregroundColor: Colors.white),

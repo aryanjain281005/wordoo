@@ -425,7 +425,7 @@ class _SoundOrchestraItemState extends State<SoundOrchestraItem> with TickerProv
           builder: (_, v, child) => Transform.scale(scale: v, child: child),
           child: Column(children: [
             // painted Gajju already carries his dhol; otherwise elephant + drum
-            if (ReadleAssets.instance.art('char.gajju.happy') != null)
+            if (WordooAssets.instance.art('char.gajju.happy') != null)
               SizedBox(width: 210, height: 210, child: ArtImage('char.gajju.happy', fallback: const SizedBox.shrink()))
             else ...[
               const SizedBox(width: 120, height: 110, child: Center(child: Text('🐘', style: TextStyle(fontSize: 84)))),

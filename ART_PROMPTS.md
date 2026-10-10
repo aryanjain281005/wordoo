@@ -1,4 +1,4 @@
-# Readle — Image Generation Prompts
+# Wordoo — Image Generation Prompts
 
 Every image the app can use, with a ready-to-paste prompt. Until a file exists, the app shows its own
 code-drawn placeholder, so you can add images **one at a time, in any order**. Nothing breaks if some are missing.

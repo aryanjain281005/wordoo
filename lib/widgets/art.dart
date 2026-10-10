@@ -417,7 +417,7 @@ class _AdventureBackgroundState extends State<AdventureBackground> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    final art = ReadleAssets.instance.art(widget.artId ?? 'bg.${widget.scene.name}');
+    final art = WordooAssets.instance.art(widget.artId ?? 'bg.${widget.scene.name}');
     return Stack(fit: StackFit.expand, children: [
       if (art != null) ...[
         // painted background: drawn once and cached; only a few light sparkles move on their own layer
@@ -666,7 +666,7 @@ class ArtWarmUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ids = <String>{
-      for (final f in ReadleAssets.instance.bundledUnder('assets/art/'))
+      for (final f in WordooAssets.instance.bundledUnder('assets/art/'))
         if (prefixes.any((p) => f.substring(11).startsWith(p))) f.substring(11, f.lastIndexOf('.')),
     };
     return IgnorePointer(

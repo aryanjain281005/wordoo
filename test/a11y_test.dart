@@ -26,7 +26,7 @@ void main() {
       final handle = t.ensureSemantics();
       await t.runAsync(() async {
         await (FontLoader('Fredoka')..addFont(rootBundle.load('assets/fonts/Fredoka.ttf'))).load();
-        await ReadleAssets.instance.load();
+        await WordooAssets.instance.load();
       });
       final st = AppState()..loadDemoProfile(0);
       t.view.physicalSize = const Size(1080, 2340);

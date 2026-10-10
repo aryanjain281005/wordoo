@@ -42,7 +42,7 @@ class _LandingScreenState extends State<LandingScreen> with TickerProviderStateM
               left: 0,
               right: 0,
               child: Column(children: [
-                Pop(child: AnimatedBuilder(animation: _sky, builder: (_, child) => Transform.translate(offset: Offset(0, sin(_sky.time * 1.7) * 5), child: child), child: _Logo(size: (w * .22).clamp(60, 96)))),
+                Pop(child: AnimatedBuilder(animation: _sky, builder: (_, child) => Transform.translate(offset: Offset(0, sin(_sky.time * 1.7) * 5), child: child), child: _Logo(size: (w * .78).clamp(200, 420)))),
                 const SizedBox(height: 4),
                 Pop(index: 1, child: _Ribbon(text: Brand.tagline.replaceAll('Just for You', 'Just for You!'))),
               ]),
@@ -133,32 +133,10 @@ class _Ribbon extends StatelessWidget {
       );
 }
 
+/// The Wordoo logo (fox + star + lettering). [size] is its width.
 class _Logo extends StatelessWidget {
   final double size;
   const _Logo({required this.size});
-  static const _cols = [Color(0xFFFFD34D), Color(0xFFFFB02E), Color(0xFFFF9A2E), Color(0xFFFF7A2E), Color(0xFFFFB02E), Color(0xFFFFD34D)];
   @override
-  Widget build(BuildContext context) {
-    final letters = Brand.name.split('');
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      for (var i = 0; i < letters.length; i++)
-        Transform.translate(
-          offset: Offset(0, i.isEven ? 0 : size * .06),
-          child: Transform.rotate(
-            angle: (i - 2.5) * .035,
-            child: Stack(children: [
-              Text(letters[i], style: ts(size, w: FontWeight.w700).copyWith(shadows: [Shadow(color: const Color(0xFF2B1A7A), offset: Offset(0, size * .09))], foreground: Paint()
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = size * .2
-                ..strokeJoin = StrokeJoin.round
-                ..color = const Color(0xFF3B2A8F))),
-              ShaderMask(
-                shaderCallback: (r) => LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.white, _cols[i], const Color(0xFFE5700F)], stops: const [0, .35, 1]).createShader(r),
-                child: Text(letters[i], style: ts(size, color: Colors.white, w: FontWeight.w700)),
-              ),
-            ]),
-          ),
-        ),
-    ]);
-  }
+  Widget build(BuildContext context) => Image.asset('assets/art/brand.logo.png', width: size, fit: BoxFit.contain, semanticLabel: Brand.name);
 }

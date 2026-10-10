@@ -63,7 +63,7 @@ class AudioManager {
           iOS: AudioContextIOS(category: AVAudioSessionCategory.playback, options: const {AVAudioSessionOptions.mixWithOthers}),
         ));
       } catch (_) {}
-      await ReadleAssets.instance.load();
+      await WordooAssets.instance.load();
       try {
         final raw = jsonDecode(await rootBundle.loadString('assets/vo/en/envelopes.json')) as Map<String, dynamic>;
         _envelopes = raw.map((k, v) => MapEntry(k, List<int>.from(v as List)));
@@ -81,7 +81,7 @@ class AudioManager {
         _sayIndexHi = {for (final e in raw.entries) speechKey((e.value as Map)['text'] as String): e.key};
       } catch (_) {}
       // every sound effect is loaded up-front, so the first tap on anything sounds instantly
-      final all = ReadleAssets.instance.bundledUnder('assets/sfx/').where((p) => p.endsWith('.ogg'));
+      final all = WordooAssets.instance.bundledUnder('assets/sfx/').where((p) => p.endsWith('.ogg'));
       await Future.wait([for (final p in all) _sfxPlayer(p.substring('assets/sfx/'.length, p.length - 4))]);
       _ready = true;
     } catch (e) {
@@ -94,7 +94,7 @@ class AudioManager {
     if (ready != null) return Future.value(ready);
     return _sfxLoading[id] ??= () async {
       final path = 'assets/sfx/$id.ogg';
-      if (!ReadleAssets.instance.bundled(path)) return null;
+      if (!WordooAssets.instance.bundled(path)) return null;
       final p = AudioPlayer();
       await p.setPlayerMode(PlayerMode.lowLatency);
       await p.setReleaseMode(ReleaseMode.stop);
@@ -144,7 +144,7 @@ class AudioManager {
     _musicId = id;
     await stopMusic();
     if (!musicOn) return;
-    final path = ReadleAssets.instance.music(id);
+    final path = WordooAssets.instance.music(id);
     if (path == null) return; // placeholder: silence until the Pixabay track is added to the manifest
     try {
       _music = await FlameAudio.loopLongAudio(path, volume: musicVolume * _level);
@@ -193,8 +193,8 @@ class AudioManager {
     } catch (_) {}
   }
 
-  bool _hiClip(String id) => lang == 'hi' && ReadleAssets.instance.bundled('assets/vo/hi/$id.ogg');
-  bool hasVoice(String id) => _hiClip(id) || ReadleAssets.instance.bundled('assets/vo/en/$id.ogg');
+  bool _hiClip(String id) => lang == 'hi' && WordooAssets.instance.bundled('assets/vo/hi/$id.ogg');
+  bool hasVoice(String id) => _hiClip(id) || WordooAssets.instance.bundled('assets/vo/en/$id.ogg');
   String _voicePath(String id) => _hiClip(id) ? 'assets/vo/hi/$id.ogg' : 'assets/vo/en/$id.ogg';
   List<int>? _envelope(String id) => _hiClip(id) ? _envelopesHi[id] : _envelopes[id];
 
@@ -208,7 +208,7 @@ class AudioManager {
       if (h != null && _hiClip(h)) return h;
     }
     final id = _sayIndex[speechKey(text)];
-    return id != null && ReadleAssets.instance.bundled('assets/vo/en/$id.ogg') ? id : null;
+    return id != null && WordooAssets.instance.bundled('assets/vo/en/$id.ogg') ? id : null;
   }
 
   /// Say a word / sound / instruction in the narrator's recorded voice (falls back to device TTS).

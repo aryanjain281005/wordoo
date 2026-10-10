@@ -166,7 +166,7 @@ String indicatorLabel(Indicator i) => switch (i) {
 
 String indicatorAdvice(Indicator i) => switch (i) {
       Indicator.low => 'No consistent difficulty was seen. Keep reading together and check in each week.',
-      Indicator.some => 'Some skills need extra practice. Readle will focus on them; watch progress at the weekly check-in.',
+      Indicator.some => 'Some skills need extra practice. Wordoo will focus on them; watch progress at the weekly check-in.',
       Indicator.elevated =>
         'Consistent difficulty was seen in two or more areas. Please consider a full assessment by a qualified professional (for example an educational psychologist using DALI-DAB or the NIMHANS SLD battery).',
     };

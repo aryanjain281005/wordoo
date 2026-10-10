@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthesise Readle's own sound effects (no samples, no licences): numpy -> wav -> ffmpeg -> assets/sfx/<id>.ogg.
+"""Synthesise Wordoo's own sound effects (no samples, no licences): numpy -> wav -> ffmpeg -> assets/sfx/<id>.ogg.
 
     ~/readle-tools/venv/bin/python tool/gen_sfx.py [id ...]
 

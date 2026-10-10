@@ -74,7 +74,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ReadleAssets.instance.precache(context, ['island.', 'bg.day', 'char.milo.happy']);
+      WordooAssets.instance.precache(context, ['island.', 'bg.day', 'char.milo.happy']);
       final st = context.read<AppState>();
       if (st.campaign.observatoryUnlocked && !st.badges.contains('obs-s${st.campaign.season}')) {
         st.badges.add('obs-s${st.campaign.season}');
@@ -295,7 +295,7 @@ class _WorldMapScreenState extends State<WorldMapScreen> with TickerProviderStat
                             colorFilter: ColorFilter.matrix(_saturation(locked ? 1 : .35 + .65 * (restoration / 100).clamp(0.0, 1.0))),
                             child: ArtImage(
                               // v3: the 7th island is Gumsum's Storm Citadel until the Trial is won
-                              island == IslandId.observatory && !st.campaign.trialPassed && ReadleAssets.instance.art('island.citadel') != null ? 'island.citadel' : 'island.${island.name}',
+                              island == IslandId.observatory && !st.campaign.trialPassed && WordooAssets.instance.art('island.citadel') != null ? 'island.citadel' : 'island.${island.name}',
                               fallback: CustomPaint(painter: IslandArt(r.id, r.grass, r.grassDark, locked: locked)),
                             ),
                           )),

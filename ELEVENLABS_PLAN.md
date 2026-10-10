@@ -1,4 +1,4 @@
-# ElevenLabs voices for Readle: design blueprint
+# ElevenLabs voices for Wordoo: design blueprint
 
 Status: **implemented 10 Oct (steps 1-3 and batch 1).** Where it lives:
 * `tool/gen_voices.py` — `ENGINE=eleven` (dialogue only: `assets/story/lines_en.json`; the 5,000-word `say` bank and story-book narration stay on Kokoro). `DRY=1` prints the credit estimate. Stops cleanly on `quota`/402/401, retries 429/5xx, resumes by content hash.
@@ -14,7 +14,7 @@ Original status line: **plan only.** Written after reviewing the current audio p
 
 ## 0. The key finding: we don't need ElevenLabs at runtime
 
-Every sentence a character says in Readle is **known before the app ships**:
+Every sentence a character says in Wordoo is **known before the app ships**:
 
 | Source | Lines | Characters (text) |
 |---|---|---|

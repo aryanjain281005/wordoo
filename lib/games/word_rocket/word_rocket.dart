@@ -544,7 +544,7 @@ class _RocketScene extends FlameGame {
     super.render(canvas);
     final w = size.x, h = size.y;
     final rect = Rect.fromLTWH(0, 0, w, h);
-    if (ReadleAssets.instance.art('bg.rocket.zone$zone') == null) {
+    if (WordooAssets.instance.art('bg.rocket.zone$zone') == null) {
       final c = _zoneColors[zone - 1];
       canvas.drawRect(rect, Paint()..shader = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: c).createShader(rect));
       // light rays in the shallow zones, glowing specks in the deep

@@ -1,4 +1,4 @@
-# Readle — AI Video Prompts (GAME_DESIGN_V3 animations)
+# Wordoo — AI Video Prompts (GAME_DESIGN_V3 animations)
 
 Every cinematic in [`GAME_DESIGN_V3.md`](GAME_DESIGN_V3.md) §6, broken into short clips that today's AI video tools can
 make well (5–10 seconds each). The app plays the clips in order and adds the **recorded character voices, music and

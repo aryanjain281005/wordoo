@@ -32,7 +32,7 @@ void main() {
   Future<void> boot(WidgetTester t) async {
     await t.runAsync(() async {
       await (FontLoader('Fredoka')..addFont(rootBundle.load('assets/fonts/Fredoka.ttf'))).load();
-      await ReadleAssets.instance.load();
+      await WordooAssets.instance.load();
     });
     st = AppState()..loadDemoProfile(0);
     st.explorerName = 'Aaravkrishnan'; // long name on purpose
