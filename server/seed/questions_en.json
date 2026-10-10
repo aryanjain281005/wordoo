@@ -1,0 +1,2952 @@
+{
+ "lang": "en",
+ "exportedAt": "2026-10-10T01:21:00.273984Z",
+ "questions": [
+  {
+   "id": "r1",
+   "subtest": "rhyme",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "cat",
+   "emoji": "🐱",
+   "say": "Which one rhymes with cat?",
+   "options": [
+    {
+     "label": "hat",
+     "emoji": "🎩",
+     "say": "hat"
+    },
+    {
+     "label": "dog",
+     "emoji": "🐶",
+     "say": "dog"
+    },
+    {
+     "label": "sun",
+     "emoji": "☀️",
+     "say": "sun"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r2",
+   "subtest": "rhyme",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "bee",
+   "emoji": "🐝",
+   "say": "Which one rhymes with bee?",
+   "options": [
+    {
+     "label": "tree",
+     "emoji": "🌳",
+     "say": "tree"
+    },
+    {
+     "label": "cup",
+     "emoji": "🥤",
+     "say": "cup"
+    },
+    {
+     "label": "fish",
+     "emoji": "🐟",
+     "say": "fish"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r3",
+   "subtest": "rhyme",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "ring",
+   "emoji": "💍",
+   "say": "Which one rhymes with ring?",
+   "options": [
+    {
+     "label": "king",
+     "emoji": "👑",
+     "say": "king"
+    },
+    {
+     "label": "rain",
+     "emoji": "🌧️",
+     "say": "rain"
+    },
+    {
+     "label": "moon",
+     "emoji": "🌙",
+     "say": "moon"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r4",
+   "subtest": "rhyme",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "cake",
+   "emoji": "🎂",
+   "say": "Which one rhymes with cake?",
+   "options": [
+    {
+     "label": "snake",
+     "emoji": "🐍",
+     "say": "snake"
+    },
+    {
+     "label": "cap",
+     "emoji": "🧢",
+     "say": "cap"
+    },
+    {
+     "label": "book",
+     "emoji": "📖",
+     "say": "book"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r5",
+   "subtest": "rhyme",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "star",
+   "emoji": "⭐",
+   "say": "Which one rhymes with star?",
+   "options": [
+    {
+     "label": "car",
+     "emoji": "🚗",
+     "say": "car"
+    },
+    {
+     "label": "stop",
+     "emoji": "🛑",
+     "say": "stop"
+    },
+    {
+     "label": "stair",
+     "emoji": "🪜",
+     "say": "stair"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r6",
+   "subtest": "rhyme",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "bat",
+   "emoji": "🦇",
+   "say": "Which one rhymes with bat?",
+   "options": [
+    {
+     "label": "rat",
+     "emoji": "🐀",
+     "say": "rat"
+    },
+    {
+     "label": "bus",
+     "emoji": "🚌",
+     "say": "bus"
+    },
+    {
+     "label": "pig",
+     "emoji": "🐷",
+     "say": "pig"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r7",
+   "subtest": "rhyme",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "moon",
+   "emoji": "🌙",
+   "say": "Which one rhymes with moon?",
+   "options": [
+    {
+     "label": "spoon",
+     "emoji": "🥄",
+     "say": "spoon"
+    },
+    {
+     "label": "fox",
+     "emoji": "🦊",
+     "say": "fox"
+    },
+    {
+     "label": "hat",
+     "emoji": "🎩",
+     "say": "hat"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r8",
+   "subtest": "rhyme",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "fish",
+   "emoji": "🐟",
+   "say": "Which one rhymes with fish?",
+   "options": [
+    {
+     "label": "dish",
+     "emoji": "🍽️",
+     "say": "dish"
+    },
+    {
+     "label": "pan",
+     "emoji": "🍳",
+     "say": "pan"
+    },
+    {
+     "label": "bed",
+     "emoji": "🛏️",
+     "say": "bed"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r9",
+   "subtest": "rhyme",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "bell",
+   "emoji": "🔔",
+   "say": "Which one rhymes with bell?",
+   "options": [
+    {
+     "label": "shell",
+     "emoji": "🐚",
+     "say": "shell"
+    },
+    {
+     "label": "ball",
+     "emoji": "⚽",
+     "say": "ball"
+    },
+    {
+     "label": "cup",
+     "emoji": "🥤",
+     "say": "cup"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "r10",
+   "subtest": "rhyme",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "goat",
+   "emoji": "🐐",
+   "say": "Which one rhymes with goat?",
+   "options": [
+    {
+     "label": "boat",
+     "emoji": "⛵",
+     "say": "boat"
+    },
+    {
+     "label": "gate",
+     "emoji": "🚪",
+     "say": "gate"
+    },
+    {
+     "label": "coat",
+     "emoji": "🧥",
+     "say": "coat"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f1",
+   "subtest": "firstSound",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "m",
+   "say": "Which one starts with mmm?",
+   "options": [
+    {
+     "label": "moon",
+     "emoji": "🌙",
+     "say": "moon"
+    },
+    {
+     "label": "sun",
+     "emoji": "☀️",
+     "say": "sun"
+    },
+    {
+     "label": "car",
+     "emoji": "🚗",
+     "say": "car"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f2",
+   "subtest": "firstSound",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "b",
+   "say": "Which one starts with buh?",
+   "options": [
+    {
+     "label": "ball",
+     "emoji": "⚽",
+     "say": "ball"
+    },
+    {
+     "label": "fish",
+     "emoji": "🐟",
+     "say": "fish"
+    },
+    {
+     "label": "dog",
+     "emoji": "🐶",
+     "say": "dog"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f3",
+   "subtest": "firstSound",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "s",
+   "say": "Which one starts with sss?",
+   "options": [
+    {
+     "label": "sun",
+     "emoji": "☀️",
+     "say": "sun"
+    },
+    {
+     "label": "bed",
+     "emoji": "🛏️",
+     "say": "bed"
+    },
+    {
+     "label": "pig",
+     "emoji": "🐷",
+     "say": "pig"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f4",
+   "subtest": "firstSound",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "f",
+   "say": "Which one starts with fff?",
+   "options": [
+    {
+     "label": "fish",
+     "emoji": "🐟",
+     "say": "fish"
+    },
+    {
+     "label": "hat",
+     "emoji": "🎩",
+     "say": "hat"
+    },
+    {
+     "label": "moon",
+     "emoji": "🌙",
+     "say": "moon"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f5",
+   "subtest": "firstSound",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "d",
+   "say": "Which one starts with duh?",
+   "options": [
+    {
+     "label": "dog",
+     "emoji": "🐶",
+     "say": "dog"
+    },
+    {
+     "label": "cup",
+     "emoji": "🥤",
+     "say": "cup"
+    },
+    {
+     "label": "tree",
+     "emoji": "🌳",
+     "say": "tree"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f6",
+   "subtest": "firstSound",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "t",
+   "say": "Which one starts with tuh?",
+   "options": [
+    {
+     "label": "tree",
+     "emoji": "🌳",
+     "say": "tree"
+    },
+    {
+     "label": "bee",
+     "emoji": "🐝",
+     "say": "bee"
+    },
+    {
+     "label": "car",
+     "emoji": "🚗",
+     "say": "car"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f7",
+   "subtest": "firstSound",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "h",
+   "say": "Which one starts with huh?",
+   "options": [
+    {
+     "label": "hat",
+     "emoji": "🎩",
+     "say": "hat"
+    },
+    {
+     "label": "moon",
+     "emoji": "🌙",
+     "say": "moon"
+    },
+    {
+     "label": "dog",
+     "emoji": "🐶",
+     "say": "dog"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f8",
+   "subtest": "firstSound",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "p",
+   "say": "Which one starts with puh?",
+   "options": [
+    {
+     "label": "pig",
+     "emoji": "🐷",
+     "say": "pig"
+    },
+    {
+     "label": "fox",
+     "emoji": "🦊",
+     "say": "fox"
+    },
+    {
+     "label": "sun",
+     "emoji": "☀️",
+     "say": "sun"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f9",
+   "subtest": "firstSound",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "r",
+   "say": "Which one starts with rrr?",
+   "options": [
+    {
+     "label": "rat",
+     "emoji": "🐀",
+     "say": "rat"
+    },
+    {
+     "label": "bus",
+     "emoji": "🚌",
+     "say": "bus"
+    },
+    {
+     "label": "fish",
+     "emoji": "🐟",
+     "say": "fish"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "f10",
+   "subtest": "firstSound",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "n",
+   "say": "Which one starts with nnn?",
+   "options": [
+    {
+     "label": "nut",
+     "emoji": "🥜",
+     "say": "nut"
+    },
+    {
+     "label": "dog",
+     "emoji": "🐶",
+     "say": "dog"
+    },
+    {
+     "label": "cake",
+     "emoji": "🎂",
+     "say": "cake"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p1",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 1,
+   "say": "Say cat, but take away the k sound.",
+   "options": [
+    {
+     "label": "at",
+     "say": "at"
+    },
+    {
+     "label": "ca",
+     "say": "ca"
+    },
+    {
+     "label": "cot",
+     "say": "cot"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p2",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 1,
+   "say": "Say sun, but take away the s sound.",
+   "options": [
+    {
+     "label": "un",
+     "say": "un"
+    },
+    {
+     "label": "su",
+     "say": "su"
+    },
+    {
+     "label": "sat",
+     "say": "sat"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p3",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 2,
+   "say": "Say bat. Now change b to h.",
+   "options": [
+    {
+     "label": "hat",
+     "say": "hat"
+    },
+    {
+     "label": "bit",
+     "say": "bit"
+    },
+    {
+     "label": "bad",
+     "say": "bad"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p4",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 2,
+   "say": "Say star, but take away the s sound.",
+   "options": [
+    {
+     "label": "tar",
+     "say": "tar"
+    },
+    {
+     "label": "sar",
+     "say": "sar"
+    },
+    {
+     "label": "stay",
+     "say": "stay"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p5",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 3,
+   "say": "Say stop, but take away the t sound.",
+   "options": [
+    {
+     "label": "sop",
+     "say": "sop"
+    },
+    {
+     "label": "top",
+     "say": "top"
+    },
+    {
+     "label": "step",
+     "say": "step"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p6",
+   "subtest": "phonemeManip",
+   "pool": "A",
+   "difficulty": 3,
+   "say": "Say plate, but take away the l sound.",
+   "options": [
+    {
+     "label": "pate",
+     "say": "pate"
+    },
+    {
+     "label": "late",
+     "say": "late"
+    },
+    {
+     "label": "plat",
+     "say": "plat"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p7",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 1,
+   "say": "Say hat, but take away the h sound.",
+   "options": [
+    {
+     "label": "at",
+     "say": "at"
+    },
+    {
+     "label": "ha",
+     "say": "ha"
+    },
+    {
+     "label": "hot",
+     "say": "hot"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p8",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 1,
+   "say": "Say fish, but take away the f sound.",
+   "options": [
+    {
+     "label": "ish",
+     "say": "ish"
+    },
+    {
+     "label": "fi",
+     "say": "fi"
+    },
+    {
+     "label": "dish",
+     "say": "dish"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p9",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 2,
+   "say": "Say man. Now change m to p.",
+   "options": [
+    {
+     "label": "pan",
+     "say": "pan"
+    },
+    {
+     "label": "map",
+     "say": "map"
+    },
+    {
+     "label": "men",
+     "say": "men"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p10",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 2,
+   "say": "Say snake, but take away the s sound.",
+   "options": [
+    {
+     "label": "nake",
+     "say": "nake"
+    },
+    {
+     "label": "sake",
+     "say": "sake"
+    },
+    {
+     "label": "snack",
+     "say": "snack"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p11",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 3,
+   "say": "Say frog, but take away the r sound.",
+   "options": [
+    {
+     "label": "fog",
+     "say": "fog"
+    },
+    {
+     "label": "rog",
+     "say": "rog"
+    },
+    {
+     "label": "frock",
+     "say": "frock"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "p12",
+   "subtest": "phonemeManip",
+   "pool": "B",
+   "difficulty": 3,
+   "say": "Say clap, but take away the l sound.",
+   "options": [
+    {
+     "label": "cap",
+     "say": "cap"
+    },
+    {
+     "label": "lap",
+     "say": "lap"
+    },
+    {
+     "label": "clip",
+     "say": "clip"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l1",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 1,
+   "say": "mmm",
+   "options": [
+    {
+     "label": "m"
+    },
+    {
+     "label": "n"
+    },
+    {
+     "label": "w"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l2",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 1,
+   "say": "sss",
+   "options": [
+    {
+     "label": "s"
+    },
+    {
+     "label": "z"
+    },
+    {
+     "label": "c"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l3",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 2,
+   "say": "buh",
+   "options": [
+    {
+     "label": "b"
+    },
+    {
+     "label": "d"
+    },
+    {
+     "label": "p"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l4",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 2,
+   "say": "fff",
+   "options": [
+    {
+     "label": "f"
+    },
+    {
+     "label": "t"
+    },
+    {
+     "label": "v"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l5",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 3,
+   "say": "shh",
+   "options": [
+    {
+     "label": "sh"
+    },
+    {
+     "label": "ch"
+    },
+    {
+     "label": "th"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l6",
+   "subtest": "letterSound",
+   "pool": "A",
+   "difficulty": 3,
+   "say": "ee, like in tree",
+   "options": [
+    {
+     "label": "ee"
+    },
+    {
+     "label": "ai"
+    },
+    {
+     "label": "oo"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l7",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 1,
+   "say": "tuh",
+   "options": [
+    {
+     "label": "t"
+    },
+    {
+     "label": "f"
+    },
+    {
+     "label": "l"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l8",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 1,
+   "say": "nnn",
+   "options": [
+    {
+     "label": "n"
+    },
+    {
+     "label": "m"
+    },
+    {
+     "label": "h"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l9",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 2,
+   "say": "duh",
+   "options": [
+    {
+     "label": "d"
+    },
+    {
+     "label": "b"
+    },
+    {
+     "label": "q"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l10",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 2,
+   "say": "puh",
+   "options": [
+    {
+     "label": "p"
+    },
+    {
+     "label": "q"
+    },
+    {
+     "label": "b"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l11",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 3,
+   "say": "chuh, like in chair",
+   "options": [
+    {
+     "label": "ch"
+    },
+    {
+     "label": "sh"
+    },
+    {
+     "label": "th"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "l12",
+   "subtest": "letterSound",
+   "pool": "B",
+   "difficulty": 3,
+   "say": "oh, like in boat",
+   "options": [
+    {
+     "label": "oa"
+    },
+    {
+     "label": "ai"
+    },
+    {
+     "label": "ee"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n1",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "elephant",
+   "emoji": "🐘",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "elephant"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n2",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "scissors",
+   "emoji": "✂️",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "scissors",
+    "scissor",
+    "kainchi"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n3",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "butterfly",
+   "emoji": "🦋",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "butterfly"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n4",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "turtle",
+   "emoji": "🐢",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "turtle",
+    "tortoise"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n5",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "rainbow",
+   "emoji": "🌈",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "rainbow"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n6",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "bicycle",
+   "emoji": "🚲",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "bicycle",
+    "cycle",
+    "bike"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n7",
+   "subtest": "pictureNaming",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "key",
+   "emoji": "🔑",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "key",
+    "keys"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n8",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "giraffe",
+   "emoji": "🦒",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "giraffe"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n9",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "monkey",
+   "emoji": "🐒",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "monkey"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n10",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "watermelon",
+   "emoji": "🍉",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "watermelon"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n11",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "train",
+   "emoji": "🚂",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "train",
+    "engine",
+    "railway"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n12",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "clock",
+   "emoji": "⏰",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "clock",
+    "alarm",
+    "alarm clock",
+    "watch"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n13",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "carrot",
+   "emoji": "🥕",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "carrot"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "n14",
+   "subtest": "pictureNaming",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "parrot",
+   "emoji": "🦜",
+   "options": [],
+   "correct": 0,
+   "accept": [
+    "parrot"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "ranA",
+   "subtest": "ran",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [
+    {
+     "label": "dog",
+     "emoji": "🐶"
+    },
+    {
+     "label": "sun",
+     "emoji": "☀️"
+    },
+    {
+     "label": "apple",
+     "emoji": "🍎"
+    },
+    {
+     "label": "house",
+     "emoji": "🏠"
+    },
+    {
+     "label": "star",
+     "emoji": "⭐"
+    }
+   ],
+   "correct": 0,
+   "accept": [
+    "dog|dogs|doggy",
+    "sun|son",
+    "apple|apples",
+    "house|home|houses",
+    "star|stars"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "ranB",
+   "subtest": "ran",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [
+    {
+     "label": "cat",
+     "emoji": "🐱"
+    },
+    {
+     "label": "ball",
+     "emoji": "⚽"
+    },
+    {
+     "label": "tree",
+     "emoji": "🌳"
+    },
+    {
+     "label": "car",
+     "emoji": "🚗"
+    },
+    {
+     "label": "fish",
+     "emoji": "🐟"
+    }
+   ],
+   "correct": 0,
+   "accept": [
+    "cat|cats|kat",
+    "ball|bowl|balls",
+    "tree|three|trees",
+    "car|cars|kar",
+    "fish|fishes"
+   ],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w1",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "cat",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w2",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "sun",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w3",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "bed",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w4",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "fish",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w5",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "ship",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w6",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "frog",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w7",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "rabbit",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w8",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "garden",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w9",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "mountain",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "w10",
+   "subtest": "wordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "beautiful",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "w11",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "dog",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w12",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "hat",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w13",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "cup",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w14",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "duck",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w15",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "moon",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w16",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "star",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w17",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "basket",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w18",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "pencil",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "w19",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "umbrella",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "w20",
+   "subtest": "wordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "together",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "x1",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "fap",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x2",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "mib",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x3",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "zug",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x4",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "blet",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x5",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "shom",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x6",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "trand",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x7",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "bimlet",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "x8",
+   "subtest": "nonwordReading",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "stroggle",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "x9",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "vop",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x10",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "tib",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x11",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "jad",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x12",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "snig",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x13",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "chab",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x14",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "glomp",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "x15",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "wempo",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "x16",
+   "subtest": "nonwordReading",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "frintel",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "s1",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "cat",
+   "emoji": "🐱",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "c",
+    "a",
+    "t"
+   ],
+   "distractors": [
+    "o",
+    "e"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s2",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "sun",
+   "emoji": "☀️",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "s",
+    "u",
+    "n"
+   ],
+   "distractors": [
+    "a",
+    "o"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s3",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "fish",
+   "emoji": "🐟",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "f",
+    "i",
+    "s",
+    "h"
+   ],
+   "distractors": [
+    "c",
+    "e"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s4",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 2,
+   "target": "ship",
+   "emoji": "🚢",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "s",
+    "h",
+    "i",
+    "p"
+   ],
+   "distractors": [
+    "c",
+    "a"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s5",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "frog",
+   "emoji": "🐸",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "f",
+    "r",
+    "o",
+    "g"
+   ],
+   "distractors": [
+    "l",
+    "a"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s6",
+   "subtest": "spelling",
+   "pool": "A",
+   "difficulty": 3,
+   "target": "rabbit",
+   "emoji": "🐰",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "r",
+    "a",
+    "b",
+    "b",
+    "i",
+    "t"
+   ],
+   "distractors": [
+    "p",
+    "e"
+   ],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "s7",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "dog",
+   "emoji": "🐶",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "d",
+    "o",
+    "g"
+   ],
+   "distractors": [
+    "b",
+    "a"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s8",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "hat",
+   "emoji": "🎩",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "h",
+    "a",
+    "t"
+   ],
+   "distractors": [
+    "e",
+    "o"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s9",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "duck",
+   "emoji": "🦆",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "d",
+    "u",
+    "c",
+    "k"
+   ],
+   "distractors": [
+    "a",
+    "o"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s10",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 2,
+   "target": "chick",
+   "emoji": "🐤",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "c",
+    "h",
+    "i",
+    "c",
+    "k"
+   ],
+   "distractors": [
+    "s",
+    "e"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s11",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "drum",
+   "emoji": "🥁",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "d",
+    "r",
+    "u",
+    "m"
+   ],
+   "distractors": [
+    "b",
+    "a"
+   ],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "s12",
+   "subtest": "spelling",
+   "pool": "B",
+   "difficulty": 3,
+   "target": "basket",
+   "emoji": "🧺",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [
+    "b",
+    "a",
+    "s",
+    "k",
+    "e",
+    "t"
+   ],
+   "distractors": [
+    "p",
+    "i"
+   ],
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "lcA",
+   "subtest": "listening",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Riya went to the market with her mother. She bought red apples and a yellow banana. On the way home it started to rain, so they opened an umbrella.",
+   "questions": [
+    {
+     "q": "Who went with Riya?",
+     "options": [
+      {
+       "label": "mother",
+       "emoji": "👩",
+       "say": "mother"
+      },
+      {
+       "label": "father",
+       "emoji": "👨",
+       "say": "father"
+      },
+      {
+       "label": "grandma",
+       "emoji": "👵",
+       "say": "grandma"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "What did she buy?",
+     "options": [
+      {
+       "label": "apples and a banana",
+       "emoji": "🍎🍌",
+       "say": "apples and a banana"
+      },
+      {
+       "label": "carrots",
+       "emoji": "🥕",
+       "say": "carrots"
+      },
+      {
+       "label": "bread",
+       "emoji": "🍞",
+       "say": "bread"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "Why did they open the umbrella?",
+     "options": [
+      {
+       "label": "it was raining",
+       "emoji": "🌧️",
+       "say": "it was raining"
+      },
+      {
+       "label": "it was sunny",
+       "emoji": "☀️",
+       "say": "it was sunny"
+      },
+      {
+       "label": "it was windy",
+       "emoji": "💨",
+       "say": "it was windy"
+      }
+     ],
+     "correct": 0,
+     "tag": "Cause / effect error"
+    }
+   ],
+   "source": "seed"
+  },
+  {
+   "id": "lcB",
+   "subtest": "listening",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Arjun has a dog named Moti. One day Moti ran after a ball into the garden and got very muddy. So Arjun gave him a bath.",
+   "questions": [
+    {
+     "q": "What did Moti run after?",
+     "options": [
+      {
+       "label": "a ball",
+       "emoji": "⚽",
+       "say": "a ball"
+      },
+      {
+       "label": "a cat",
+       "emoji": "🐱",
+       "say": "a cat"
+      },
+      {
+       "label": "a butterfly",
+       "emoji": "🦋",
+       "say": "a butterfly"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "Where did Moti run?",
+     "options": [
+      {
+       "label": "into the garden",
+       "emoji": "🌳",
+       "say": "into the garden"
+      },
+      {
+       "label": "to school",
+       "emoji": "🏫",
+       "say": "to school"
+      },
+      {
+       "label": "to the sea",
+       "emoji": "🌊",
+       "say": "to the sea"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "What did Arjun do next?",
+     "options": [
+      {
+       "label": "gave him a bath",
+       "emoji": "🛁",
+       "say": "gave him a bath"
+      },
+      {
+       "label": "gave him food",
+       "emoji": "🍽️",
+       "say": "gave him food"
+      },
+      {
+       "label": "went to sleep",
+       "emoji": "🛏️",
+       "say": "went to sleep"
+      }
+     ],
+     "correct": 0,
+     "tag": "Sequence error"
+    }
+   ],
+   "source": "seed"
+  },
+  {
+   "id": "rcA1",
+   "subtest": "readingComp",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [
+    {
+     "label": "cat on bed",
+     "emoji": "🐱🛏️",
+     "say": "cat on bed"
+    },
+    {
+     "label": "dog on bed",
+     "emoji": "🐶🛏️",
+     "say": "dog on bed"
+    },
+    {
+     "label": "cat in tree",
+     "emoji": "🐱🌳",
+     "say": "cat in tree"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "The cat is on the bed.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcA2",
+   "subtest": "readingComp",
+   "pool": "A",
+   "difficulty": 2,
+   "options": [
+    {
+     "label": "fish in water",
+     "emoji": "🐟💧",
+     "say": "fish in water"
+    },
+    {
+     "label": "fish in tree",
+     "emoji": "🐟🌳",
+     "say": "fish in tree"
+    },
+    {
+     "label": "bird in water",
+     "emoji": "🐦💧",
+     "say": "bird in water"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "The fish is in the water.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcA3",
+   "subtest": "readingComp",
+   "pool": "A",
+   "difficulty": 3,
+   "options": [
+    {
+     "label": "red ball",
+     "emoji": "🔴⚽",
+     "say": "red ball"
+    },
+    {
+     "label": "blue ball",
+     "emoji": "🔵⚽",
+     "say": "blue ball"
+    },
+    {
+     "label": "red apple",
+     "emoji": "🔴🍎",
+     "say": "red apple"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "I have a big red ball.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcB1",
+   "subtest": "readingComp",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [
+    {
+     "label": "dog in car",
+     "emoji": "🐶🚗",
+     "say": "dog in car"
+    },
+    {
+     "label": "cat in car",
+     "emoji": "🐱🚗",
+     "say": "cat in car"
+    },
+    {
+     "label": "dog in house",
+     "emoji": "🐶🏠",
+     "say": "dog in house"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "The dog is in the car.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcB2",
+   "subtest": "readingComp",
+   "pool": "B",
+   "difficulty": 2,
+   "options": [
+    {
+     "label": "bird on tree",
+     "emoji": "🐦🌳",
+     "say": "bird on tree"
+    },
+    {
+     "label": "bird on house",
+     "emoji": "🐦🏠",
+     "say": "bird on house"
+    },
+    {
+     "label": "fish on tree",
+     "emoji": "🐟🌳",
+     "say": "fish on tree"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "The bird is on the tree.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcB3",
+   "subtest": "readingComp",
+   "pool": "B",
+   "difficulty": 3,
+   "options": [
+    {
+     "label": "blue cup",
+     "emoji": "🔵🥤",
+     "say": "blue cup"
+    },
+    {
+     "label": "red cup",
+     "emoji": "🔴🥤",
+     "say": "red cup"
+    },
+    {
+     "label": "blue ball",
+     "emoji": "🔵⚽",
+     "say": "blue ball"
+    }
+   ],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "I have a little blue cup.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "rcAm",
+   "subtest": "readingComp",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Meena planted a small seed in a pot. Every morning she gave it water and kept it in the sun. After two weeks, a tiny green leaf came out. Meena was so happy that she showed it to her whole class.",
+   "questions": [
+    {
+     "q": "What did Meena plant?",
+     "options": [
+      {
+       "label": "a seed",
+       "say": "a seed"
+      },
+      {
+       "label": "a tree",
+       "say": "a tree"
+      },
+      {
+       "label": "a flower",
+       "say": "a flower"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "Why did the leaf come out?",
+     "options": [
+      {
+       "label": "She gave it water and sun",
+       "say": "She gave it water and sun"
+      },
+      {
+       "label": "It rained a lot",
+       "say": "It rained a lot"
+      },
+      {
+       "label": "Her friend helped",
+       "say": "Her friend helped"
+      }
+     ],
+     "correct": 0,
+     "tag": "Cause / effect error"
+    },
+    {
+     "q": "How did Meena feel?",
+     "options": [
+      {
+       "label": "happy",
+       "say": "happy"
+      },
+      {
+       "label": "angry",
+       "say": "angry"
+      },
+      {
+       "label": "sleepy",
+       "say": "sleepy"
+      }
+     ],
+     "correct": 0,
+     "tag": "Inference error"
+    }
+   ],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "rcBm",
+   "subtest": "readingComp",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Ravi made a kite with paper and sticks. He ran fast in the park, and the wind lifted the kite high. Suddenly the string broke and the kite flew over a tree. Ravi’s friend climbed the tree and brought it back.",
+   "questions": [
+    {
+     "q": "What did Ravi make?",
+     "options": [
+      {
+       "label": "a kite",
+       "say": "a kite"
+      },
+      {
+       "label": "a boat",
+       "say": "a boat"
+      },
+      {
+       "label": "a cake",
+       "say": "a cake"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    },
+    {
+     "q": "What happened when the string broke?",
+     "options": [
+      {
+       "label": "The kite flew over a tree",
+       "say": "The kite flew over a tree"
+      },
+      {
+       "label": "Ravi fell down",
+       "say": "Ravi fell down"
+      },
+      {
+       "label": "It started to rain",
+       "say": "It started to rain"
+      }
+     ],
+     "correct": 0,
+     "tag": "Cause / effect error"
+    },
+    {
+     "q": "Who brought the kite back?",
+     "options": [
+      {
+       "label": "Ravi’s friend",
+       "say": "Ravi’s friend"
+      },
+      {
+       "label": "his mother",
+       "say": "his mother"
+      },
+      {
+       "label": "a bird",
+       "say": "a bird"
+      }
+     ],
+     "correct": 0,
+     "tag": "Wrong detail"
+    }
+   ],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "orAj",
+   "subtest": "oralReading",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "The cat sat on a mat. It is a big red cat. The cat can run.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "orBj",
+   "subtest": "oralReading",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "I see a dog. The dog is big. The dog can run very fast.",
+   "questions": [],
+   "only": "junior",
+   "source": "seed"
+  },
+  {
+   "id": "orAm",
+   "subtest": "oralReading",
+   "pool": "A",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Tara has a little brown dog named Bholu. Every evening they go to the park near their house. Bholu likes to chase the pigeons, but he never catches them. When they come home, Tara gives him a bowl of milk.",
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "orBm",
+   "subtest": "oralReading",
+   "pool": "B",
+   "difficulty": 1,
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "passage": "Sam lives near a big river. On Sundays he goes fishing with his grandfather. They sit on the bank and wait quietly. Sometimes they catch a small fish, but they always let it go back into the water.",
+   "questions": [],
+   "only": "middle",
+   "source": "seed"
+  },
+  {
+   "id": "flA",
+   "subtest": "fluency",
+   "pool": "A",
+   "difficulty": 1,
+   "target": "animals",
+   "say": "Say as many animals as you can!",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  },
+  {
+   "id": "flB",
+   "subtest": "fluency",
+   "pool": "B",
+   "difficulty": 1,
+   "target": "foods",
+   "say": "Say as many foods as you can!",
+   "options": [],
+   "correct": 0,
+   "accept": [],
+   "answer": [],
+   "distractors": [],
+   "questions": [],
+   "source": "seed"
+  }
+ ]
+}

@@ -19,6 +19,8 @@ class ChoiceOpt {
   final String? emoji;
   final String? say;
   const ChoiceOpt(this.label, {this.emoji, this.say});
+  Map<String, dynamic> toJson() => {'label': label, if (emoji != null) 'emoji': emoji, if (say != null) 'say': say};
+  factory ChoiceOpt.fromJson(Map<String, dynamic> j) => ChoiceOpt(j['label'] as String, emoji: j['emoji'] as String?, say: j['say'] as String?);
 }
 
 class Question {
@@ -27,6 +29,18 @@ class Question {
   final int correct;
   final String tag;
   const Question(this.q, this.options, this.correct, {this.tag = 'Wrong detail'});
+  Map<String, dynamic> toJson() => {'q': q, 'options': [for (final o in options) o.toJson()], 'correct': correct, 'tag': tag};
+  factory Question.fromJson(Map<String, dynamic> j) =>
+      Question(j['q'] as String, [for (final o in j['options'] as List) ChoiceOpt.fromJson(Map<String, dynamic>.from(o as Map))], j['correct'] as int, tag: j['tag'] as String? ?? 'Wrong detail');
+}
+
+/// The three difficulty pools of the adaptive screening. A question's [SItem.difficulty] (1–3) is its pool.
+enum Tier { easy, medium, hard }
+
+extension TierX on Tier {
+  /// 1 = easy, 2 = medium, 3 = hard (same numbers as [SItem.difficulty]).
+  int get level => index + 1;
+  static Tier of(int difficulty) => Tier.values[(difficulty.clamp(1, 3)) - 1];
 }
 
 /// One screening item. Every item belongs to pool A (baseline) or B (weekly check) for fresh-item testing.
@@ -46,6 +60,7 @@ class SItem {
   final String? passage;
   final List<Question> questions;
   final GradeBand? only; // restrict to a band
+  final String source; // 'seed' (shipped with the app) or 'gemini' (written by the Question Agent and stored in the database)
   const SItem({
     required this.id,
     required this.subtest,
@@ -62,7 +77,48 @@ class SItem {
     this.passage,
     this.questions = const [],
     this.only,
+    this.source = 'seed',
   });
+
+  Tier get tier => TierX.of(difficulty);
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'subtest': subtest,
+        'pool': pool,
+        'difficulty': difficulty,
+        if (target != null) 'target': target,
+        if (emoji != null) 'emoji': emoji,
+        if (say != null) 'say': say,
+        'options': [for (final o in options) o.toJson()],
+        'correct': correct,
+        'accept': accept,
+        'answer': answer,
+        'distractors': distractors,
+        if (passage != null) 'passage': passage,
+        'questions': [for (final q in questions) q.toJson()],
+        if (only != null) 'only': only!.name,
+        'source': source,
+      };
+
+  factory SItem.fromJson(Map<String, dynamic> j) => SItem(
+        id: j['id'] as String,
+        subtest: j['subtest'] as String,
+        pool: j['pool'] as String? ?? 'A',
+        difficulty: (j['difficulty'] as num?)?.toInt().clamp(1, 3) ?? 1,
+        target: j['target'] as String?,
+        emoji: j['emoji'] as String?,
+        say: j['say'] as String?,
+        options: [for (final o in (j['options'] as List? ?? const [])) ChoiceOpt.fromJson(Map<String, dynamic>.from(o as Map))],
+        correct: (j['correct'] as num?)?.toInt() ?? 0,
+        accept: List<String>.from(j['accept'] as List? ?? const []),
+        answer: List<String>.from(j['answer'] as List? ?? const []),
+        distractors: List<String>.from(j['distractors'] as List? ?? const []),
+        passage: j['passage'] as String?,
+        questions: [for (final q in (j['questions'] as List? ?? const [])) Question.fromJson(Map<String, dynamic>.from(q as Map))],
+        only: j['only'] == null ? null : GradeBand.values.firstWhere((b) => b.name == j['only']),
+        source: j['source'] as String? ?? 'seed',
+      );
 }
 
 /// Measurements from one spoken response (VoxLexi-style).
@@ -103,6 +159,7 @@ class ItemResponse {
   final SpeechMetrics? speech;
   final bool measured; // false when the device could not capture speech
   final double? rate; // task-specific rate (items/sec, words/min, count)
+  final int tier; // difficulty pool the question came from (1 easy, 2 medium, 3 hard); scoring weighs harder questions more
   const ItemResponse({
     required this.itemId,
     required this.subtest,
@@ -113,8 +170,11 @@ class ItemResponse {
     this.speech,
     this.measured = true,
     this.rate,
+    this.tier = 2,
   });
   bool get correct => score >= .99;
+
+  ItemResponse withTier(int t) => ItemResponse(itemId: itemId, subtest: subtest, score: score, ms: ms, replays: replays, tag: tag, speech: speech, measured: measured, rate: rate, tier: t);
 
   Map<String, dynamic> toJson() => {
         'itemId': itemId,
@@ -125,6 +185,7 @@ class ItemResponse {
         'tag': tag,
         'measured': measured,
         'rate': rate,
+        'tier': tier,
         if (speech != null) 'speech': speech!.toJson(),
       };
 }

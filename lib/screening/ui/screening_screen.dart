@@ -1,15 +1,19 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/cloud.dart';
 import '../../core/theme.dart';
 import '../../core/tts.dart';
 import '../../state/app_state.dart';
 import '../../widgets/art.dart';
 import '../../widgets/common.dart';
+import '../adaptive.dart';
 import '../bank.dart';
 import '../battery.dart';
 import '../models.dart';
 import '../scorer.dart';
 import '../speech_engine.dart';
+import 'agent_banner.dart';
 import 'tasks.dart';
 
 Scene _sceneFor(Construct c) => switch (c) {
@@ -22,6 +26,15 @@ Scene _sceneFor(Construct c) => switch (c) {
       Construct.oralLanguage => Scene.forest,
       Construct.rapidNaming => Scene.night,
     };
+
+/// One station of the battery: all questions it can draw from (the three difficulty pools), and the ones asked so far.
+class _Station {
+  final SubtestDef def;
+  final List<SItem> pool; // every question for this grade band, from the easy, medium and hard pools
+  final int want; // how many questions the station asks
+  final List<SItem> asked = [];
+  _Station(this.def, this.pool, this.want);
+}
 
 /// The child's "First Adventure": a DALI-aligned screening battery presented as bridge stations.
 class ScreeningScreen extends StatefulWidget {
@@ -36,7 +49,8 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
   late final GradeBand band = bandForGrade(st.grade);
   late final String pool = st.screenings.length.isEven ? 'A' : 'B';
   late final DateTime started = DateTime.now();
-  final plan = <(SubtestDef, List<SItem>)>[];
+  final plan = <_Station>[];
+  final trace = <TraceStep>[]; // the path through the easy / medium / hard pools
   final responses = <String, List<ItemResponse>>{};
   bool? speechOk;
   int si = 0, ii = 0, missRun = 0;
@@ -50,18 +64,16 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     for (final def in battery) {
       final n = def.count(band);
       if (n == 0) continue;
-      // fresh items every time: least-used items first (across all forms), then this cycle's form, then difficulty
-      final all = [...bank.forSubtest(def.id, 'A', band), ...bank.forSubtest(def.id, 'B', band)];
-      all.sort((x, y) {
-        final sx = st.screeningSeen[x.id] ?? 0, sy = st.screeningSeen[y.id] ?? 0;
-        if (sx != sy) return sx.compareTo(sy);
-        if (x.pool != y.pool) return x.pool == pool ? -1 : 1;
-        return x.difficulty.compareTo(y.difficulty);
-      });
-      final items = all.take(n).toList()..sort((x, y) => x.difficulty.compareTo(y.difficulty));
-      if (items.isEmpty) continue;
-      plan.add((def, items));
+      // every question of the station (both forms), in the three difficulty pools; the child's answers decide which pool the next one comes from
+      final byId = <String, SItem>{for (final i in [...bank.forSubtest(def.id, 'A', band), ...bank.forSubtest(def.id, 'B', band)]) i.id: i};
+      if (byId.isEmpty) continue;
+      final station = _Station(def, byId.values.toList(), min(n, byId.length));
+      final first = Adaptive.pick(station.pool, Adaptive.startTier, used: const {}, form: pool, seen: st.screeningSeen);
+      if (first == null) continue;
+      station.asked.add(first); // the first question of every station comes from the medium pool
+      plan.add(station);
     }
+    Cloud.instance.last.value = null; // the Question Agent banner starts empty for each screening
     _checkSpeech();
   }
 
@@ -70,8 +82,8 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     if (mounted) setState(() => speechOk = ok);
   }
 
-  SubtestDef get def => plan[si].$1;
-  List<SItem> get items => plan[si].$2;
+  SubtestDef get def => plan[si].def;
+  List<SItem> get items => plan[si].asked;
 
   void _startStation() {
     Speaker.instance.stop();
@@ -84,19 +96,33 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     setState(() => intro = false);
   }
 
-  void _onDone(List<ItemResponse> r) {
+  void _onDone(List<ItemResponse> raw) {
+    final station = plan[si];
+    final asked = station.asked[ii];
+    // each answer is stamped with the pool its question came from (harder pools weigh more in the score)
+    final r = [for (final x in raw) x.withTier(asked.tier.level)];
     responses.putIfAbsent(def.id, () => []).addAll(r);
+    // HOW the child answered decides the next pool: wrong → easy; right but slow / paused / unclear → medium; right and quick → hard
+    final quality = Adaptive.assess(r, def, band);
+    final nextTier = Adaptive.next(r, quality);
+    final step = TraceStep(subtest: def.id, itemId: asked.id, tier: asked.tier, score: Adaptive.score(r), ms: r.map((x) => x.ms).fold(0, (a, b) => a + b), quality: quality, nextTier: nextTier);
+    trace.add(step);
+    _sendToCloud(asked, r, step);
     final miss = r.every((x) => x.score < .5);
     missRun = miss ? missRun + 1 : 0;
     if (missRun >= def.discontinue) {
       // stop rule: the child is not kept on items that are too hard
-      for (var k = ii + 1; k < items.length; k++) {
-        responses[def.id]!.add(ItemResponse(itemId: items[k].id, subtest: def.id, score: 0, ms: 0, tag: 'discontinued'));
+      for (var k = station.asked.length; k < station.want; k++) {
+        responses[def.id]!.add(ItemResponse(itemId: '${def.id}-skipped$k', subtest: def.id, score: 0, ms: 0, tag: 'discontinued'));
       }
       _nextStation();
       return;
     }
-    if (ii + 1 < items.length) {
+    final next = station.asked.length < station.want
+        ? Adaptive.pick(station.pool, nextTier, used: {for (final i in station.asked) i.id}, form: pool, seen: st.screeningSeen)
+        : null;
+    if (next != null) {
+      station.asked.add(next);
       setState(() {
         ii++;
         msg = null;
@@ -104,6 +130,31 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     } else {
       _nextStation();
     }
+  }
+
+  /// Sends the answer to the database; the Question Agent answers with 10 new questions (shown in the banner).
+  void _sendToCloud(SItem asked, List<ItemResponse> r, TraceStep step) {
+    final sp = r.map((x) => x.speech).whereType<SpeechMetrics>().firstOrNull;
+    Cloud.instance.sendResponse({
+      'studentId': st.cloudStudentId,
+      'childName': st.childName,
+      'gradeBand': band.name,
+      'lang': bank.code,
+      'subtest': def.id,
+      'itemId': asked.id,
+      'itemSource': asked.source,
+      'tier': step.tier.name,
+      'nextTier': step.nextTier.name,
+      'score': step.score,
+      'ms': step.ms,
+      'replays': r.fold<int>(0, (a, x) => a + x.replays),
+      'tag': r.map((x) => x.tag).whereType<String>().firstOrNull,
+      'quality': step.quality.toJson(),
+      if (sp != null) 'speech': sp.toJson(),
+      'station': si,
+      'index': ii,
+      'ts': DateTime.now().toUtc().toIso8601String(),
+    });
   }
 
   void _nextStation() {
@@ -132,7 +183,7 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
       minutes: DateTime.now().difference(started).inMinutes,
     );
     Future.delayed(const Duration(milliseconds: 2400), () {
-      if (mounted) st.completeScreening(report, responses);
+      if (mounted) st.completeScreening(report, responses, trace: trace);
     });
   }
 
@@ -159,6 +210,7 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
       child: SafeArea(
         child: Column(children: [
           _bridge(),
+          if (Cloud.showBanner) const AgentBanner(),
           Expanded(
             child: Stack(children: [
               Positioned.fill(child: intro ? _stationCard() : _task()),

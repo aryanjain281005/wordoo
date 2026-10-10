@@ -1,0 +1,14 @@
+{
+  "name": "readle-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Readle cloud: question bank + screening history in MongoDB, and the Question Agent (Gemini) that grows the bank from children's responses.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "seed": "node src/seed.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": { "mongodb": "^6.10.0" }
+}

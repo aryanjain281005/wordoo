@@ -8,6 +8,9 @@ import 'models.dart';
 ///  • band: Strong ≥ 50th percentile, Developing 16th–50th, Needs Support < 16th
 ///  • DALI rule: a domain is flagged when ≥ 50 % of its measured subtests are Needs Support
 ///  • indicator: 0 flagged domains → Low, 1 → Some, ≥ 2 → Elevated (refer for full assessment)
+/// Weight of an answer by the difficulty pool it came from (PROVISIONAL, to be calibrated on pilot data).
+double tierWeight(int tier) => switch (tier) { 1 => .7, 3 => 1.3, _ => 1.0 };
+
 class Scorer {
   static double normalCdf(double z) {
     // Abramowitz–Stegun erf approximation
@@ -23,7 +26,10 @@ class Scorer {
     if (m.isEmpty) {
       return SubtestResult(id: def.id, construct: def.construct, accuracy: 0, z: 0, percentile: 0, band: ScreenBand.notMeasured, items: rs.length, measured: false);
     }
-    final acc = m.map((r) => r.score).reduce((a, b) => a + b) / m.length;
+    // Adaptive screening: a right answer in the hard pool says more than one in the easy pool, so each answer is weighted by
+    // its pool (easy 0.7, medium 1.0, hard 1.3). With every answer in the medium pool this is the plain average.
+    double w(ItemResponse r) => tierWeight(r.tier);
+    final acc = m.map((r) => r.score * w(r)).reduce((a, b) => a + b) / m.map(w).reduce((a, b) => a + b);
     final rates = m.where((r) => r.rate != null).map((r) => r.rate!).toList();
     final rate = rates.isEmpty ? null : rates.reduce((a, b) => a + b) / rates.length;
     final n = def.norm(band);

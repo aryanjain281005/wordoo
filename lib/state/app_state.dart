@@ -7,6 +7,9 @@ import '../engine/levels.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../content/content_pack.dart';
 import '../core/audio.dart';
+import '../core/cloud.dart';
+import '../screening/adaptive.dart';
+import '../screening/history_doc.dart';
 import '../core/loc.dart';
 import '../story/story_lines.dart';
 import '../core/config.dart';
@@ -64,6 +67,15 @@ class AppState extends ChangeNotifier {
 
   // profile
   String childName = '';
+  /// Stable anonymous id of this child in the cloud database (screening history, answers). Never a name, phone number or ID.
+  String studentId = '';
+  String get cloudStudentId {
+    if (studentId.isEmpty) {
+      final r = Random();
+      studentId = 'child_${List.generate(8, (_) => r.nextInt(16).toRadixString(16)).join()}';
+    }
+    return studentId;
+  }
   String explorerName = '';
   int age = 6;
   String grade = 'Class 1';
@@ -211,6 +223,7 @@ class AppState extends ChangeNotifier {
   Map<String, dynamic> _toJson() => {
         'screen': screen.index,
         'childName': childName,
+        'studentId': studentId,
         'explorerName': explorerName,
         'age': age,
         'grade': grade,
@@ -254,6 +267,7 @@ class AppState extends ChangeNotifier {
     screen = AppScreen.values[j['screen'] as int];
     if (screen == AppScreen.assessment || screen == AppScreen.weeklyReport) screen = AppScreen.home;
     childName = j['childName'] as String;
+    studentId = j['studentId'] as String? ?? '';
     explorerName = j['explorerName'] as String;
     age = j['age'] as int;
     grade = j['grade'] as String;
@@ -500,7 +514,7 @@ class AppState extends ChangeNotifier {
 
   /// Screening finished. First time → every skill starts at its own step from the screening.
   /// Later (check-in) → blend the fresh screening with what gameplay already knows.
-  void completeScreening(scr.ScreeningReport report, Map<String, List<scr.ItemResponse>> responses) {
+  void completeScreening(scr.ScreeningReport report, Map<String, List<scr.ItemResponse>> responses, {List<TraceStep> trace = const []}) {
     for (final list in responses.values) {
       for (final r in list) {
         screeningSeen[r.itemId.split('.').first] = (screeningSeen[r.itemId.split('.').first] ?? 0) + 1;
@@ -509,6 +523,8 @@ class AppState extends ChangeNotifier {
     final (:scores, :unmeasured) = _scoresFrom(report);
     final first = !hasBaseline;
     screenings = [...screenings, report];
+    // the longitudinal history goes to the database too (kept and re-sent later when there is no connection)
+    Cloud.instance.sendScreening(screeningDoc(studentId: cloudStudentId, childName: childName, report: report, baseline: first, trace: trace));
     if (first) {
       _startFromScores(scores, unmeasured: unmeasured);
       badges.add(Badges.first.id);

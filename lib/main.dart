@@ -3,6 +3,7 @@ import 'story/story_lines.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'core/audio.dart';
+import 'core/cloud.dart';
 import 'core/theme.dart';
 import 'data/strings.dart';
 import 'screens/app_shell.dart';
@@ -19,6 +20,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   AudioManager.instance.init();
   StoryLines.instance.load();
+  Cloud.instance.init('en'); // question bank copy + refresh from the Readle server (optional: the app works offline)
   runApp(ChangeNotifierProvider(create: (_) => AppState()..load(), child: const ReadleApp()));
 }
 

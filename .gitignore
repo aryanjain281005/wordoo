@@ -53,3 +53,7 @@ runtheflutter.txt
 .env
 .env.*
 *.env
+
+# Readle server
+server/node_modules/
+server/data/

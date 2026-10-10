@@ -66,3 +66,6 @@ Bilingual build: when the child picks हिन्दी at set-up, the **prolog
 * Voices: story lines = ElevenLabs (`VOLANG=hi ENGINE=eleven`), words/instructions = Kokoro Hindi (`VOLANG=hi`), files in `assets/vo/hi/`. Phone TTS (hi-IN) speaks the screening and the bridge screen.
 * Verified: phone (prologue, map, island sheet, Orchestra + Ninja in Hindi, Hindi clips confirmed loading via frame-stat marks), browser build (fresh set-up → Hindi prologue → bridge → first screening station). Not heard by ear: the Hindi voices.
 * Dev panel: English / हिन्दी switch.
+
+## 9. Adaptive screening + Question Agent (see AGENT_FLOW.md)
+Three difficulty pools (easy/medium/hard = `SItem.difficulty` 1–3). After each answer the next question comes from: wrong → easy; right but slow / long pause / unclear / replays → medium; right and clean → hard (`lib/screening/adaptive.dart`). Scoring weights answers by pool (0.7/1/1.3). Every answer → `server` (`POST /telemetry`) → Question Agent (Gemini) writes 10 new questions → MongoDB `questions`; app shows the **Question Agent banner** and uses the new questions at once. Finished screenings → `screenings` collection (schema from the brief). Server: `server/` (Node, `npm start`). The MongoDB MCP connector is blocked by the Atlas org (MCP access disabled), so the DB was verified on a local mongod; for Atlas set `MONGODB_URI` in `.env`.
