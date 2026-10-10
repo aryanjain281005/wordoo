@@ -16,3 +16,15 @@ With no `RESEND_API_KEY` the server runs in **dry-run**: the email is saved as a
 
 Privacy: the parent's address stays on the phone and is only used for the send; the server stores only its domain, the report
 text and the numbers (collection `reports`). One report per address per minute. Reports never diagnose; the disclaimer is fixed.
+
+## Gmail (SMTP) — easiest way to send real emails
+1. Google Account → Security → turn on 2-Step Verification → **App passwords** → create one named "Wordoo" (16 letters).
+2. Add to the git-ignored `.env` (never commit it):
+
+       SMTP_HOST=smtp.gmail.com
+       SMTP_PORT=465
+       SMTP_USER=youraddress@gmail.com
+       SMTP_PASS=abcdefghijklmnop
+       MAIL_FROM=Wordoo <youraddress@gmail.com>
+
+3. Restart the server (`cd server && npm start`); the start-up line shows `mail: smtp`.

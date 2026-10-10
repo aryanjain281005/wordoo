@@ -32,6 +32,7 @@ export function config(env = loadEnv()) {
     dataDir: env.DATA_DIR || join(root, 'server', 'data'),
     apiToken: env.API_TOKEN || '',
     resendKey: env.RESEND_API_KEY || '',
+    smtp: { host: env.SMTP_HOST || '', port: Number(env.SMTP_PORT || 465), user: env.SMTP_USER || '', pass: (env.SMTP_PASS || '').replace(/\s+/g, '') },
     mailFrom: env.MAIL_FROM || '',
     outboxDir: env.OUTBOX_DIR || join(root, 'server', 'outbox'),
   };

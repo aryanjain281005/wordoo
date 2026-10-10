@@ -143,7 +143,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const whisper = createWhisper({ apiKey: cfg.openaiKey });
   whisper.probe().then((ok) => console.log(ok ? 'Whisper probe: OK' : `Whisper probe FAILED: ${whisper.error}`));
   setInterval(() => whisper.probe(), 10 * 60 * 1000).unref(); // credits added later → the app starts using Whisper by itself
-  const mailer = createMailer({ resendKey: cfg.resendKey, from: cfg.mailFrom, outboxDir: cfg.outboxDir });
+  const mailer = createMailer({ resendKey: cfg.resendKey, smtp: cfg.smtp, from: cfg.mailFrom, outboxDir: cfg.outboxDir });
   const app = createApp({ store, agent, cfg, whisper, gemini, mailer });
   app.listen(cfg.port, cfg.host, () => console.log(`Wordoo server on :${cfg.port} · database: ${store.kind} · whisper: ${cfg.openaiKey ? 'on' : 'off'} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · mail: ${mailer.mode} · bank seeded +${n}`));
 }

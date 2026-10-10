@@ -9,6 +9,11 @@
     "seed": "node src/seed.js",
     "test": "node --test test/*.test.js"
   },
-  "engines": { "node": ">=20" },
-  "dependencies": { "mongodb": "^6.10.0" }
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0",
+    "nodemailer": "^10.0.16"
+  }
 }

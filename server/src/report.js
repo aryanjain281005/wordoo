@@ -1,6 +1,6 @@
 // Parent report: Gemini writes a warm, plain-language "official" progress report from the numbers the app sends,
 // the server checks it (numbers must match, no diagnostic words), renders an HTML + text email, and sends it.
-// Mail providers: Resend (RESEND_API_KEY + MAIL_FROM) — or, with no provider set, the email is written to server/outbox/ (dry run).
+// Mail providers: SMTP (e.g. Gmail with an app password: SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS) or Resend (RESEND_API_KEY) — with neither set, the email is written to server/outbox/ (dry run).
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -167,10 +167,17 @@ export function renderEmail(r, data) {
 }
 
 /** Sends through Resend when configured; otherwise writes the email to server/outbox/ so nothing is lost (dry run). */
-export function createMailer({ resendKey, from, outboxDir, fetchImpl = fetch }) {
+export function createMailer({ resendKey, from, outboxDir, fetchImpl = fetch, smtp, transportFactory }) {
+  const useSmtp = !!(smtp && smtp.host && smtp.user && smtp.pass);
+  let transport;
   return {
-    mode: resendKey ? 'resend' : 'outbox',
+    mode: useSmtp ? 'smtp' : resendKey ? 'resend' : 'outbox',
     async send({ to, subject, html, text }) {
+      if (useSmtp) {
+        transport ??= await (transportFactory ?? (async (o) => (await import('nodemailer')).default.createTransport(o)))({ host: smtp.host, port: smtp.port || 465, secure: (smtp.port || 465) === 465, auth: { user: smtp.user, pass: smtp.pass } });
+        await transport.sendMail({ from: from || `Wordoo <${smtp.user}>`, to, subject, html, text });
+        return { sent: true, mode: 'smtp' };
+      }
       if (!resendKey) {
         mkdirSync(outboxDir, { recursive: true });
         const f = join(outboxDir, `${Date.now()}-${to.replace(/[^a-z0-9@._-]/gi, '_')}.html`);

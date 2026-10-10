@@ -82,3 +82,13 @@ test('POST /report/email: needs consent, writes to the outbox without a mail pro
     app.close();
   }
 });
+
+test('SMTP mailer sends through the transport (Gmail-style settings)', async () => {
+  const sent = [];
+  const m = createMailer({ outboxDir: '/nonexistent', smtp: { host: 'smtp.gmail.com', port: 465, user: 'me@gmail.com', pass: 'abcd efgh' }, transportFactory: async (o) => ({ opts: o, sendMail: async (x) => sent.push(x) }) });
+  assert.equal(m.mode, 'smtp');
+  const r = await m.send({ to: 'mum@example.com', subject: 's', html: '<p>h</p>', text: 't' });
+  assert.equal(r.sent, true);
+  assert.equal(sent[0].to, 'mum@example.com');
+  assert.match(sent[0].from, /me@gmail.com/);
+});
