@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/art/brand.logo.png" alt="Wordoo Logo" width="180"/>
+<img src="assets/art/brand.logo.png" alt="Wordoo Logo" width="220"/>
 
 # ✨ Wordoo — A Reading Adventure Just for You
 
@@ -20,7 +20,29 @@
 
 ---
 
-*"Help Milo the fox rescue the Story Keepers and restore the light of Aksharpur!"*
+### 🎨 Welcome to Akshargram!
+
+*"Help Milo the fox rescue the Story Keepers from Gumsum's cloud cages and restore the light of Aksharpur!"*
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/art/char.milo.cheer.webp" width="160" alt="Milo the Fox"/><br/>
+      <b>🦊 Milo the Fox</b><br/>
+      <em>Brave Guide & Companion</em>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/art/still.map.storm.webp" width="220" alt="World Map Storm"/><br/>
+      <b>🗺️ The Storm Over Akshargram</b><br/>
+      <em>Gumsum's Shadow Cloud Cages</em>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/art/still.tree.keepers.webp" width="220" alt="Story Keepers"/><br/>
+      <b>🌳 The Story Keepers</b><br/>
+      <em>Guardians of Literacy & Words</em>
+    </td>
+  </tr>
+</table>
 
 </div>
 
@@ -36,11 +58,11 @@
 | 4 | [🎙️ VoxLexi — Speech Scoring](#4-speech-scoring--the-voxlexi-pipeline-on-the-phone) | How the phone scores reading aloud |
 | 5 | [📊 Scoring & the Report](#5-scoring-rules-and-the-screening-report) | Z-scores, percentiles, DALI domain rule |
 | 6 | [🧠 Personalisation & Adaptive Difficulty](#6-personalisation-and-adaptive-difficulty) | How Wordoo learns and adapts to each child |
-| 7 | [🎮 The 11-Game Architecture](#7-the-11-game-architecture-and-the-6-playable-games) | Six playable games and five more coming |
+| 7 | [🎮 The 11-Game Architecture](#7-the-11-game-architecture-and-the-6-playable-games) | Six playable games, eight floating islands & five coming |
 | 8 | [⭐ Rewards](#8-rewards) | Stars, treasures, badges, and the Star Observatory |
 | 9 | [📅 Weekly Cycle & Parent Report](#9-weekly-cycle-parent-report-and-next-week-plan) | Check-ins, growth reports, and the next plan |
 | 10 | [🌐 Languages & Content](#10-languages-and-content-architecture) | English, Hindi, and the language-pack system |
-| 11 | [🎨 Visual Design System](#11-visual-design-system) | Painted scenes, characters, and components |
+| 11 | [🎨 Visual Design System](#11-visual-design-system) | Painted scenes, character gallery, and components |
 | 12 | [🔒 Accessibility, Privacy & Safety](#12-accessibility-privacy-and-safety) | What is stored, what is never stored |
 | 13 | [⚙️ Technical Architecture](#13-technical-architecture) | Flutter stack, state, offline-first design |
 | 14 | [📁 Project Structure](#14-project-structure) | Full directory map |
@@ -49,7 +71,7 @@
 | 17 | [🧪 Tests](#17-tests) | 34 tests and what they cover |
 | 18 | [🎬 Demo Script for Judges](#18-demo-script-for-judges) | Step-by-step walkthrough |
 | 19 | [📚 Research Basis](#19-research-basis--what-we-took-and-what-we-changed) | DALI, LexiScreen, VoxLexi |
-| 20 | [🏗️ Project History](#20-what-we-built-step-by-step-project-history) | What was built and in what order |
+| 20 | [🏗️ Project History](#20-what-we-built-step-by-step-project-history) | Storybook illustrations & narrative build history |
 | 21 | [🚧 Limitations & Roadmap](#21-known-limitations-and-roadmap) | Honest gaps and what comes next |
 | 22 | [🙏 Credits & Licences](#22-credits-and-licences) | Fonts, research, third-party acknowledgements |
 
@@ -71,6 +93,21 @@ ASSESS  →  UNDERSTAND  →  PERSONALISE  →  PLAY  →  MEASURE  →  RE-PERS
 
 Two children with different skill profiles get **different maps, different missions, and different starting levels** — automatically.
 
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="assets/art/prop.book.open.webp" width="220" alt="The Magic Storybook"/><br/>
+      <b>📖 The Magic Storybook</b><br/>
+      <em>Unlocking stories as reading skills grow</em>
+    </td>
+    <td align="center" width="50%">
+      <img src="assets/art/char.milo.talk.webp" width="160" alt="Milo Explaining"/><br/>
+      <b>🦊 Guided by Milo</b><br/>
+      <em>Gentle encouragement, zero stress or penalty</em>
+    </td>
+  </tr>
+</table>
+
 📘 Full game design: [GAME_DESIGN.md](GAME_DESIGN.md) · [GAME_DESIGN_V3.md](GAME_DESIGN_V3.md)
 
 ---
@@ -79,23 +116,63 @@ Two children with different skill profiles get **different maps, different missi
 
 ```mermaid
 flowchart TD
-    A([🚀 Launch]) --> B[👨‍👩‍👧 Grown-up Setup\nname · class · language · consent]
-    B --> C[🧒 Create Your Explorer\navatar · hairstyle · companion]
-    C --> D[📖 Story Intro\nYour First Adventure]
-    D --> E[🔬 Screening\n13 DALI-aligned stations]
-    E --> F[🗺️ Skill Map\nStrong / Developing / Needs Support]
-    F --> G[📄 Grown-up Report\npercentiles · observations · advice]
-    G --> H([🌏 World Map\npersonalised islands + missions])
-    H --> I[🎮 Play a Mission\nlive adaptive difficulty]
-    I --> J[⭐ Reward Screen\nstars · treasures · badges]
+    A([🚀 Launch]) --> B[👨‍👩‍👧 Grown-up Setup
+name · class · language · consent]
+    B --> C[🧒 Create Your Explorer
+avatar · hairstyle · companion]
+    C --> D[📖 Story Intro
+Your First Adventure]
+    D --> E[🔬 Screening
+13 DALI-aligned stations]
+    E --> F[🗺️ Skill Map
+Strong / Developing / Needs Support]
+    F --> G[📄 Grown-up Report
+percentiles · observations · advice]
+    G --> H([🌏 World Map
+personalised islands + missions])
+    H --> I[🎮 Play a Mission
+live adaptive difficulty]
+    I --> J[⭐ Reward Screen
+stars · treasures · badges]
     J --> H
-    H --> K{All 7 islands done\n≥ 60 answers per skill?}
+    H --> K{All 7 islands done
+≥ 60 answers per skill?}
     K -- No --> H
-    K -- Yes --> L[🌉 Star Bridge Check-in\nfresh screening form B]
-    L --> M[📈 Weekly Progress Report\nbaseline → week 1 changes]
-    M --> N[🗓️ Next Adventure Plan\nnew levels · focus skills]
+    K -- Yes --> L[🌉 Star Bridge Check-in
+fresh screening form B]
+    L --> M[📈 Weekly Progress Report
+baseline → week 1 changes]
+    M --> N[🗓️ Next Adventure Plan
+new levels · focus skills]
     N --> H
 ```
+
+### 🖼️ Visual Journey Showcase
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/bg.day.webp" width="180" alt="Launch Scene"/><br/>
+      <b>1. Launch Scene</b><br/>
+      <em>Enchanted castle & path</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/char.milo.happy.webp" width="130" alt="Meet Milo"/><br/>
+      <b>2. Meet Companion</b><br/>
+      <em>Choose your helper fox</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.cage.forest.webp" width="150" alt="Cloud Cage"/><br/>
+      <b>3. Rescue Keepers</b><br/>
+      <em>Free friends from cages</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.writer.chest_open.webp" width="160" alt="Treasure Chest"/><br/>
+      <b>4. Earn Rewards</b><br/>
+      <em>Unlock hats & chests</em>
+    </td>
+  </tr>
+</table>
 
 | # | Screen | What happens | Code |
 |---|--------|--------------|------|
@@ -220,8 +297,12 @@ All logic is in `lib/screening/scorer.dart`; reference values are in `lib/screen
 
 ```mermaid
 flowchart LR
-    A[Raw item responses\naccuracy + rate] --> B[Subtest z-score\nacc-z and rate-z combined\nby rateWeight]
-    B --> C[normalCDF z\nAbramowitz-Stegun erf]
+    A[Raw item responses
+accuracy + rate] --> B[Subtest z-score
+acc-z and rate-z combined
+by rateWeight]
+    B --> C[normalCDF z
+Abramowitz-Stegun erf]
     C --> D[Percentile 0-100]
     D --> E{Band}
     E -- "≥50th" --> F[🟢 Strong]
@@ -231,7 +312,8 @@ flowchart LR
     I --> J{Flagged domains}
     J -- 0 --> K[Low Indicators]
     J -- "1 or ≥2 NS" --> L[Some Indicators]
-    J -- "≥2" --> M[Elevated Indicators\nrefer to professional]
+    J -- "≥2" --> M[Elevated Indicators
+refer to professional]
 ```
 
 1. **Subtest score** = accuracy (and, for timed tasks, a rate: names/sec, WCPM, number of animals).
@@ -282,6 +364,82 @@ All thresholds live in **`lib/core/config.dart`** (`Cfg`) — nothing is hard-co
 
 Each skill **owns** its games; no game is the primary game for two skills (`lib/data/skills.dart`).
 
+### 🏝️ The 8 Enchanted Floating Islands of Akshargram
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/island.forest.webp" width="180" alt="Sound Forest"/><br/>
+      <b>🌲 Sound Forest</b><br/>
+      <em>Phonological Awareness & Rhyming</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.valley.webp" width="180" alt="Symbol Valley"/><br/>
+      <b>🏹 Symbol Valley</b><br/>
+      <em>Letter-Sound Target Shooting</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.ocean.webp" width="180" alt="Word Ocean"/><br/>
+      <b>🌊 Word Ocean</b><br/>
+      <em>Rocket Phonics & Decoding</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.village.webp" width="180" alt="Word Village"/><br/>
+      <b>🏘️ Word Village</b><br/>
+      <em>Word Detective & Recognition</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/island.treasure.webp" width="180" alt="Treasure Island"/><br/>
+      <b>💛 Treasure Island</b><br/>
+      <em>Spelling Hive & Honey Tiles</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.castle.webp" width="180" alt="Story Castle"/><br/>
+      <b>🏰 Story Castle</b><br/>
+      <em>Story Quest & Comprehension</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.observatory.webp" width="180" alt="Star Observatory"/><br/>
+      <b>🌌 Star Observatory</b><br/>
+      <em>Mastery Check-in & Constellations</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/island.citadel.webp" width="180" alt="Citadel of Light"/><br/>
+      <b>⚡ Citadel of Light</b><br/>
+      <em>Storm Finale & Redemption</em>
+    </td>
+  </tr>
+</table>
+
+### 🎮 Playable Mini-Game Environments
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/bg.forest.webp" width="180" alt="Sound Forest Realm"/><br/>
+      <b>🎵 Sound Orchestra</b><br/>
+      <em>Sound Forest Realm</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/bg.hive.webp" width="180" alt="Spelling Hive Board"/><br/>
+      <b>🐝 Spelling Hive</b><br/>
+      <em>Honeycomb Tile Board</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/bg.castle.webp" width="180" alt="Story Castle Library"/><br/>
+      <b>📖 Story Quest</b><br/>
+      <em>Story Castle Library</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/bg.rocket.zone1.webp" width="180" alt="Rocket Phonics Zone"/><br/>
+      <b>🚀 Word Rocket</b><br/>
+      <em>Phonics Launch Pad</em>
+    </td>
+  </tr>
+</table>
+
 | Skill | Island | Games (★ = playable now) |
 |---|---|---|
 | Phonological Awareness | 🌲 Sound Forest | ★ **Sound Orchestra**, Sound Ninja |
@@ -315,6 +473,31 @@ Items are generated from language-pack word lists (`lib/engine/item_factory.dart
 - **Badges:** First Adventure, per-region Explorer, Daily Adventurer, Week Champion, Level Climber.
 - The **Star Observatory** (7th island) unlocks when all six skill chapters are done; finishing it (plus enough answers per skill) opens the **Star Bridge** check-in.
 - **No loot boxes, no lives, no leaderboards, no streak punishment.**
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.writer.chest_open.webp" width="160" alt="Treasure Chest"/><br/>
+      <b>🧰 Word Chest</b><br/>
+      <em>Unlocked by Star Milestones</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.castle.tower_restored.webp" width="150" alt="Restored Tower"/><br/>
+      <b>🏰 Restored Tower</b><br/>
+      <em>Restoring Light to Aksharpur</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.hive.honey_jar.webp" width="130" alt="Honey Jar"/><br/>
+      <b>🍯 Honey Jar Rewards</b><br/>
+      <em>Earned in Spelling Hive</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/prop.orchestra.drum.webp" width="150" alt="Orchestra Drum"/><br/>
+      <b>🥁 Musical Drums</b><br/>
+      <em>Earned in Sound Orchestra</em>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -350,6 +533,60 @@ Fonts: **Fredoka** (rounded game font) and **Noto Sans Devanagari** are bundled 
 ## 11. 🎨 Visual Design System
 
 Everything is drawn in code (no third-party image assets beyond the bundled art library), styled after the project's reference board.
+
+### 🦊 Meet the Characters & Story Keepers
+
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="assets/art/char.milo.cheer.webp" width="130" alt="Milo the Fox"/><br/>
+      <b>🦊 Milo the Fox</b><br/>
+      <em>Brave Explorer Companion</em>
+    </td>
+    <td align="center" width="20%">
+      <img src="assets/art/char.kitabu.cheer.webp" width="130" alt="Kitabu the Owl"/><br/>
+      <b>🧙 Kitabu the Owl</b><br/>
+      <em>Grand Story Keeper</em>
+    </td>
+    <td align="center" width="20%">
+      <img src="assets/art/char.pari.cheer.webp" width="130" alt="Pari the Fairy"/><br/>
+      <b>🧚 Pari the Fairy</b><br/>
+      <em>Light & Magic Guide</em>
+    </td>
+    <td align="center" width="20%">
+      <img src="assets/art/char.arya.happy.webp" width="130" alt="Arya"/><br/>
+      <b>👧 Arya</b><br/>
+      <em>Curious Explorer</em>
+    </td>
+    <td align="center" width="20%">
+      <img src="assets/art/char.ullu.happy.webp" width="130" alt="Ullu"/><br/>
+      <b>🦉 Ullu</b><br/>
+      <em>Wisdom Keeper</em>
+    </td>
+  </tr>
+</table>
+
+### 🦹 The Shadow Villain & Cloud Jailers
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/art/char.gumsum.villain.webp" width="150" alt="Gumsum Villain"/><br/>
+      <b>🦹 Gumsum (Villain)</b><br/>
+      <em>Casting Shadow Storms</em>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/art/char.jailer.forest.webp" width="150" alt="Hush Cloud Jailer"/><br/>
+      <b>⛓️ Hush Cloud Jailer</b><br/>
+      <em>Guarding Cloud Cages</em>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/art/char.gumsum.redeemed.webp" width="150" alt="Gumsum Redeemed"/><br/>
+      <b>✨ Gumsum (Redeemed)</b><br/>
+      <em>Light Restored to Aksharpur</em>
+    </td>
+  </tr>
+</table>
 
 - **Painted scenes** (`widgets/hero.dart`, `widgets/art.dart`): launch landscape with castle, mountains, tree lines, winding path, light rays, drifting clouds, twinkling sparkles; themed backgrounds per region (forest, ocean, valley, village, treasure, castle, citadel).
 - **Props library** (`widgets/props.dart`): pine and round trees, palm, treasure chest, houses, castle, mountains, sailboat, fish, archery target, rocket, satellite, book, bushes, flowers, clouds, sparkles — used to paint **floating islands** (`IslandArt`).
@@ -582,6 +819,33 @@ flutter test
 ---
 
 ## 20. 🏗️ What We Built, Step by Step (Project History)
+
+### 📜 Storybook Narrative & Cutscene Art
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="assets/art/story.s-island.webp" width="180" alt="Lost Words of Akshargram"/><br/>
+      <b>1. The Lost Words</b><br/>
+      <em>Gumsum steals the Akshara light</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/story.s-festival.webp" width="180" alt="Festival of Lights"/><br/>
+      <b>2. Festival of Stories</b><br/>
+      <em>Gathering the Story Keepers</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/story.s-rocket.webp" width="180" alt="Rocket Journey"/><br/>
+      <b>3. The Phonics Rocket</b><br/>
+      <em>Soaring across Word Ocean</em>
+    </td>
+    <td align="center" width="25%">
+      <img src="assets/art/story.s-library.webp" width="180" alt="The Magic Library"/><br/>
+      <b>4. The Grand Library</b><br/>
+      <em>Restoring books to Aksharpur</em>
+    </td>
+  </tr>
+</table>
 
 <details>
 <summary><strong>Full build history (click to expand)</strong></summary>
