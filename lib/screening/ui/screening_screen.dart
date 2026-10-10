@@ -38,7 +38,8 @@ class _Station {
 
 /// The child's "First Adventure": a DALI-aligned screening battery presented as bridge stations.
 class ScreeningScreen extends StatefulWidget {
-  const ScreeningScreen({super.key});
+  final bool isDev;
+  const ScreeningScreen({super.key, this.isDev = false});
   @override
   State<ScreeningScreen> createState() => _ScreeningScreenState();
 }
@@ -157,6 +158,19 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
     });
   }
 
+  /// Developer demo ("DEV SKIP"): jumps to the next station, filling this one with full-marks answers so the report builds.
+  void _devSkipStation() {
+    if (!widget.isDev || finished) return;
+    final station = plan[si];
+    if (!responses.containsKey(def.id) || responses[def.id]!.isEmpty) {
+      responses[def.id] = [
+        for (var k = 0; k < station.want; k++)
+          ItemResponse(itemId: k < station.asked.length ? station.asked[k].id : '${def.id}-dev$k', subtest: def.id, score: 1.0, ms: 1200, tier: k < station.asked.length ? station.asked[k].tier.level : 2),
+      ];
+    }
+    _nextStation();
+  }
+
   void _nextStation() {
     if (si + 1 >= plan.length) {
       _finish();
@@ -208,17 +222,33 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
       scene: _sceneFor(def.construct),
       calm: true,
       child: SafeArea(
-        child: Column(children: [
-          _bridge(),
-          if (Cloud.showBanner) const AgentBanner(),
-          Expanded(
-            child: Stack(children: [
-              Positioned.fill(child: intro ? _stationCard() : _task()),
-              if (!intro)
-                Positioned(left: 8, bottom: 4, right: 8, child: Align(alignment: Alignment.bottomLeft, child: Companion(type: st.avatar.companion, size: 74, message: msg ?? def.t(lang)))),
+        child: Stack(
+          children: [
+            Column(children: [
+              _bridge(),
+              if (Cloud.showBanner) const AgentBanner(),
+              Expanded(
+                child: Stack(children: [
+                  Positioned.fill(child: intro ? _stationCard() : _task()),
+                  if (!intro)
+                    Positioned(left: 8, bottom: 4, right: 8, child: Align(alignment: Alignment.bottomLeft, child: Companion(type: st.avatar.companion, size: 74, message: msg ?? def.t(lang)))),
+                ]),
+              ),
             ]),
-          ),
-        ]),
+            if (widget.isDev)
+              Positioned(
+                right: 14,
+                top: 70,
+                child: FloatingActionButton.extended(
+                  heroTag: 'dev_skip_btn',
+                  backgroundColor: const Color(0xFFFF3D00),
+                  icon: const Icon(Icons.skip_next_rounded, color: Colors.white),
+                  label: Text('DEV SKIP: ${def.t(lang)} (${si + 1}/${plan.length})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                  onPressed: _devSkipStation,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
