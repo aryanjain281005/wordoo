@@ -5,6 +5,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'assets.dart';
+import 'frame_stats.dart';
 import 'speech_key.dart';
 import 'tts.dart';
 
@@ -24,7 +25,12 @@ class AudioManager {
   final ValueNotifier<double> mouth = ValueNotifier(0);
   final ValueNotifier<String?> speaking = ValueNotifier(null); // character id currently talking
 
-  final Map<String, AudioPool> _pools = {};
+  // One persistent low-latency player per sound effect. (audioplayers' AudioPool never takes its players back in low-latency
+  // mode, so every effect created and loaded a new native player: a 50–90 ms stall on the platform thread, plus a leak.)
+  final Map<String, AudioPlayer> _sfxPlayers = {};
+  final Map<String, Future<AudioPlayer?>> _sfxLoading = {};
+  final Map<String, double> _sfxVolume = {};
+  final Set<String> _sfxUsed = {};
   AudioPlayer? _music;
   AudioPlayer? _voice;
   AudioPlayer? _voicePlayer;
@@ -53,26 +59,33 @@ class AudioManager {
       } catch (_) {}
       // every sound effect is loaded up-front, so the first tap on anything sounds instantly
       final all = ReadleAssets.instance.bundledUnder('assets/sfx/').where((p) => p.endsWith('.ogg'));
-      await Future.wait([for (final p in all) _pool(p.substring('assets/sfx/'.length, p.length - 4))]);
+      await Future.wait([for (final p in all) _sfxPlayer(p.substring('assets/sfx/'.length, p.length - 4))]);
       _ready = true;
     } catch (e) {
       debugPrint('audio init: $e');
     }
   }
 
-  Future<AudioPool?> _pool(String id) async {
-    final path = 'assets/sfx/$id.ogg';
-    if (!ReadleAssets.instance.bundled(path)) return null;
-    final p = _pools[id] ??= await AudioPool.createFromAsset(path: path, maxPlayers: 3, playerMode: PlayerMode.lowLatency);
-    return p;
+  Future<AudioPlayer?> _sfxPlayer(String id) {
+    final ready = _sfxPlayers[id];
+    if (ready != null) return Future.value(ready);
+    return _sfxLoading[id] ??= () async {
+      final path = 'assets/sfx/$id.ogg';
+      if (!ReadleAssets.instance.bundled(path)) return null;
+      final p = AudioPlayer();
+      await p.setPlayerMode(PlayerMode.lowLatency);
+      await p.setReleaseMode(ReleaseMode.stop);
+      await p.setSource(AssetSource(path)); // the sound is loaded once, here
+      return _sfxPlayers[id] = p;
+    }();
   }
 
-  /// Create the sound pools ahead of time (the first play of a sound otherwise loads the file in the middle of a game).
+  /// Load sound effects ahead of time (the first play of a sound otherwise loads the file in the middle of a game).
   Future<void> preloadSfx(List<String> ids) async {
     if (!enabled) return;
     for (final id in ids) {
       try {
-        await _pool(id);
+        await _sfxPlayer(id);
       } catch (e) {
         debugPrint('preload $id: $e');
       }
@@ -82,9 +95,17 @@ class AudioManager {
   /// Play a short sound effect.
   Future<void> sfx(String id, {double volume = .8}) async {
     if (!enabled || !sfxOn) return;
+    FrameStats.mark('sfx:$id');
     try {
-      final p = await _pool(id);
-      await p?.start(volume: volume);
+      final p = _sfxPlayers[id] ?? await _sfxPlayer(id);
+      if (p == null) return;
+      if (_sfxVolume[id] != volume) {
+        _sfxVolume[id] = volume;
+        await p.setVolume(volume);
+      }
+      // a SoundPool stream that finished is only replayed after stop() clears it (resume() alone would stay silent)
+      if (_sfxUsed.add(id) == false) await p.stop();
+      await p.resume();
     } catch (e) {
       debugPrint('sfx $id: $e');
     }
@@ -180,6 +201,7 @@ class AudioManager {
 
   /// Speak a character line. Completes when the line has finished (approximately, for TTS).
   Future<void> voice(String id, String text, {String character = 'milo', String ttsLocale = 'en-IN'}) async {
+    FrameStats.mark('voice:$id');
     await stopVoice();
     speaking.value = character;
     _duck(true);

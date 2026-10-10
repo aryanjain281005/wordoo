@@ -8,10 +8,22 @@ class FrameStats {
   static final List<FrameTiming> _t = [];
   static bool _on = false;
 
+  static final Stopwatch _clock = Stopwatch();
+  static final List<(int, String)> _marks = [];
+
+  /// Dev-only: remember what happened when (sound started, voice line started) so a stall can be matched to it.
+  static void mark(String what) {
+    if (_on) _marks.add((_clock.elapsedMilliseconds, what));
+  }
+
   static void _cb(List<FrameTiming> l) => _t.addAll(l);
 
   static void begin() {
     _t.clear();
+    _marks.clear();
+    _clock
+      ..reset()
+      ..start();
     if (!_on) {
       SchedulerBinding.instance.addTimingsCallback(_cb);
       _on = true;
@@ -34,6 +46,7 @@ class FrameStats {
     final t0 = _t.first.timestampInMicroseconds(FramePhase.buildStart);
     final bad = _t.where((f) => ms(f.totalSpan) > 40).take(14).map((f) => '${((f.timestampInMicroseconds(FramePhase.buildStart) - t0) / 1e6).toStringAsFixed(1)}s:${ms(f.totalSpan).toStringAsFixed(0)}ms(b${ms(f.buildDuration).toStringAsFixed(0)}/r${ms(f.rasterDuration).toStringAsFixed(0)})').join(' ');
     if (bad.isNotEmpty) debugPrint('FRAMESTATS hitches $label: $bad');
+    if (_marks.isNotEmpty) debugPrint('FRAMESTATS marks $label: ${_marks.map((m) => '${(m.$1 / 1000).toStringAsFixed(1)}s ${m.$2}').join(' | ')}');
     final s = '$label: ${_t.length} frames, slow ${(100 * slow / _t.length).toStringAsFixed(1)}%, build p50 ${p(b, .5)} p95 ${p(b, .95)} ms, raster p50 ${p(r, .5)} p95 ${p(r, .95)} ms, worst ${worst.toStringAsFixed(0)} ms';
     debugPrint('FRAMESTATS $s');
     return s;
