@@ -27,7 +27,7 @@ class Cloud {
   Cloud._();
 
   static const _api = String.fromEnvironment('READLE_API', defaultValue: 'http://127.0.0.1:8787');
-  static const showBanner = bool.fromEnvironment('READLE_AGENT_BANNER', defaultValue: true);
+  static const showBanner = bool.fromEnvironment('READLE_AGENT_BANNER', defaultValue: false);
 
   String baseUrl = _api;
   bool get enabled => baseUrl.isNotEmpty && baseUrl != 'off';

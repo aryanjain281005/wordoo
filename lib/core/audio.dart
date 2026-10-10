@@ -55,6 +55,14 @@ class AudioManager {
       // every sound load "assets/assets/…" on real devices — so clear the prefix for every cache we use.
       FlameAudio.updatePrefix('');
       AudioCache.instance.prefix = '';
+      // Every player used to ask Android for exclusive audio focus, so each sound effect or music start made
+      // the narration player lose focus and go silent after its first words. Nobody takes focus now: all sounds mix.
+      try {
+        await AudioPlayer.global.setAudioContext(AudioContext(
+          android: const AudioContextAndroid(audioFocus: AndroidAudioFocus.none, contentType: AndroidContentType.speech, usageType: AndroidUsageType.media, stayAwake: false),
+          iOS: AudioContextIOS(category: AVAudioSessionCategory.playback, options: const {AVAudioSessionOptions.mixWithOthers}),
+        ));
+      } catch (_) {}
       await ReadleAssets.instance.load();
       try {
         final raw = jsonDecode(await rootBundle.loadString('assets/vo/en/envelopes.json')) as Map<String, dynamic>;

@@ -237,14 +237,18 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
             ]),
             if (widget.isDev)
               Positioned(
-                right: 14,
-                bottom: 110, // low on the screen, so it never covers the Question Agent banner at the top
-                child: FloatingActionButton.extended(
-                  heroTag: 'dev_skip_btn',
-                  backgroundColor: const Color(0xFFFF3D00),
-                  icon: const Icon(Icons.skip_next_rounded, color: Colors.white),
-                  label: Text('DEV SKIP: ${def.t(lang)} (${si + 1}/${plan.length})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-                  onPressed: _devSkipStation,
+                right: 8,
+                bottom: 8,
+                child: SizedBox(
+                  height: 32,
+                  child: FloatingActionButton.extended(
+                    heroTag: 'dev_skip_btn',
+                    extendedPadding: const EdgeInsets.symmetric(horizontal: 10),
+                    backgroundColor: const Color(0xFFFF3D00),
+                    icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 16),
+                    label: Text('SKIP ${si + 1}/${plan.length}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11)),
+                    onPressed: _devSkipStation,
+                  ),
                 ),
               ),
           ],
