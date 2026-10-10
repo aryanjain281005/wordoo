@@ -298,6 +298,13 @@ class AudioManager {
       if (s == PlayerState.completed) finish();
     });
     p.setVolume(1.0);
+    if (const bool.fromEnvironment('VOICE_LOG')) {
+      final t0 = Stopwatch()..start();
+      p.onPlayerStateChanged.listen((s) => debugPrint('VOICEDBG state $s @${t0.elapsedMilliseconds}'));
+      p.onDurationChanged.listen((d) => debugPrint('VOICEDBG duration ${d.inMilliseconds}ms'));
+      p.onPositionChanged.listen((d) => debugPrint('VOICEDBG pos ${d.inMilliseconds}ms @${t0.elapsedMilliseconds}'));
+      p.onLog.listen((m) => debugPrint('VOICEDBG log $m'));
+    }
     return p;
   }
 

@@ -148,7 +148,7 @@ class Cloud {
       if (r.statusCode == 429) return (ok: false, message: 'A report was just sent. Please try again in a minute.');
       return (ok: false, message: 'Could not send the report: ${j['error'] ?? r.statusCode}');
     } catch (_) {
-      return (ok: false, message: 'Could not reach the Wordoo server. Check the connection and try again.');
+      return (ok: false, message: 'Could not reach the Wordoo server ($baseUrl). Check that it is running and the phone is connected, then try again.');
     }
   }
 
