@@ -224,6 +224,13 @@ void main() {
       expect(posted, isEmpty); // not sent twice
     });
 
+    test('a fresh download replaces the phone’s copy: questions removed from the database disappear', () async {
+      Cloud.instance.client = MockClient((_) async => http.Response.bytes(utf8.encode(jsonEncode({'questions': [made('g_new').toJson()]})), 200));
+      QuestionStore.instance.merge('en', [made('g_old')]);
+      await Cloud.instance.syncQuestions('en');
+      expect(QuestionStore.instance.forSubtest('en', 'rhyme').map((i) => i.id), ['g_new']);
+    });
+
     test('questions downloaded from the database are kept on the phone', () async {
       Cloud.instance.client = MockClient((_) async => http.Response.bytes(utf8.encode(jsonEncode({'questions': [made('g_a').toJson(), made('g_b').toJson()]})), 200));
       expect(await Cloud.instance.syncQuestions('en'), true);

@@ -98,7 +98,7 @@ export class QuestionAgent {
       key,
       source: 'gemini',
       status: 'active',
-      model: this.gemini.model,
+      model: this.gemini.lastModel ?? this.gemini.model,
       createdAt: ts,
       createdFor: { student_id: t.studentId, trigger_item: t.itemId, score: t.score, tier: t.tier, quality: t.quality ?? {}, error: t.tag ?? null },
     }));
@@ -106,7 +106,7 @@ export class QuestionAgent {
     const bankAfter = await this.bankSize(lang);
     const result = {
       ran: true,
-      model: this.gemini.model,
+      model: this.gemini.lastModel ?? this.gemini.model,
       subtest,
       requestedFor: t.subtest,
       tier: TIER_NAMES[tierNum],

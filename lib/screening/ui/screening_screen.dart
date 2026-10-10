@@ -238,7 +238,7 @@ class _ScreeningScreenState extends State<ScreeningScreen> {
             if (widget.isDev)
               Positioned(
                 right: 14,
-                top: 70,
+                bottom: 110, // low on the screen, so it never covers the Question Agent banner at the top
                 child: FloatingActionButton.extended(
                   heroTag: 'dev_skip_btn',
                   backgroundColor: const Color(0xFFFF3D00),

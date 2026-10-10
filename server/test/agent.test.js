@@ -90,7 +90,7 @@ test('stations without a writer map to the closest one (oral reading → word re
 test('HTTP API: health, telemetry → agent, bank, screenings history', async () => {
   const store = freshStore();
   const agent = new QuestionAgent({ store, gemini: mockGemini(rhymeItems), cfg, log() {} });
-  const server = createApp({ store, agent, cfg: { ...cfg, geminiKey: 'x', geminiModel: 'mock' } });
+  const server = createApp({ store, agent, cfg: { ...cfg, geminiKey: 'x', geminiModels: ['mock'] } });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}`;
   const get = async (p) => (await fetch(base + p)).json();
@@ -121,4 +121,20 @@ test('seed: the shipped questions go into the database once', async () => {
   const one = (await store.find('questions', { id: 'r1' }))[0];
   assert.equal(one.source, 'seed');
   assert.equal(one.subtest, 'rhyme');
+});
+
+test('Gemini client falls back to the next model when the first is slow or fails', async () => {
+  const { geminiClient } = await import('../src/gemini.js');
+  const calls = [];
+  const fetchImpl = async (url, opts) => {
+    calls.push(url.split('/models/')[1].split(':')[0]);
+    if (calls.length === 1) {
+      await new Promise((_, rej) => opts.signal.addEventListener('abort', () => rej(Object.assign(new Error('x'), { name: 'AbortError' }))));
+    }
+    return { ok: true, text: async () => JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"items":[1]}' }] } }] }) };
+  };
+  const g = geminiClient({ apiKey: 'k', models: ['slow-model', 'fast-lite'], fetchImpl, firstTimeoutMs: 30 });
+  assert.deepEqual(await g.generateJson('p', {}), { items: [1] });
+  assert.deepEqual(calls, ['slow-model', 'fast-lite']);
+  assert.equal(g.lastModel, 'fast-lite');
 });

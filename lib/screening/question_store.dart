@@ -28,6 +28,11 @@ class QuestionStore {
     }
   }
 
+  /// A fresh download: the database is the truth, so anything it no longer has (removed or switched off) leaves the phone too.
+  void replace(String lang, Iterable<SItem> items) {
+    _cloud[lang] = {for (final i in items) i.id: i};
+  }
+
   void clear() => _cloud.clear();
 
   // ---- a copy on the phone ----

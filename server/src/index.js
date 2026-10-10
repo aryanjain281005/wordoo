@@ -43,7 +43,7 @@ export function createApp({ store, agent, cfg }) {
       const lang = url.searchParams.get('lang') || 'en';
 
       if (req.method === 'GET' && url.pathname === '/health') {
-        return json(res, 200, { ok: true, database: store.kind, agent: cfg.agentEnabled && !!cfg.geminiKey ? cfg.geminiModel : 'off', bank: await store.count('questions', { lang, status: 'active' }) });
+        return json(res, 200, { ok: true, database: store.kind, agent: cfg.agentEnabled && !!cfg.geminiKey ? cfg.geminiModels : 'off', bank: await store.count('questions', { lang, status: 'active' }) });
       }
       if (req.method === 'GET' && url.pathname === '/questions') {
         const qs = (await store.find('questions', { lang, status: 'active' })).map(({ _id, key, createdFor, ...q }) => q);
@@ -90,9 +90,9 @@ export function createApp({ store, agent, cfg }) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const cfg = config();
   const store = await openStore(cfg);
-  const gemini = geminiClient({ apiKey: cfg.geminiKey, model: cfg.geminiModel });
+  const gemini = geminiClient({ apiKey: cfg.geminiKey, models: cfg.geminiModels });
   const agent = new QuestionAgent({ store, gemini, cfg });
   const n = await seedBank(store);
   const app = createApp({ store, agent, cfg });
-  app.listen(cfg.port, cfg.host, () => console.log(`Readle server on :${cfg.port} · database: ${store.kind} · agent: ${cfg.geminiKey ? cfg.geminiModel : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
+  app.listen(cfg.port, cfg.host, () => console.log(`Readle server on :${cfg.port} · database: ${store.kind} · agent: ${cfg.geminiKey ? cfg.geminiModels.join(' → ') : 'OFF (no GEMINI_API_KEY)'} · bank seeded +${n}`));
 }

@@ -53,7 +53,7 @@ class Cloud {
       final r = await _client.get(_u('/questions', {'lang': lang})).timeout(const Duration(seconds: 6));
       if (r.statusCode != 200) return false;
       final qs = (jsonDecode(utf8.decode(r.bodyBytes)) as Map)['questions'] as List;
-      QuestionStore.instance.merge(lang, [for (final j in qs) SItem.fromJson(Map<String, dynamic>.from(j as Map))]);
+      QuestionStore.instance.replace(lang, [for (final j in qs) SItem.fromJson(Map<String, dynamic>.from(j as Map))]);
       await QuestionStore.instance.save(lang);
       return true;
     } catch (e) {

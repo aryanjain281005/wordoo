@@ -41,7 +41,7 @@ child answers a question                         (app: ScreeningScreen._onDone)
          │
          ▼  server/src/agent.js  (QuestionAgent.onResponse)
          a) which station + which pool?  (the pool the child goes to next; oral reading / fluency / naming map to the closest writable station)
-         b) prompt Gemini (gemini-flash-latest, structured JSON) with: the station's rules, the pool's difficulty, how the child answered
+         b) prompt Gemini (gemini-flash-latest; if it is slow (>20 s) or fails, gemini-flash-lite-latest answers; structured JSON) with: the station's rules, the pool's difficulty, how the child answered
             (right/wrong, slow, pause, mistake type), and the questions that already exist (so it does not repeat them)
          c) every question Gemini returns is CHECKED (subtests.js): e.g. a rhyme must share its ending with the target and the
             wrong options must not; a "take away the c sound" answer must equal the word minus its first letter; spelling decoys
